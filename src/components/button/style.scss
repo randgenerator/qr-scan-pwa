@@ -1,0 +1,59 @@
+.contentButton {
+  width: 100%;
+  margin: 0 auto;
+  .submitButton {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 140%;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 24px 12px;
+    margin: 0 auto;
+    img{
+        margin: 0 0 0 10px;
+    }
+    .iconRight{
+        width: 24px;
+    }
+    .iconLog{
+        width: 16px;
+    }
+  }
+  .bg-green {
+    background: #00b578;
+    color: #ffffff;
+  }
+  .bg-yellow {
+    background: #ff8f1f;
+    color: #ffffff;
+  }
+  .bg-red {
+    background: #ff3141;
+    color: #ffffff;
+  }
+  .bg-fiolet {
+    background: #7159bd;
+    color: #ffffff;
+  }
+  .bg-redBordered {
+    background: white;
+    color: #ff3141;
+    border: 1px solid #ff3141;
+  }
+  .bg-fiolBordered {
+    background: white;
+    color: #7159bd;
+    border: 1px solid #7159bd;
+  }
+
+  button[type="button"][disabled] {
+    opacity: 0.4;
+  }
+}

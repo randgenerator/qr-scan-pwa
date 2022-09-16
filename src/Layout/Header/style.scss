@@ -1,0 +1,40 @@
+.header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  border-bottom: 1px solid #EEEEEE;
+  padding: 10px 12px;
+  .leftIcon {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    img {
+      width: 24px;
+    }
+    span {
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 140%;
+      color: #7159bd;
+    }
+  }
+  .title {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 140%;
+    text-align: center;
+    color: #333333;
+  }
+  .settingsIcon {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    cursor: pointer;
+    width: 24px;
+  }
+}

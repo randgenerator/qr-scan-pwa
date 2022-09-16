@@ -1,0 +1,44 @@
+.main {
+  &__top {
+    background: #322f3d;
+    padding: 21px 20px 22px;
+    p {
+      font-weight: 500;
+      font-size: 16px;
+      color: #999999;
+      text-align: center;
+      a {
+        text-decoration: underline;
+        color: #7159bd;
+        cursor: pointer;
+      }
+    }
+  }
+  .scanArea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 322px);
+    font-weight: 500;
+    font-size: 18px;
+    color: #999999;
+    text-align: center;
+    background-color: #1e1c25;
+  }
+  &__bottom {
+    background: #322f3d;
+    padding: 46px 20px 44px;
+    margin-bottom: 40px;
+
+    .btn {
+      width: 100%;
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 16px;
+      text-align: center;
+      background: #ff8f1f;
+      border-radius: 4px;
+      padding: 24px 0;
+    }
+  }
+}
