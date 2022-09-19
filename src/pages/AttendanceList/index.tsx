@@ -6,6 +6,7 @@ import { getAttendance, getSelectedEvents } from "store/db";
 const AttendanceList = () => {
   const [attendances, setAttendances] = useState<any>([])
   const [selectedEvents, setSelectedEvents] = useState<any>([])
+  const [sorted, setSorted] = useState<any>([])
 
   useEffect(() => {
     const getEventsDB = async () => {
@@ -13,7 +14,14 @@ const AttendanceList = () => {
       const selected = await getSelectedEvents()
       setSelectedEvents(selected?.map(ev => parseInt(ev)))
       setAttendances(att.filter(attendance => selectedEvents.includes(attendance.attendance_id)))
-
+      const grouped = attendances.reduce((att: any, c: any) => {
+        const letter = c.full_name[0];
+        if(!att[letter]) att[letter] = {letter, children: [c]}
+        else att[letter].children.push(c);
+        return att;
+      }, {})
+      let sort = Object.values(grouped)
+      setSorted(sort.sort((a:any, b:any) => a.letter - b.letter))      
     }
 
     getEventsDB()
@@ -29,15 +37,19 @@ const AttendanceList = () => {
         <button type="button">Cancel</button>
       </div>
 
-    {attendances.map((attendee: any) => {
+    {sorted.map((attendee: any) => {
       return (
-        <div className="list__items">
-          <div className="item">
-            <h3>{attendee.full_name}</h3>
-            <span>{attendee.full_name}</span>
+      attendee.children.map((att: any) => {
+        return (
+          <div className="list__items">
+            <div className="item">
+              <h3>{att.full_name}</h3>
+              <span>{att.full_name}</span>
+            </div>
+            <span className="attending">{att.status}</span>
           </div>
-          <span className="attending">{attendee.status}</span>
-        </div>
+        )
+      })
       )
     })}
 
@@ -63,15 +75,12 @@ const AttendanceList = () => {
         <span className="verified">Verified</span>
       </div> */}
       <ul className="list__letters">
-        <li className="letter active">A</li>
-        <li className="letter">B</li>
-        <li className="letter">C</li>
-        <li className="letter">D</li>
-        <li className="letter">E</li>
-        <li className="letter">F</li>
-        <li className="letter">G</li>
-        <li className="letter">H</li>
-        <li className="letter">I</li>
+        {/* <li className="letter active">A</li> */}
+        {sorted.map((letter:any) => {
+          return (
+            <li className="letter">{letter}</li>
+          )
+        })}
       </ul>
     </div>
   );
