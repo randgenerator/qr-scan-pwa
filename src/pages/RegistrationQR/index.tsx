@@ -14,7 +14,7 @@ const RegistrationQR = () => {
   const [showVerified, setShowVerified] = useState<boolean>(false)
   const [showAlreadyVerified, setShowAlreadyVerified] = useState<boolean>(false)
   const [showNotFound, setShowNotFound] = useState<boolean>(false)
-  const [scanPaused, setScanPaused] = useState<boolean>(false)
+  const [scanAllowed, setScanPaused] = useState<boolean>(true)
 
 	const handleError = (err: any) => {
 		console.log(err)
@@ -65,7 +65,7 @@ const RegistrationQR = () => {
 	}
 
   const handlePause = () => {
-    setScanPaused(!scanPaused)
+    setScanPaused(!scanAllowed)
   }
 
   console.log(attendances)
@@ -81,7 +81,7 @@ const RegistrationQR = () => {
       </div>
       {/* Area for camera feed */}
       <div className="scanArea">
-        {scanPaused && <QrReader
+        {scanAllowed && <QrReader
                   delay={500}
                   style={previewStyle}
                   onError={handleError}

@@ -27,15 +27,30 @@ const Events = () => {
                 'Authorization': `Bearer ${token}`
               }
         })
-        setEvents(evts.data.events)
-        events.forEach(async event => {
+        .then(function (response) {
+          return response.data.events
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        console.log("evts", evts)
+        setEvents(evts)
+        evts.forEach(async (event: any) => {
+          console.log("event is", event)
           await saveEvents(event)
-          const att = await axios.get(`https://pa-test.esynergy.lv/api/v1/pwa/events/${event.id}/attendance`, {
+          const att = await axios.get(`https://pa-test.esynergy.lv/api/v1/pwa/events/${event.id.toString()}/attendance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
               }
           })
-          att.data.attendances.forEach(async (attendance: any) => {
+          .then(function (response) {
+            return response.data.attendances
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+          
+          att.forEach(async (attendance: any) => {
             attendance.attendance_id = event.id
             await saveAttendance(attendance)
           })

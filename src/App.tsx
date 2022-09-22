@@ -49,7 +49,9 @@ function App({ children }:{children:any}) {
 	
     return (
       <AuthProvider authType = {'cookie'}
-                  authName={'_auth'}>
+                  authName={'_auth'}
+                  cookieDomain={window.location.hostname}
+                  cookieSecure={window.location.protocol === "https:"}>
         {children}
       </AuthProvider>
     );
