@@ -24,9 +24,8 @@ const Settings = () => {
   }
 
   const handleSignOut = () => {
-    if(signOut()) {
+      signOut()
       navigate('/')
-    }
   }
 
   return (

@@ -5,52 +5,59 @@ import { getAttendance, getSelectedEvents } from "store/db";
 
 const AttendanceList = () => {
   const [attendances, setAttendances] = useState<any>([])
-  const [selectedEvents, setSelectedEvents] = useState<any>([])
   const [sorted, setSorted] = useState<any>([])
+  const [search, setSearch] = useState<any>([])
+  const [searchField, setSearchField] = useState<string>("")
 
   useEffect(() => {
     const getEventsDB = async () => {
       const att = await getAttendance()
       const selected = await getSelectedEvents()
-      setSelectedEvents(selected?.map(ev => parseInt(ev)))
-      setAttendances(att.filter(attendance => selectedEvents.includes(attendance.attendance_id)))
-      const grouped = attendances.reduce((att: any, c: any) => {
+      const selectedInt = selected?.map(ev => parseInt(ev))
+      const tempAtt = att.filter(attendance => selectedInt?.includes(attendance.attendance_id))
+      setAttendances(tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name)))
+      const grouped = tempAtt.reduce((att: any, c: any) => {
         const letter = c.full_name[0];
         if(!att[letter]) att[letter] = {letter, children: [c]}
         else att[letter].children.push(c);
         return att;
       }, {})
       let sort = Object.values(grouped)
-      setSorted(sort.sort((a:any, b:any) => a.letter - b.letter))      
+      setSorted(sort.sort((a:any, b:any) => a.letter - b.letter))
+      setSearch(tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name)))    
     }
 
     getEventsDB()
   }, [])
+
+  useEffect(() => {
+    if (searchField === "") {
+      setSearch(attendances)
+    } else {
+      setSearch(attendances.filter((att:any) => att.full_name.includes(searchField) || att.class_name.includes(searchField)))
+    }
+  }, [searchField])
 
   return (
     <div className="list">
       <div className="list__search">
         <div className="input">
           <img src={SearchIcon} alt="searchIcon" />
-          <input type="text" placeholder="search" />
+          <input type="text" placeholder="search" onChange={(e) => setSearchField(e.target.value)} />
         </div>
         <button type="button">Cancel</button>
       </div>
 
-    {sorted.map((attendee: any) => {
-      return (
-      attendee.children.map((att: any) => {
+    {search.map((attendee: any) => {
         return (
           <div className="list__items">
             <div className="item">
-              <h3>{att.full_name}</h3>
-              <span>{att.full_name}</span>
+              <h3>{attendee.full_name}</h3>
+              <span>{attendee.full_name}</span>
             </div>
-            <span className="attending">{att.status}</span>
+            <span className="attending">{attendee.status}</span>
           </div>
         )
-      })
-      )
     })}
 
       {/* <div className="list__items">
@@ -76,9 +83,9 @@ const AttendanceList = () => {
       </div> */}
       <ul className="list__letters">
         {/* <li className="letter active">A</li> */}
-        {sorted.map((letter:any) => {
+        {sorted.map((att:any) => {
           return (
-            <li className="letter">{letter}</li>
+            <li className="letter">{att.letter}</li>
           )
         })}
       </ul>
