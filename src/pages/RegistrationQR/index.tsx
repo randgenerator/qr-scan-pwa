@@ -52,9 +52,9 @@ const RegistrationQR = () => {
     const getEventsDB = async () => {
       const att = await getAttendance()
       const selected = await getSelectedEvents()
-      setSelectedEvents(selected?.map(ev => parseInt(ev)))
-      setAttendances(att.filter(attendance => selectedEvents.includes(attendance.attendance_id)))
-
+      const selectedInt = selected?.map(ev => parseInt(ev))
+      setSelectedEvents(selectedInt)
+      setAttendances(att.filter(attendance => selectedInt?.includes(attendance.attendance_id)))
     }
 
     getEventsDB()
@@ -83,7 +83,7 @@ const RegistrationQR = () => {
       {/* Area for camera feed */}
       <div className="scanArea">
         {scanAllowed && <QrReader
-                  delay={500}
+                  delay={3000}
                   style={previewStyle}
                   onError={handleError}
                   onScan={handleScan}
