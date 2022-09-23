@@ -22,6 +22,7 @@ const RegistrationQR = () => {
 
 	const handleScan = async (result: any) => {
 		if(result){
+      console.log("result is", result)
       const attendee = attendances.find((att: any) => att.qr_uuid === result)
 			if (attendee) {
         const token = await getToken()
@@ -71,8 +72,8 @@ const RegistrationQR = () => {
   console.log(attendances)
   return (
     <div className="main">
-      {showVerified && <Modal.Verified button={false} buttonTitle="" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
-      {showAlreadyVerified && <Modal.InProgress button={false} buttonTitle="Register attendance" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
+      {showVerified && <Modal.Verified showModal={setShowVerified} button={false} buttonTitle="" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
+      {showAlreadyVerified && <Modal.InProgress showModal={setShowAlreadyVerified} button={false} buttonTitle="Register attendance" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
       {showNotFound && <Modal.NotFound button={false} buttonTitle="Register attendance" />}
       <div className="main__top">
         <p>
