@@ -42,12 +42,15 @@ const RegistrationQR = () => {
               setShowAlreadyVerified(true)
               setTimeout(() => setScanAllowed(true), 3000)
             } else if (error.response.data.error.includes("No query results")) {
-              setScanAllowed(false)
               setShowNotFound(true)
               setTimeout(() => setScanAllowed(true), 3000)
             }
           }
         })
+      } else {
+        setScanAllowed(false)
+        setShowNotFound(true)
+        setTimeout(() => setScanAllowed(true), 3000)
       }
 		}
 	}
@@ -73,7 +76,6 @@ const RegistrationQR = () => {
     setScanAllowed(!scanAllowed)
   }
 
-  console.log(attendances)
   return (
     <div className="main">
       {showVerified && <Modal.Verified showModal={setShowVerified} button={false} buttonTitle="" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
