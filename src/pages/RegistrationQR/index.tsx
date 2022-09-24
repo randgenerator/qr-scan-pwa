@@ -22,9 +22,9 @@ const RegistrationQR = () => {
 
 	const handleScan = async (result: any) => {
 		if(result){
-      console.log("result is", result)
       const attendee = attendances.find((att: any) => att.qr_uuid === result)
 			if (attendee) {
+        setScanAllowed(false)
         const token = await getToken()
         setScannedAttendee(attendee)
         await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${attendee.id}/verify`, {}, {
@@ -33,14 +33,12 @@ const RegistrationQR = () => {
             }
         })
         .then(function (response) {
-          setScanAllowed(false)
           setShowVerified(true)
           setTimeout(() => setScanAllowed(true), 3000)
         })
         .catch(function (error) {
           if (error.response.data.error) {
             if (error.response.data.error.includes("already")) {
-              setScanAllowed(false)
               setShowAlreadyVerified(true)
               setTimeout(() => setScanAllowed(true), 3000)
             } else if (error.response.data.error.includes("No query results")) {
