@@ -36,10 +36,10 @@ const RegistrationQR = () => {
           setShowVerified(true)
         })
         .catch(function (error) {
-          if (error.response.data.message) {
-            if (error.response.data.message.contains("already")) {
+          if (error.response.data.error) {
+            if (error.response.data.error.contains("already")) {
               setShowAlreadyVerified(true)
-            } else if (error.response.data.message.contains("No query results")) {
+            } else if (error.response.data.error.contains("No query results")) {
               setShowNotFound(true)
             }
           }
@@ -83,7 +83,7 @@ const RegistrationQR = () => {
       {/* Area for camera feed */}
       <div className="scanArea">
         {scanAllowed && <QrReader
-                  delay={3000}
+                  delay={5000}
                   style={previewStyle}
                   onError={handleError}
                   onScan={handleScan}
