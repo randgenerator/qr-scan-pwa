@@ -80,7 +80,7 @@ const RegistrationQR = () => {
     <div className="main">
       {showVerified && <Modal.Verified showModal={setShowVerified} button={false} buttonTitle="" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
       {showAlreadyVerified && <Modal.InProgress showModal={setShowAlreadyVerified} button={false} buttonTitle="Register attendance" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
-      {showNotFound && <Modal.NotFound button={false} buttonTitle="Register attendance" />}
+      {showNotFound && <Modal.NotFound showModal={setShowNotFound} button={false} buttonTitle="Register attendance" />}
       <div className="main__top">
         <p>
           Registering attendants for {selectedEvents.length}. <Link to="/events">Edit</Link>{" "}
