@@ -27,12 +27,12 @@ const RegistrationQR = () => {
 			if (attendee) {
         const token = await getToken()
         setScannedAttendee(attendee)
-        await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${attendee.id}/verify`, {
+        await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${attendee.id}/verify`, {}, {
           headers: {
               'Authorization': `Bearer ${token}`
             }
         })
-        .then(function () {
+        .then(function (response) {
           setShowVerified(true)
         })
         .catch(function (error) {
