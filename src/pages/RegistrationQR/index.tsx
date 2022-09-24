@@ -14,7 +14,7 @@ const RegistrationQR = () => {
   const [showVerified, setShowVerified] = useState<boolean>(false)
   const [showAlreadyVerified, setShowAlreadyVerified] = useState<boolean>(false)
   const [showNotFound, setShowNotFound] = useState<boolean>(false)
-  const [scanAllowed, setScanPaused] = useState<boolean>(true)
+  const [scanAllowed, setScanAllowed] = useState<boolean>(true)
 
 	const handleError = (err: any) => {
 		console.log(err)
@@ -33,14 +33,20 @@ const RegistrationQR = () => {
             }
         })
         .then(function (response) {
+          setScanAllowed(false)
           setShowVerified(true)
+          setTimeout(() => setScanAllowed(true), 3000)
         })
         .catch(function (error) {
           if (error.response.data.error) {
             if (error.response.data.error.contains("already")) {
+              setScanAllowed(false)
               setShowAlreadyVerified(true)
+              setTimeout(() => setScanAllowed(true), 3000)
             } else if (error.response.data.error.contains("No query results")) {
+              setScanAllowed(false)
               setShowNotFound(true)
+              setTimeout(() => setScanAllowed(true), 3000)
             }
           }
         })
@@ -66,7 +72,7 @@ const RegistrationQR = () => {
 	}
 
   const handlePause = () => {
-    setScanPaused(!scanAllowed)
+    setScanAllowed(!scanAllowed)
   }
 
   console.log(attendances)
