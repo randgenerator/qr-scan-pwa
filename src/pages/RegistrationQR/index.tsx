@@ -39,11 +39,11 @@ const RegistrationQR = () => {
         })
         .catch(function (error) {
           if (error.response.data.error) {
-            if (error.response.data.error.contains("already")) {
+            if (error.response.data.error.includes("already")) {
               setScanAllowed(false)
               setShowAlreadyVerified(true)
               setTimeout(() => setScanAllowed(true), 3000)
-            } else if (error.response.data.error.contains("No query results")) {
+            } else if (error.response.data.error.includes("No query results")) {
               setScanAllowed(false)
               setShowNotFound(true)
               setTimeout(() => setScanAllowed(true), 3000)
