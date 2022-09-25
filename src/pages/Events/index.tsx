@@ -81,12 +81,6 @@ const Events = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="events">
-        <div className="events__header">
-          <h2 className="title">Events </h2>
-          <div className="settingsIcon">
-            <img src={IconSettings} alt="settingsIcon" />
-          </div>
-        </div>
         <div className="events__content">
           <h3 className="content-title">Select events to register attendants</h3>
           <ul className="select-events">
