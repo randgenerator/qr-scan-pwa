@@ -103,7 +103,7 @@ const Events = () => {
                         <label htmlFor={event.id.toString()}></label>
                       </div>
                       <div className="text">
-                        <h3 className="text__title ">{event.name}</h3>
+                        <h3 className="text__title ">{event.service_series_name}</h3>
                         <span className="text__caption">{event.description}</span>
                       </div>
                     </li>

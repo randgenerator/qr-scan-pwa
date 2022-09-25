@@ -10,10 +10,12 @@ import axios from "axios";
 const RegistrationQR = () => {
   const [attendances, setAttendances] = useState<any>([])
   const [scannedAttendee, setScannedAttendee] = useState<any>({})
+  const [scannedAttendeeMultiple, setScannedAttendeeMultiple] = useState<any>([])
   const [selectedEvents, setSelectedEvents] = useState<any>([])
   const [showVerified, setShowVerified] = useState<boolean>(false)
   const [showAlreadyVerified, setShowAlreadyVerified] = useState<boolean>(false)
   const [showNotFound, setShowNotFound] = useState<boolean>(false)
+  const [showSeveral, setShowSeveral] = useState<boolean>(false)
   const [scanAllowed, setScanAllowed] = useState<boolean>(true)
 
 	const handleError = (err: any) => {
@@ -22,8 +24,8 @@ const RegistrationQR = () => {
 
 	const handleScan = async (result: any) => {
 		if(result){
-      const attendee = attendances.find((att: any) => att.qr_uuid === result)
-			if (attendee) {
+      const attendee = attendances.filter((att: any) => att.qr_uuid === result)
+			if (attendee.length === 1) {
         setScanAllowed(false)
         const token = await getToken()
         setScannedAttendee(attendee)
@@ -47,6 +49,10 @@ const RegistrationQR = () => {
             }
           }
         })
+      } else if (attendee.length > 1) {
+        setScanAllowed(false)
+        setScannedAttendeeMultiple(attendee)
+        setScannedAttendee(attendee[0])
       } else {
         setScanAllowed(false)
         setShowNotFound(true)
@@ -58,9 +64,10 @@ const RegistrationQR = () => {
   useEffect(() => {
     const getEventsDB = async () => {
       const att = await getAttendance()
+      const events = await getEvents()
       const selected = await getSelectedEvents()
       const selectedInt = selected?.map(ev => parseInt(ev))
-      setSelectedEvents(selectedInt)
+      setSelectedEvents(events.filter(evt => selectedInt?.includes(evt.id)))
       setAttendances(att.filter(attendance => selectedInt?.includes(attendance.attendance_id)))
     }
 
@@ -79,6 +86,7 @@ const RegistrationQR = () => {
   return (
     <div className="main">
       {showVerified && <Modal.Verified showModal={setShowVerified} button={false} buttonTitle="" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
+      {showSeveral && <Modal.SeveralEvents showModal={setShowSeveral} scanAllowed={setScanAllowed} showError={setShowAlreadyVerified} showSuccess={setShowVerified} events={selectedEvents} attendee={scannedAttendeeMultiple} />}
       {showAlreadyVerified && <Modal.InProgress showModal={setShowAlreadyVerified} button={false} buttonTitle="Register attendance" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
       {showNotFound && <Modal.NotFound showModal={setShowNotFound} button={false} buttonTitle="Register attendance" />}
       <div className="main__top">
