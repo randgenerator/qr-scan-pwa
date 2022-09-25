@@ -17,6 +17,7 @@ const RegistrationQR = () => {
   const [showNotFound, setShowNotFound] = useState<boolean>(false)
   const [showSeveral, setShowSeveral] = useState<boolean>(false)
   const [scanAllowed, setScanAllowed] = useState<boolean>(true)
+  const [continious, setContinious] = useState<any>(true)
 
 	const handleError = (err: any) => {
 		console.log(err)
@@ -36,7 +37,6 @@ const RegistrationQR = () => {
         })
         .then(function (response) {
           setShowVerified(true)
-          setTimeout(() => setScanAllowed(true), 3000)
         })
         .catch(function (error) {
           if (error.response.data.error) {
@@ -64,6 +64,8 @@ const RegistrationQR = () => {
 
   useEffect(() => {
     const getEventsDB = async () => {
+      const cont = await getConfig()
+      setContinious(cont)
       const att = await getAttendance()
       const events = await getEvents()
       const selected = await getSelectedEvents()
@@ -86,10 +88,33 @@ const RegistrationQR = () => {
 
   return (
     <div className="main">
-      {showVerified && <Modal.Verified showModal={setShowVerified} button={false} buttonTitle="" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
-      {showSeveral && <Modal.SeveralEvents showModal={setShowSeveral} scanAllowed={setScanAllowed} showError={setShowAlreadyVerified} showSuccess={setShowVerified} events={selectedEvents} attendee={scannedAttendeeMultiple} />}
-      {showAlreadyVerified && <Modal.InProgress showModal={setShowAlreadyVerified} button={false} buttonTitle="Register attendance" data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
-      {showNotFound && <Modal.NotFound showModal={setShowNotFound} button={false} buttonTitle="Register attendance" />}
+      {showVerified && <Modal.Verified 
+        showModal={setShowVerified} 
+        scanAllowed={setScanAllowed} 
+        button={continious ? false : true} 
+        buttonTitle="Scan next"
+        continious={continious}
+        data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
+      {showSeveral && <Modal.SeveralEvents 
+        showModal={setShowSeveral} 
+        scanAllowed={setScanAllowed} 
+        showError={setShowAlreadyVerified} 
+        showSuccess={setShowVerified} 
+        events={selectedEvents} 
+        attendee={scannedAttendeeMultiple} />}
+      {showAlreadyVerified && <Modal.InProgress 
+        showModal={setShowAlreadyVerified} 
+        scanAllowed={setScanAllowed} 
+        continious={continious}
+        button={continious ? false : true} 
+        buttonTitle="Scan next" 
+        data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
+      {showNotFound && <Modal.NotFound 
+        showModal={setShowNotFound} 
+        scanAllowed={setScanAllowed} 
+        continious={continious}
+        button={continious ? false : true} 
+        buttonTitle="Scan next" />}
       <div className="main__top">
         <p>
           Registering attendants for {selectedEvents.length}. <Link to="/events">Edit</Link>{" "}

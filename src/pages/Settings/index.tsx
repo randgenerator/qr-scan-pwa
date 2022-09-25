@@ -32,7 +32,7 @@ const Settings = () => {
     <div className="settings">
       <div className="settings__top">
         <h3 className="title">Settings</h3>
-        <img className="closeIcon" src={CloseIcon} alt="closeIcon" />
+        <img className="closeIcon" src={CloseIcon} onClick={() => navigate(-1)} alt="closeIcon" />
       </div>
       <div className="settings__content">
         <h3 className="title">Registration mode</h3>

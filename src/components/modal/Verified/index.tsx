@@ -4,14 +4,16 @@ import Button from "components/button";
 
 import IconChecked from "assets/images/icon-checked.svg"
 
-const Verified = ({button, buttonTitle, data, showModal}:{button:any,buttonTitle:any,data:any,showModal:any}) => {
+const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed}:{button:any,buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {
-    setTimeout(() => closeModal(), 3000)
+    if (continious) setTimeout(() => closeModal(), 3000)
   }, [])
 
   const closeModal = () => {
+    scanAllowed(true)
     showModal(false)
   }
+
 
   return (
     <div className="modalOne">
@@ -19,7 +21,7 @@ const Verified = ({button, buttonTitle, data, showModal}:{button:any,buttonTitle
         <img src={IconChecked} alt="iconChecked" />
         <h3>Attendance verified!</h3>
         <p>{data}</p>
-        {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={undefined} />}
+        {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
 
       </div>
     </div>

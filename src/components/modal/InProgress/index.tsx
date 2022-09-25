@@ -3,12 +3,13 @@ import "./style.scss";
 import Button from "components/button";
 import IconDanger from "assets/images/icon-danger.svg";
 
-const InProgress = ({button, buttonTitle, data, showModal}:{button:any,buttonTitle:any,data:any,showModal:any}) => {
+const InProgress = ({button, buttonTitle, data, showModal, continious, scanAllowed}:{button:any,buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {
-    setTimeout(() => closeModal(), 3000)
+    if (continious) setTimeout(() => closeModal(), 3000)
   }, [])
 
   const closeModal = () => {
+    scanAllowed(true)
     showModal(false)
   }
 
@@ -18,7 +19,7 @@ const InProgress = ({button, buttonTitle, data, showModal}:{button:any,buttonTit
         <img src={IconDanger} alt="iconChecked" />
         <h3>Attendant already verified!</h3>
         <p>{data}</p>
-      {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={undefined} />}
+      {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
       </div>
 
     </div>
