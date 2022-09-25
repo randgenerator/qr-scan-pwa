@@ -53,6 +53,7 @@ const RegistrationQR = () => {
         setScanAllowed(false)
         setScannedAttendeeMultiple(attendee)
         setScannedAttendee(attendee[0])
+        setShowSeveral(true)
       } else {
         setScanAllowed(false)
         setShowNotFound(true)
