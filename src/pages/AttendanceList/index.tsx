@@ -69,11 +69,11 @@ const AttendanceList = () => {
       {search.map((attendee: any) => {
           return (
             <div className="list__items" data-qr={attendee.qr_uuid} key={attendee.id} onClick={handleRegistration}>
-              <div className="item">
-                <h3>{attendee.full_name}</h3>
-                <span>{attendee.full_name}</span>
+              <div className="item" data-qr={attendee.qr_uuid}>
+                <h3 data-qr={attendee.qr_uuid}>{attendee.full_name}</h3>
+                <span data-qr={attendee.qr_uuid}>{attendee.full_name}</span>
               </div>
-              <span className="attending">{attendee.status}</span>
+              <span data-qr={attendee.qr_uuid} className="attending">{attendee.status}</span>
             </div>
           )
       })}
