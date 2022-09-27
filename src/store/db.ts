@@ -42,7 +42,7 @@ interface PwaDB extends DBSchema {
 }
 
 export async function initDb() {
-    await openDB<PwaDB>('pwa-db', 1, {
+    const db = await openDB<PwaDB>('pwa-db', 1, {
         upgrade(db) {
           db.createObjectStore('token');
           db.createObjectStore('selected');
@@ -57,6 +57,8 @@ export async function initDb() {
           attendance.createIndex('by-id', 'id');
         },
     });
+
+    await db.put("config", true, "continuous")
 }
 
 export async function addToken(token: string) {

@@ -9,24 +9,26 @@ import { useNavigate } from "react-router-dom";
 const Settings = () => {
   const navigate = useNavigate()
   const signOut = useSignOut()
-  const [continuous, setContinuous] = useState<boolean | undefined>(true)
+  const [continuous, setContinuous] = useState<any>()
 
   useEffect(() => {
     const setConf = async () => {
-      setContinuous(await getConfig())
+      const cont = await getConfig()
+      setContinuous(cont)
     }
     setConf()
   }, [])
   
-  const handleChange = (e: any) => {
-    setContinuous(e.target.checked)
-    changeConfig(e.target.checked)
+  const handleChange = async (e:any) => {
+    setContinuous((check: any) => !check)
+    await changeConfig(e.target.checked)
   }
 
   const handleSignOut = () => {
       signOut()
       navigate('/')
   }
+
 
   return (
     <div className="settings">
@@ -39,7 +41,7 @@ const Settings = () => {
         <div className="change-mode">
           <h3> Continuous registration</h3>
           <div className="checkboxWrapper">
-            <input type="checkbox" value="" defaultChecked={continuous} id="checkboxThreeInput" onChange={handleChange} name="" />
+            <input type="checkbox" key={Math.random()} checked={continuous} id="checkboxThreeInput" onChange={handleChange} name="" />
             <label htmlFor="checkboxThreeInput"></label>
           </div>
         </div>

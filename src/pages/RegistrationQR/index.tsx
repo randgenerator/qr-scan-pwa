@@ -29,8 +29,8 @@ const RegistrationQR = () => {
 			if (attendee.length === 1) {
         setScanAllowed(false)
         const token = await getToken()
-        setScannedAttendee(attendee)
-        await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${attendee.id}/verify`, {}, {
+        setScannedAttendee(attendee[0])
+        await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${attendee[0].id}/verify`, {}, {
           headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -42,10 +42,8 @@ const RegistrationQR = () => {
           if (error.response.data.error) {
             if (error.response.data.error.includes("already")) {
               setShowAlreadyVerified(true)
-              setTimeout(() => setScanAllowed(true), 3000)
             } else if (error.response.data.error.includes("No query results")) {
               setShowNotFound(true)
-              setTimeout(() => setScanAllowed(true), 3000)
             }
           }
         })
@@ -57,7 +55,6 @@ const RegistrationQR = () => {
       } else {
         setScanAllowed(false)
         setShowNotFound(true)
-        setTimeout(() => setScanAllowed(true), 3000)
       }
 		}
 	}
@@ -120,16 +117,14 @@ const RegistrationQR = () => {
           Registering attendants for {selectedEvents.length}. <Link to="/events">Edit</Link>{" "}
         </p>
       </div>
-      {/* Area for camera feed */}
       <div className="scanArea">
         {scanAllowed && <QrReader
-                  delay={5000}
+                  delay={500}
                   style={previewStyle}
                   onError={handleError}
                   onScan={handleScan}
         />}
       </div>
-      {/* Area for camera feed */}
       <div className="main__bottom">
         <button className="btn" onClick={handlePause} type="button">
           Pause registration
