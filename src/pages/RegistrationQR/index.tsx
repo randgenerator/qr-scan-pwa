@@ -26,7 +26,9 @@ const RegistrationQR = () => {
 	const handleScan = async (result: any) => {
 		if(result){
       const attendee = attendances.filter((att: any) => att.qr_uuid === result)
+      console.log("attendee list", attendee)
 			if (attendee.length === 1) {
+        console.log("attendee 1")
         setScanAllowed(false)
         const token = await getToken()
         setScannedAttendee(attendee[0])
@@ -48,11 +50,13 @@ const RegistrationQR = () => {
           }
         })
       } else if (attendee.length > 1) {
+        console.log("attendee multiple")
         setScanAllowed(false)
         setScannedAttendeeMultiple(attendee)
         setScannedAttendee(attendee[0])
         setShowSeveral(true)
       } else {
+        console.log("something wrong with attendee")
         setScanAllowed(false)
         setShowNotFound(true)
       }

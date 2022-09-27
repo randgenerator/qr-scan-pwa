@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
 import SearchIcon from "assets/images/icon-search.svg";
-import { getAttendance, getSelectedEvents } from "store/db";
+import { getAttendance, getEvents, getSelectedEvents } from "store/db";
+import Modal from "components/modal";
 
 const AttendanceList = () => {
   const [attendances, setAttendances] = useState<any>([])
   const [sorted, setSorted] = useState<any>([])
+  const [selectedEvents, setSelectedEvents] = useState<any>([])
   const [search, setSearch] = useState<any>([])
   const [searchField, setSearchField] = useState<string>("")
+  const [showRegistration, setShowRegistration] = useState<boolean>(false)
+  const [selectedAttendee, setSelectedAttendee] = useState<any>([])
+  const [showSeveral, setShowSeveral] = useState<boolean>(false)
 
   useEffect(() => {
     const getEventsDB = async () => {
       const att = await getAttendance()
       const selected = await getSelectedEvents()
+      const events = await getEvents()
       const selectedInt = selected?.map(ev => parseInt(ev))
+      setSelectedEvents(events.filter(evt => selectedInt?.includes(evt.id)))
       const tempAtt = att.filter(attendance => selectedInt?.includes(attendance.attendance_id))
       setAttendances(tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name)))
       const grouped = tempAtt.reduce((att: any, c: any) => {
@@ -38,8 +45,19 @@ const AttendanceList = () => {
     }
   }, [searchField])
 
+  const handleRegistration = (e:any) => {
+    console.log("qr is ", e.target.dataset.qr)
+    setSelectedAttendee(attendances.filter((att: any) => att.qr_uuid === e.target.dataset.qr))
+    if (selectedAttendee.length > 1) setShowSeveral(true)
+    setShowRegistration(true)
+  }
+
   return (
     <div className="list">
+      {showRegistration && <Modal.Attendance
+        showModal={setShowRegistration} 
+        attendee={selectedAttendee}
+        events={selectedEvents} />}
       <div className="list__search">
         <div className="input">
           <img src={SearchIcon} alt="searchIcon" />
@@ -48,17 +66,17 @@ const AttendanceList = () => {
         <button type="button">Cancel</button>
       </div>
 
-    {search.map((attendee: any) => {
-        return (
-          <div className="list__items">
-            <div className="item">
-              <h3>{attendee.full_name}</h3>
-              <span>{attendee.full_name}</span>
+      {search.map((attendee: any) => {
+          return (
+            <div className="list__items" data-qr={attendee.qr_uuid} key={attendee.id} onClick={handleRegistration}>
+              <div className="item">
+                <h3>{attendee.full_name}</h3>
+                <span>{attendee.full_name}</span>
+              </div>
+              <span className="attending">{attendee.status}</span>
             </div>
-            <span className="attending">{attendee.status}</span>
-          </div>
-        )
-    })}
+          )
+      })}
 
       {/* <div className="list__items">
         <div className="item">
