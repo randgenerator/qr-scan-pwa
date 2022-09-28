@@ -3,14 +3,48 @@ import Button from "components/button";
 import "./style.scss";
 
 import checkedIcon from "assets/images/icon-checked.svg";
+import axios from "axios";
+import { getToken, unverifyAttendance, verifyAttendance } from "store/db";
 
-const Attendance = ({ events, attendee, showModal }:{events:any, attendee:any, showModal:any}) => {
+const Attendance = ({ events, attendee, showModal, showVerified }:{events:any, attendee:any, showModal:any, showVerified:any}) => {
 
   const closeModal = () => {
     showModal(false)
   }
 
-  console.log(attendee)
+  const register = async (e:any) => {
+    const token = await getToken()
+    await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${e.target.value}/verify`, {}, {
+          headers: {
+              'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(async function (response) {
+          await verifyAttendance(attendee[0].id)
+          showVerified(true)
+          closeModal()
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+  }
+
+  const cancelAttendance = async (e:any) => {
+    const token = await getToken()
+    await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${e.target.value}/unverify`, {}, {
+          headers: {
+              'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(async function (response) {
+          await unverifyAttendance(attendee[0].id)
+          showVerified(true)
+          closeModal()
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+  }
 
   return (
     <div className="attendance">
@@ -34,7 +68,7 @@ const Attendance = ({ events, attendee, showModal }:{events:any, attendee:any, s
 
                   {att.verified === 1 ? <span className="attendanceVerified">Attendance verified</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Attending</span> : att.status.toLowerCase().includes("not_attending") ? <span className="notattending">Not Attending</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Cancelled</span> : ""}
                   
-                  {att.verified === 0 ? <Button title="Register attendance" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={undefined} /> : ""}
+                  {att.verified === 0 ? <Button title="Register attendance" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title="Cancel attendance" type="redBordered" iconArrow={undefined} iconLogOut={undefined} onClick={undefined} />}
                   
                   </>
                 )

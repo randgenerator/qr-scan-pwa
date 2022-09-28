@@ -7,7 +7,7 @@ import IconDanger from "assets/images/icon-danger.svg";
 import { styled } from '@mui/material/styles';
 import Button, { ButtonProps } from '@mui/material/Button';
 import axios from "axios";
-import { getToken } from "store/db";
+import { getToken, verifyAttendance } from "store/db";
 
 const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, showSuccess}:{events:any, attendee:any, showModal:any, showError: any, scanAllowed:any, showSuccess: any}) => {
   
@@ -24,7 +24,8 @@ const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, sho
               'Authorization': `Bearer ${token}`
             }
         })
-        .then(function (response) {
+        .then(async function (response) {
+          await verifyAttendance(attendee[0].id)
           showModal(false)
           showSuccess(true)
           setTimeout(() => scanAllowed(true), 3000)

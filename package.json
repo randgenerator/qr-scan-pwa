@@ -16,6 +16,7 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^0.27.2",
     "idb": "^7.0.2",
+    "is-reachable": "^5.2.1",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-auth-kit": "^2.1.1",

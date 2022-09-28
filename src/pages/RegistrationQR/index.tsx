@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./style.scss";
 import QrReader from 'react-qr-reader-es6';
-import { getToken, getSelectedEvents, getEvents, getAttendance, getConfig } from "store/db";
+import { getToken, getSelectedEvents, getEvents, getAttendance, getConfig, verifyAttendance } from "store/db";
 
 import Modal from "components/modal";
 import axios from "axios";
@@ -37,7 +37,8 @@ const RegistrationQR = () => {
               'Authorization': `Bearer ${token}`
             }
         })
-        .then(function (response) {
+        .then(async function (response) {
+          await verifyAttendance(attendee[0].id)
           setShowVerified(true)
         })
         .catch(function (error) {

@@ -20,7 +20,7 @@ const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed
       <div className="modalOne__wrapper">
         <img src={IconChecked} alt="iconChecked" />
         <h3>Attendance verified!</h3>
-        <p>{data}</p>
+        <p>{data != undefined ? data : ""}</p>
         {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
 
       </div>

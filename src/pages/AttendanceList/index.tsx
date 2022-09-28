@@ -13,6 +13,7 @@ const AttendanceList = () => {
   const [showRegistration, setShowRegistration] = useState<boolean>(false)
   const [selectedAttendee, setSelectedAttendee] = useState<any>([])
   const [showSeveral, setShowSeveral] = useState<boolean>(false)
+  const [showVerified, setShowVerified] = useState<boolean>(false)
 
   useEffect(() => {
     const getEventsDB = async () => {
@@ -54,9 +55,17 @@ const AttendanceList = () => {
 
   return (
     <div className="list">
+      {showVerified && <Modal.Verified 
+        showModal={setShowVerified} 
+        scanAllowed={undefined} 
+        button={true} 
+        buttonTitle="Verify next"
+        continious={false}
+        data={undefined} />}
       {showRegistration && <Modal.Attendance
         showModal={setShowRegistration} 
         attendee={selectedAttendee}
+        showVerified={setShowVerified}
         events={selectedEvents} />}
       <div className="list__search">
         <div className="input">

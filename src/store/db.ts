@@ -61,6 +61,16 @@ export async function initDb() {
     await db.put("config", true, "continuous")
 }
 
+export async function clearDb() {
+  await openDB<PwaDB>('pwa-db', 1, {
+    upgrade(db) {
+      db.deleteObjectStore('selected');
+      db.deleteObjectStore('events');
+      db.deleteObjectStore('attendance');
+    },
+});
+}
+
 export async function addToken(token: string) {
     const db = await openDB<PwaDB>('pwa-db', 1, {
         upgrade(db) {
@@ -139,6 +149,32 @@ export async function saveAttendance(attendance: any) {
   });
 
   await db.add("attendance", attendance)
+}
+
+export async function verifyAttendance(id: any) {
+  const db = await openDB<PwaDB>('pwa-db', 1);
+  const tx = db.transaction('attendance', 'readwrite');
+  const index = tx.store.index('by-id');
+
+  for await (const cursor of index.iterate(id)) {
+    const attendant = { ...cursor.value };
+    attendant.verified = 1;
+    cursor.update(attendant);
+  }
+  await tx.done;
+}
+
+export async function unverifyAttendance(id: any) {
+  const db = await openDB<PwaDB>('pwa-db', 1);
+  const tx = db.transaction('attendance', 'readwrite');
+  const index = tx.store.index('by-id');
+
+  for await (const cursor of index.iterate(id)) {
+    const attendant = { ...cursor.value };
+    attendant.verified = 0;
+    cursor.update(attendant);
+  }
+  await tx.done;
 }
 
 export async function changeConfig(toggle: boolean) {
