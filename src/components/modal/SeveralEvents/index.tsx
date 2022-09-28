@@ -1,44 +1,85 @@
 import React, { useState } from "react";
 import "./style.scss";
-// import Button from "components/button";
-
-
 import IconDanger from "assets/images/icon-danger.svg";
-import { styled } from '@mui/material/styles';
-import Button, { ButtonProps } from '@mui/material/Button';
 import axios from "axios";
-import { getToken, verifyAttendance } from "store/db";
+import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
+import isReachable from "is-reachable";
+import Button from "components/button";
 
 const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, showSuccess}:{events:any, attendee:any, showModal:any, showError: any, scanAllowed:any, showSuccess: any}) => {
-  
-  const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
-    color: theme.palette.getContrastText('#00b578'),
-    backgroundColor: '#00b578',
-  }));
+  const [confirm, setConfirm] = useState<boolean>(false)
 
   const handleRegister = async (e:any) => {
     const id = e.target.value
-    const token = await getToken()
-    await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${id}/verify`, {}, {
-          headers: {
-              'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(async function (response) {
-          await verifyAttendance(attendee[0].id)
-          showModal(false)
-          showSuccess(true)
-          setTimeout(() => scanAllowed(true), 3000)
-        })
-        .catch(function (error) {
-          if (error.response.data.error) {
-            if (error.response.data.error.includes("already")) {
-              showModal(false)
-              showError(true)
-              setTimeout(() => scanAllowed(true), 3000)
-            }
+    if (await isReachable("https://pa-test.esynergy.lv")) {
+      const token = await getToken()
+      await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${id}/verify`, {}, {
+        headers: {
+            'Authorization': `Bearer ${token}`
           }
-        })
+      })
+      .then(async function (response) {
+        await verifyAttendance(id)
+        showModal(false)
+        showSuccess(true)
+        setTimeout(() => scanAllowed(true), 3000)
+      })
+      .catch(function (error) {
+        if (error.response.data.error) {
+          if (error.response.data.error.includes("already")) {
+            showModal(false)
+            showError(true)
+            setTimeout(() => scanAllowed(true), 3000)
+          }
+        }
+      })
+    } else {
+      await verifyAttendance(id)
+      const offlineData = {
+        id: id,
+        status: "verify"
+      } 
+      await saveOffline(offlineData)
+      showSuccess(true)
+      showModal(false)
+      setTimeout(() => scanAllowed(true), 3000)
+    }    
+  }
+
+  const confirmDialog = () => {
+    setConfirm(true)
+  }
+
+  const cancelRegister = async (e:any) => {
+    const id = e.target.value
+    if (await isReachable("https://pa-test.esynergy.lv")) {
+      const token = await getToken()
+      await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${id}/unverify`, {}, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+          }
+      })
+      .then(async function (response) {
+        await unverifyAttendance(id)
+        showModal(false)
+        scanAllowed(true)
+      })
+      .catch(function (error) {
+        console.log(error)
+        showModal(false)
+        scanAllowed(true)
+      })
+    } else {
+      await unverifyAttendance(id)
+      const offlineData = {
+        id: id,
+        status: "cancel"
+      } 
+      await saveOffline(offlineData)
+      showSuccess(true)
+      showModal(false)
+      setTimeout(() => scanAllowed(true), 3000)
+    }    
   }
 
   return (
@@ -56,7 +97,8 @@ const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, sho
                 <h4 className="lunchTitle">{event.service_series_name}</h4>
                 <span>{att.status}</span>
               </div>
-              <ColorButton value={att.id} type="button" onClick={handleRegister} >Register attendance</ColorButton>
+              {att.verified === 0 ? <Button value={att.id} title="Register attendance" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={handleRegister} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelRegister : confirmDialog} />}
+                  
               </>
             )
           })}

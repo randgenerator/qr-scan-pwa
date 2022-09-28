@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getToken, setSelectedEvents } from "store/db";
+import { getToken, setSelectedEvents, saveEvents, saveAttendance, getEvents } from "store/db";
 import "./style.scss";
-import { saveEvents, saveAttendance } from "store/db";
 import IconSettings from "assets/images/icon-settings.svg";
 import { useNavigate } from "react-router-dom";
+import isReachable from "is-reachable";
 
 type Event = {
   id: number;
@@ -20,7 +20,8 @@ const Events = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<Array<Event>>([]);
   useEffect(()=> {
-    const getEvents = async () => {
+    const initEvents = async () => {
+      if (await isReachable("https://pa-test.esynergy.lv")) {
         const token = await getToken()
         const evts = await axios.get("https://pa-test.esynergy.lv/api/v1/pwa/events/initiated", {
             headers: {
@@ -55,9 +56,16 @@ const Events = () => {
             await saveAttendance(attendance)
           })
         })
+      } else {
+        const evts = await getEvents()
+        setEvents(evts)
+      }
+        
+        
+        
     }
 
-    getEvents()
+    initEvents()
   },[])
 
   const [selected, setSelected] = useState<Array<any>>([])

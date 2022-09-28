@@ -1,49 +1,79 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "components/button";
 import "./style.scss";
-
 import checkedIcon from "assets/images/icon-checked.svg";
 import axios from "axios";
-import { getToken, unverifyAttendance, verifyAttendance } from "store/db";
+import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
+import isReachable from "is-reachable";
 
 const Attendance = ({ events, attendee, showModal, showVerified }:{events:any, attendee:any, showModal:any, showVerified:any}) => {
+  const [confirm, setConfirm] = useState<boolean>(false)
 
   const closeModal = () => {
     showModal(false)
   }
 
   const register = async (e:any) => {
-    const token = await getToken()
-    await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${e.target.value}/verify`, {}, {
-          headers: {
-              'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(async function (response) {
-          await verifyAttendance(attendee[0].id)
-          showVerified(true)
-          closeModal()
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+    if (await isReachable("https://pa-test.esynergy.lv")) {
+      const token = await getToken()
+      const resp = await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${e.target.value}/verify`, {}, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+          }
+      })
+      .then(async function (response) {
+        return true
+      })
+      .catch(function (error) {
+        console.log(error)
+        return false
+      })
+      if (resp) {
+        await verifyAttendance(e.target.value)
+        showVerified(true)
+        showModal(false)
+      }
+    } else {      
+      await verifyAttendance(e.target.value)
+      const offlineData = {
+        id: e.target.value,
+        status: "verify"
+      } 
+      await saveOffline(offlineData)
+      showVerified(true)
+      showModal(false)
+    }
+  }
+
+  const confirmDialog = () => {
+    setConfirm(true)
   }
 
   const cancelAttendance = async (e:any) => {
-    const token = await getToken()
-    await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${e.target.value}/unverify`, {}, {
-          headers: {
-              'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(async function (response) {
-          await unverifyAttendance(attendee[0].id)
-          showVerified(true)
-          closeModal()
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+    if (await isReachable("https://pa-test.esynergy.lv")) {
+      const token = await getToken()
+      await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${e.target.value}/unverify`, {}, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+          }
+      })
+      .then(async function (response) {
+        await unverifyAttendance(e.target.value)
+        showVerified(true)
+        showModal(false)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    } else {
+      await unverifyAttendance(e.target.value)
+      const offlineData = {
+        id: e.target.value,
+        status: "cancel"
+      } 
+      await saveOffline(offlineData)
+      showModal(false)        
+    }
   }
 
   return (
@@ -68,7 +98,7 @@ const Attendance = ({ events, attendee, showModal, showVerified }:{events:any, a
 
                   {att.verified === 1 ? <span className="attendanceVerified">Attendance verified</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Attending</span> : att.status.toLowerCase().includes("not_attending") ? <span className="notattending">Not Attending</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Cancelled</span> : ""}
                   
-                  {att.verified === 0 ? <Button title="Register attendance" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title="Cancel attendance" type="redBordered" iconArrow={undefined} iconLogOut={undefined} onClick={undefined} />}
+                  {att.verified === 0 ? <Button title="Register attendance" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
                   
                   </>
                 )

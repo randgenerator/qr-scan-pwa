@@ -39,6 +39,14 @@ interface PwaDB extends DBSchema {
       value: Array<any>;
       key: string;
     };
+    offline: {
+      value: {
+        id: number;
+        status: string;
+      };
+      key: string;
+      indexes: { 'by-id': number };
+    };
 }
 
 export async function initDb() {
@@ -55,10 +63,15 @@ export async function initDb() {
             keyPath: 'id',
           });
           attendance.createIndex('by-id', 'id');
+          const offline = db.createObjectStore('offline', {
+            keyPath: 'id',
+          });
+          offline.createIndex('by-id', 'id');
         },
     });
 
     await db.put("config", true, "continuous")
+    db.close()
 }
 
 export async function clearDb() {
@@ -68,131 +81,122 @@ export async function clearDb() {
       db.deleteObjectStore('events');
       db.deleteObjectStore('attendance');
     },
-});
+  });
 }
 
 export async function addToken(token: string) {
-    const db = await openDB<PwaDB>('pwa-db', 1, {
-        upgrade(db) {
-          db.createObjectStore('token');
-        }
-    });
+    const db = await openDB<PwaDB>('pwa-db', 1);
 
     await db.put("token", token, "token")
+    db.close()
 }
 
 export async function getToken() {
-    const db = await openDB<PwaDB>('pwa-db', 1, {
-        upgrade(db) {
-          db.createObjectStore('token');
-        }
-    });
+    const db = await openDB<PwaDB>('pwa-db', 1);
 
-    return await db.get("token", "token")
+    const data = await db.get("token", "token")
+    db.close()
+    return data
 }
 
 export async function getSelectedEvents() {
-  const db = await openDB<PwaDB>('pwa-db', 1, {
-      upgrade(db) {
-        db.createObjectStore('selected');
-      }
-  });
+  const db = await openDB<PwaDB>('pwa-db', 1);
 
-  return await db.get("selected", "events")
+  const data = await db.get("selected", "events")
+  db.close()
+  return data
 }
 
 export async function setSelectedEvents(events: any) {
-  const db = await openDB<PwaDB>('pwa-db', 1, {
-    upgrade(db) {
-      db.createObjectStore('selected');
-    }
-  });
+  const db = await openDB<PwaDB>('pwa-db', 1);
 
   await db.put("selected", events, "events")
+  db.close()
 }
 
 export async function getEvents() {
-  const db = await openDB<PwaDB>('pwa-db', 1, {
-      upgrade(db) {
-        db.createObjectStore('events');
-      }
-  });
+  const db = await openDB<PwaDB>('pwa-db', 1);
 
-  return await db.getAllFromIndex('events', 'by-id')
+  const data = await db.getAllFromIndex('events', 'by-id')
+  db.close()
+  return data
 }
 
 export async function saveEvents(event: any) {
-  const db = await openDB<PwaDB>('pwa-db', 1, {
-    upgrade(db) {
-      db.createObjectStore('events');
-    }
-  });
+  const db = await openDB<PwaDB>('pwa-db', 1);
 
   await db.add("events", event)
+  db.close()
 }
 
 export async function getAttendance() {
-  const db = await openDB<PwaDB>('pwa-db', 1, {
-      upgrade(db) {
-        db.createObjectStore('attendance');
-      }
-  });
+  const db = await openDB<PwaDB>('pwa-db', 1);
 
-  return await db.getAllFromIndex('attendance', 'by-id')
+  const data = await db.getAllFromIndex('attendance', 'by-id')
+  db.close()
+  return data
 }
 
 export async function saveAttendance(attendance: any) {
-  const db = await openDB<PwaDB>('pwa-db', 1, {
-    upgrade(db) {
-      db.createObjectStore('attendance');
-    }
-  });
+  const db = await openDB<PwaDB>('pwa-db', 1);
 
-  await db.add("attendance", attendance)
+  await db.put("attendance", attendance)
+  db.close()
 }
 
 export async function verifyAttendance(id: any) {
   const db = await openDB<PwaDB>('pwa-db', 1);
-  const tx = db.transaction('attendance', 'readwrite');
-  const index = tx.store.index('by-id');
-
-  for await (const cursor of index.iterate(id)) {
-    const attendant = { ...cursor.value };
-    attendant.verified = 1;
-    cursor.update(attendant);
+  const value = await db.getFromIndex('attendance', 'by-id', id);
+  if (value) {
+    value.verified = 1
+    await db.put("attendance", value)
+    db.close()
   }
-  await tx.done;
 }
 
 export async function unverifyAttendance(id: any) {
   const db = await openDB<PwaDB>('pwa-db', 1);
-  const tx = db.transaction('attendance', 'readwrite');
-  const index = tx.store.index('by-id');
-
-  for await (const cursor of index.iterate(id)) {
-    const attendant = { ...cursor.value };
-    attendant.verified = 0;
-    cursor.update(attendant);
+  const value = await db.getFromIndex('attendance', 'by-id', id);
+  if (value) {
+    value.verified = 0
+    await db.put("attendance", value)
+    db.close()
   }
-  await tx.done;
 }
 
 export async function changeConfig(toggle: boolean) {
-    const db = await openDB<PwaDB>('pwa-db', 1, {
-        upgrade(db) {
-          db.createObjectStore('config');
-        }
-    });
+    const db = await openDB<PwaDB>('pwa-db', 1);
 
     await db.put("config", toggle, "continuous")
+    db.close()
 }
 
 export async function getConfig() {
-    const db = await openDB<PwaDB>('pwa-db', 1, {
-        upgrade(db) {
-          db.createObjectStore('config');
-        }
-    });
+    const db = await openDB<PwaDB>('pwa-db', 1);
 
-    return await db.get("config", "continuous")
+    const data = await db.get("config", "continuous")
+    db.close()
+    return data
+}
+
+export async function getOffline() {
+  const db = await openDB<PwaDB>('pwa-db', 1);
+
+  const data = await db.getAllFromIndex('offline', 'by-id')
+  db.close()
+  return data
+}
+
+export async function saveOffline(offline: any) {
+  const db = await openDB<PwaDB>('pwa-db', 1);
+
+  await db.put("offline", offline)
+  db.close()
+}
+
+export async function removeOffline(id: any) {
+  const db = await openDB<PwaDB>('pwa-db', 1);
+
+  await db.delete("offline", id)
+  db.close()
 }

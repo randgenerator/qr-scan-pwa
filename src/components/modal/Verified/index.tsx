@@ -10,7 +10,7 @@ const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed
   }, [])
 
   const closeModal = () => {
-    scanAllowed(true)
+    if (scanAllowed) scanAllowed(true)
     showModal(false)
   }
 

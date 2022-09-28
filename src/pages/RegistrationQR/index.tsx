@@ -6,16 +6,19 @@ import { getToken, getSelectedEvents, getEvents, getAttendance, getConfig, verif
 
 import Modal from "components/modal";
 import axios from "axios";
+import isReachable from "is-reachable";
 
 const RegistrationQR = () => {
   const [attendances, setAttendances] = useState<any>([])
   const [scannedAttendee, setScannedAttendee] = useState<any>({})
+  const [eventData, setEventData] = useState<any>({})
   const [scannedAttendeeMultiple, setScannedAttendeeMultiple] = useState<any>([])
   const [selectedEvents, setSelectedEvents] = useState<any>([])
   const [showVerified, setShowVerified] = useState<boolean>(false)
   const [showAlreadyVerified, setShowAlreadyVerified] = useState<boolean>(false)
   const [showNotFound, setShowNotFound] = useState<boolean>(false)
   const [showSeveral, setShowSeveral] = useState<boolean>(false)
+  const [showNotAttending, setShowNotAttending] = useState<boolean>(false)
   const [scanAllowed, setScanAllowed] = useState<boolean>(true)
   const [continious, setContinious] = useState<any>(true)
 
@@ -32,24 +35,30 @@ const RegistrationQR = () => {
         setScanAllowed(false)
         const token = await getToken()
         setScannedAttendee(attendee[0])
-        await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${attendee[0].id}/verify`, {}, {
-          headers: {
-              'Authorization': `Bearer ${token}`
+        if (attendee[0].status.toLowerCase().includes("not_attending")) {
+          setEventData(selectedEvents.find((event:any) => event.id === attendee[0].attendance_id))
+          setScanAllowed(false)
+          setShowNotAttending(true)
+        } else {
+          await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${attendee[0].id}/verify`, {}, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+              }
+          })
+          .then(async function (response) {
+            await verifyAttendance(attendee[0].id)
+            setShowVerified(true)
+          })
+          .catch(function (error) {
+            if (error.response.data.error) {
+              if (error.response.data.error.includes("already")) {
+                setShowAlreadyVerified(true)
+              } else if (error.response.data.error.includes("No query results")) {
+                setShowNotFound(true)
+              }
             }
-        })
-        .then(async function (response) {
-          await verifyAttendance(attendee[0].id)
-          setShowVerified(true)
-        })
-        .catch(function (error) {
-          if (error.response.data.error) {
-            if (error.response.data.error.includes("already")) {
-              setShowAlreadyVerified(true)
-            } else if (error.response.data.error.includes("No query results")) {
-              setShowNotFound(true)
-            }
-          }
-        })
+          })
+        }
       } else if (attendee.length > 1) {
         setScanAllowed(false)
         setScannedAttendeeMultiple(attendee)
@@ -65,13 +74,53 @@ const RegistrationQR = () => {
   useEffect(() => {
     const getEventsDB = async () => {
       const cont = await getConfig()
-      setContinious(cont)
-      const att = await getAttendance()
-      const events = await getEvents()
+      const token = await getToken()
       const selected = await getSelectedEvents()
       const selectedInt = selected?.map(ev => parseInt(ev))
-      setSelectedEvents(events.filter(evt => selectedInt?.includes(evt.id)))
-      setAttendances(att.filter(attendance => selectedInt?.includes(attendance.attendance_id)))
+      let att: any[] = []
+      let events = []
+      setContinious(cont)
+      if (await isReachable("https://pa-test.esynergy.lv")) {
+        const evts = await axios.get("https://pa-test.esynergy.lv/api/v1/pwa/events/initiated", {
+            headers: {
+                'Authorization': `Bearer ${token}`
+              }
+          })
+          .then(function (response) {
+            return response.data.events
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+
+        events = evts.filter((evt:any) => selectedInt?.includes(evt.id))
+        events.forEach(async (event: any) => {
+          const newAtt = await axios.get(`https://pa-test.esynergy.lv/api/v1/pwa/events/${event.id.toString()}/attendance`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+              }
+          })
+          .then(function (response) {
+            return response.data.attendances
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+          
+          newAtt.forEach((attendance: any) => {
+            attendance.attendance_id = event.id
+            att.push(attendance)
+          })
+          
+        })
+      } else {
+        const storedAttendances = await getAttendance()
+        const storedEvents = await getEvents()
+        events = storedEvents.filter((evt:any) => selectedInt?.includes(evt.id))
+        att = storedAttendances.filter(attendance => selectedInt?.includes(attendance.attendance_id))
+      }      
+      setSelectedEvents(events)
+      setAttendances(att)
     }
 
     getEventsDB()
@@ -88,6 +137,13 @@ const RegistrationQR = () => {
 
   return (
     <div className="main">
+      {showNotAttending && <Modal.NotAttending 
+        showModal={setShowNotAttending} 
+        scanAllowed={setScanAllowed} 
+        data={scannedAttendee}
+        showSuccess={setShowVerified}
+        showError={setShowAlreadyVerified} 
+        event={eventData} />}
       {showVerified && <Modal.Verified 
         showModal={setShowVerified} 
         scanAllowed={setScanAllowed} 

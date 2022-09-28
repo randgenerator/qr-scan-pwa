@@ -9,8 +9,9 @@ function App({ children }:{children:any}) {
     useEffect(() => {
       const init = async () => {
         if (await isReachable("https://pa-test.esynergy.lv")) {
+          console.log("clearing db")
           await clearDb()
-        }        
+        }
         await initDb()
       } 
       init()
