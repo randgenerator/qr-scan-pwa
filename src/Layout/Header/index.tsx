@@ -10,11 +10,9 @@ const Header = () => {
 
 
   return (
-    <div className="header">
-      <div className="leftIcon">
-        <img src={IconLeft} alt="leftIcon" />
-        <Link to="/events"><span>Events</span></Link>
-      </div>
+    <div className="header">        
+        {location.pathname != "/events" ? <div className="leftIcon"><img src={IconLeft} alt="leftIcon" /><Link to="/events"><span>Events</span></Link></div> : ""}
+      
       <h3 className="title">{location.pathname === "/events" ? "Events" : location.pathname === "/registration" ? "Scan QR Code" : location.pathname === "/attendanceList" ? "Attendance List" : "Settings"}</h3>
       <Link to="/settings"><img className="settingsIcon" src={IconSettings} alt="settingsIcon" /></Link>
     </div>

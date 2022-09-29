@@ -21,6 +21,7 @@ const RegistrationQR = () => {
   const [showNotAttending, setShowNotAttending] = useState<boolean>(false)
   const [scanAllowed, setScanAllowed] = useState<boolean>(true)
   const [continious, setContinious] = useState<any>(true)
+  const [updateAtt, setUpdateAtt] = useState<number>()
 
 	const handleError = (err: any) => {
 		console.log(err)
@@ -47,6 +48,7 @@ const RegistrationQR = () => {
           })
           .then(async function (response) {
             await verifyAttendance(attendee[0].id)
+            setUpdateAtt(attendee[0].id)
             setShowVerified(true)
           })
           .catch(function (error) {
@@ -70,6 +72,19 @@ const RegistrationQR = () => {
       }
 		}
 	}
+
+  useEffect(() => {
+    if (updateAtt) {
+      let newAtt = [...attendances]
+      const index = attendances.findIndex((att:any) => att.id == updateAtt)
+      if (newAtt[index].verified == 0) {
+        newAtt[index].verified = 1  
+      } else {
+        newAtt[index].verified = 0
+      }
+      setAttendances(newAtt);
+    }
+  }, [updateAtt])
 
   useEffect(() => {
     const getEventsDB = async () => {
@@ -138,6 +153,7 @@ const RegistrationQR = () => {
   return (
     <div className="main">
       {showNotAttending && <Modal.NotAttending 
+        setUpdateAtt={setUpdateAtt}
         showModal={setShowNotAttending} 
         scanAllowed={setScanAllowed} 
         data={scannedAttendee}
@@ -150,8 +166,9 @@ const RegistrationQR = () => {
         button={continious ? false : true} 
         buttonTitle="Scan next"
         continious={continious}
-        data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
+        data={`${scannedAttendee.full_name},  ${scannedAttendee.class_name.toUpperCase()}`} />}
       {showSeveral && <Modal.SeveralEvents 
+        setUpdateAtt={setUpdateAtt}
         showModal={setShowSeveral} 
         scanAllowed={setScanAllowed} 
         showError={setShowAlreadyVerified} 
@@ -164,7 +181,7 @@ const RegistrationQR = () => {
         continious={continious}
         button={continious ? false : true} 
         buttonTitle="Scan next" 
-        data={`${scannedAttendee.full_name}, ${scannedAttendee.class_name}`} />}
+        data={`${scannedAttendee.full_name},  ${scannedAttendee.class_name.toUpperCase()}`} />}
       {showNotFound && <Modal.NotFound 
         showModal={setShowNotFound} 
         scanAllowed={setScanAllowed} 
@@ -173,7 +190,7 @@ const RegistrationQR = () => {
         buttonTitle="Scan next" />}
       <div className="main__top">
         <p>
-          Registering attendants for {selectedEvents.length}. <Link to="/events">Edit</Link>{" "}
+          Registering attendants for {selectedEvents.length} events. <Link to="/events">Edit</Link>{" "}
         </p>
       </div>
       <div className="scanArea">
@@ -183,6 +200,7 @@ const RegistrationQR = () => {
                   onError={handleError}
                   onScan={handleScan}
         />}
+        {!scanAllowed && "Registration paused"}
       </div>
       <div className="main__bottom">
         <button className="btn" onClick={handlePause} type="button">

@@ -6,7 +6,7 @@ import axios from "axios";
 import { getToken, saveOffline, verifyAttendance } from "store/db";
 import isReachable from "is-reachable";
 
-const NotAttending = ({event, showModal, data, scanAllowed, showError, showSuccess}:{event:any, showModal:any, data:any, scanAllowed:any, showError:any, showSuccess:any}) => {
+const NotAttending = ({event, showModal, data, scanAllowed, showError, showSuccess, setUpdateAtt}:{event:any, showModal:any, data:any, setUpdateAtt:any, scanAllowed:any, showError:any, showSuccess:any}) => {
   const register = async () => {
     if (await isReachable("https://pa-test.esynergy.lv")) {
       const token = await getToken()
@@ -17,6 +17,7 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
       })
       .then(async function (response) {
         await verifyAttendance(data.id)
+        setUpdateAtt(data.id)
         showSuccess(true)
         showModal(false)
       })
@@ -36,6 +37,7 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
         status: "verify"
       } 
       await saveOffline(offlineData)
+      setUpdateAtt(data.id)
       showSuccess(true)
       showModal(false)
     }

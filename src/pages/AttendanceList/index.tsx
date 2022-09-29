@@ -14,6 +14,7 @@ const AttendanceList = () => {
   const [selectedAttendee, setSelectedAttendee] = useState<any>([])
   const [showSeveral, setShowSeveral] = useState<boolean>(false)
   const [showVerified, setShowVerified] = useState<boolean>(false)
+  const [updateAtt, setUpdateAtt] = useState<number>()
 
   useEffect(() => {
     const getEventsDB = async () => {
@@ -46,11 +47,28 @@ const AttendanceList = () => {
     }
   }, [searchField])
 
+  useEffect(() => {
+    if (updateAtt) {
+      let newAtt = [...attendances]
+      const index = attendances.findIndex((att:any) => att.id == updateAtt)
+      if (newAtt[index].verified == 0) {
+        newAtt[index].verified = 1  
+      } else {
+        newAtt[index].verified = 0
+      }      
+      setAttendances(newAtt)
+    }
+  }, [updateAtt])
+
   const handleRegistration = (e:any) => {
     console.log("qr is ", e.target.dataset.qr)
     setSelectedAttendee(attendances.filter((att: any) => att.qr_uuid === e.target.dataset.qr))
     if (selectedAttendee.length > 1) setShowSeveral(true)
     setShowRegistration(true)
+  }
+
+  const clearSearch = () => {
+    setSearchField("")
   }
 
   return (
@@ -63,6 +81,7 @@ const AttendanceList = () => {
         continious={false}
         data={undefined} />}
       {showRegistration && <Modal.Attendance
+        setUpdateAtt={setUpdateAtt}
         showModal={setShowRegistration} 
         attendee={selectedAttendee}
         showVerified={setShowVerified}
@@ -70,9 +89,9 @@ const AttendanceList = () => {
       <div className="list__search">
         <div className="input">
           <img src={SearchIcon} alt="searchIcon" />
-          <input type="text" placeholder="search" onChange={(e) => setSearchField(e.target.value)} />
+          <input type="text" value={searchField} placeholder="search" onChange={(e) => setSearchField(e.target.value)} />
         </div>
-        <button type="button">Cancel</button>
+        {searchField && <button type="button" onClick={clearSearch}>Cancel</button>}
       </div>
 
       {search.map((attendee: any) => {
@@ -82,32 +101,11 @@ const AttendanceList = () => {
                 <h3 data-qr={attendee.qr_uuid}>{attendee.full_name}</h3>
                 <span data-qr={attendee.qr_uuid}>{attendee.full_name}</span>
               </div>
-              <span data-qr={attendee.qr_uuid} className="attending">{attendee.status}</span>
+              {attendee.verified === 1 ? <span data-qr={attendee.qr_uuid} className="verified">Attendance verified</span> : attendee.status.toLowerCase().includes("attending") ? <span data-qr={attendee.qr_uuid} className="attending">Attending</span> : attendee.status.toLowerCase().includes("not_attending") ? <span data-qr={attendee.qr_uuid} className="notattending">Not Attending</span> : attendee.status.toLowerCase().includes("cancelled") ? <span data-qr={attendee.qr_uuid} className="notattending">Cancelled</span> : ""}
             </div>
           )
       })}
 
-      {/* <div className="list__items">
-        <div className="item">
-          <h3>Lastname First name</h3>
-          <span>5A</span>
-        </div>
-        <span className="attending">Attending</span>
-      </div>
-      <div className="list__items activeItems">
-        <div className="item">
-          <h3>Lastname First name</h3>
-          <span>5A</span>
-        </div>
-        <span className="notAttending">No Attending</span>
-      </div>
-      <div className="list__items">
-        <div className="item">
-          <h3>Lastname First name</h3>
-          <span>5A</span>
-        </div>
-        <span className="verified">Verified</span>
-      </div> */}
       <ul className="list__letters">
         {/* <li className="letter active">A</li> */}
         {sorted.map((att:any) => {

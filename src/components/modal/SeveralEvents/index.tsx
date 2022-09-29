@@ -6,7 +6,7 @@ import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "sto
 import isReachable from "is-reachable";
 import Button from "components/button";
 
-const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, showSuccess}:{events:any, attendee:any, showModal:any, showError: any, scanAllowed:any, showSuccess: any}) => {
+const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, showSuccess, setUpdateAtt}:{events:any, setUpdateAtt:any, attendee:any, showModal:any, showError: any, scanAllowed:any, showSuccess: any}) => {
   const [confirm, setConfirm] = useState<boolean>(false)
 
   const handleRegister = async (e:any) => {
@@ -19,7 +19,8 @@ const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, sho
           }
       })
       .then(async function (response) {
-        await verifyAttendance(id)
+        await verifyAttendance(parseInt(id))
+        setUpdateAtt(parseInt(id))
         showModal(false)
         showSuccess(true)
         setTimeout(() => scanAllowed(true), 3000)
@@ -40,6 +41,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, sho
         status: "verify"
       } 
       await saveOffline(offlineData)
+      setUpdateAtt(parseInt(id))
       showSuccess(true)
       showModal(false)
       setTimeout(() => scanAllowed(true), 3000)
@@ -60,7 +62,8 @@ const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, sho
           }
       })
       .then(async function (response) {
-        await unverifyAttendance(id)
+        await unverifyAttendance(parseInt(id))
+        setUpdateAtt(parseInt(id))
         showModal(false)
         scanAllowed(true)
       })
@@ -70,7 +73,8 @@ const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, sho
         scanAllowed(true)
       })
     } else {
-      await unverifyAttendance(id)
+      await unverifyAttendance(parseInt(id))
+      setUpdateAtt(parseInt(id))
       const offlineData = {
         id: id,
         status: "cancel"

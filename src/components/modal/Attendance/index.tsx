@@ -6,7 +6,7 @@ import axios from "axios";
 import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
 import isReachable from "is-reachable";
 
-const Attendance = ({ events, attendee, showModal, showVerified }:{events:any, attendee:any, showModal:any, showVerified:any}) => {
+const Attendance = ({ events, attendee, showModal, showVerified, setUpdateAtt }:{events:any, attendee:any, showModal:any, showVerified:any, setUpdateAtt:any}) => {
   const [confirm, setConfirm] = useState<boolean>(false)
 
   const closeModal = () => {
@@ -29,17 +29,19 @@ const Attendance = ({ events, attendee, showModal, showVerified }:{events:any, a
         return false
       })
       if (resp) {
-        await verifyAttendance(e.target.value)
+        await verifyAttendance(parseInt(e.target.value))
+        setUpdateAtt(e.target.value)
         showVerified(true)
         showModal(false)
       }
     } else {      
-      await verifyAttendance(e.target.value)
+      await verifyAttendance(parseInt(e.target.value))
       const offlineData = {
         id: e.target.value,
         status: "verify"
       } 
       await saveOffline(offlineData)
+      setUpdateAtt(e.target.value)
       showVerified(true)
       showModal(false)
     }
@@ -58,19 +60,20 @@ const Attendance = ({ events, attendee, showModal, showVerified }:{events:any, a
           }
       })
       .then(async function (response) {
-        await unverifyAttendance(e.target.value)
-        showVerified(true)
+        await unverifyAttendance(parseInt(e.target.value))
+        setUpdateAtt(e.target.value)
         showModal(false)
       })
       .catch(function (error) {
         console.log(error)
       })
     } else {
-      await unverifyAttendance(e.target.value)
+      await unverifyAttendance(parseInt(e.target.value))
       const offlineData = {
         id: e.target.value,
         status: "cancel"
       } 
+      setUpdateAtt(e.target.value)
       await saveOffline(offlineData)
       showModal(false)        
     }
