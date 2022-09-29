@@ -1,22 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { withRouter } from "utils";
-import { initDb, clearDb } from "./store/db";
 import { AuthProvider } from 'react-auth-kit'
-import isReachable from "is-reachable";
 
 
 function App({ children }:{children:any}) {
-    useEffect(() => {
-      const init = async () => {
-        if (await isReachable("https://pa-test.esynergy.lv")) {
-          console.log("clearing db")
-          await clearDb()
-        }
-        await initDb()
-      } 
-      init()
-    }, [])
-	
+  
     return (
       <AuthProvider authType = {'cookie'}
                   authName={'_auth'}
