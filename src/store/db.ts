@@ -50,7 +50,6 @@ interface PwaDB extends DBSchema {
 }
 
 export async function initDb() {
-    console.log("initiating db")
     const db = await openDB<PwaDB>('pwa-db', 1, {
         upgrade(db) {
           db.createObjectStore('token');
@@ -71,13 +70,30 @@ export async function initDb() {
         },
     });
 
-    db.put("config", true, "continuous")
+    await db.put("config", true, "continuous")
     db.close()
 }
 
 export async function clearDb() {
-  console.log("clearing db")
-  const db = await openDB<PwaDB>('pwa-db', 1);
+  const db = await openDB<PwaDB>('pwa-db', 1, {
+    upgrade(db) {
+      db.createObjectStore('token');
+      db.createObjectStore('selected');
+      db.createObjectStore('config');
+      const event = db.createObjectStore('events', {
+        keyPath: 'id',
+      });
+      event.createIndex('by-id', 'id');
+      const attendance = db.createObjectStore('attendance', {
+        keyPath: 'id',
+      });
+      attendance.createIndex('by-id', 'id');
+      const offline = db.createObjectStore('offline', {
+        keyPath: 'id',
+      });
+      offline.createIndex('by-id', 'id');
+    },
+  });
   await db.clear("events")
   await db.clear("attendance")
   await db.clear("selected")

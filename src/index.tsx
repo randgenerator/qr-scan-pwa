@@ -10,10 +10,10 @@ import { clearDb, initDb } from 'store/db';
 import isReachable from 'is-reachable';
 
 const init = async () => {
+  await initDb()
   if (await isReachable("https://pa-test.esynergy.lv")) {
-    clearDb()
+    await clearDb()
   }
-  initDb()
 }
 
 const root = ReactDOM.createRoot(
