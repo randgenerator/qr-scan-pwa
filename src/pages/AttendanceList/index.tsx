@@ -61,7 +61,6 @@ const AttendanceList = () => {
   }, [updateAtt])
 
   const handleRegistration = (e:any) => {
-    console.log("qr is ", e.target.dataset.qr)
     setSelectedAttendee(attendances.filter((att: any) => att.qr_uuid === e.target.dataset.qr))
     if (selectedAttendee.length > 1) setShowSeveral(true)
     setShowRegistration(true)

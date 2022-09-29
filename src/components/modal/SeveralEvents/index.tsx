@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.scss";
 import IconDanger from "assets/images/icon-danger.svg";
 import axios from "axios";
@@ -85,6 +85,11 @@ const SeveralEvents = ({events, attendee, showModal, showError, scanAllowed, sho
       setTimeout(() => scanAllowed(true), 3000)
     }    
   }
+
+  useEffect(() => {
+    let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3")
+    audio.play()
+  }, [])
 
   return (
     <div className="severalEvents">

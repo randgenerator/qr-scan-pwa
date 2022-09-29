@@ -5,6 +5,8 @@ import IconDanger from "assets/images/icon-danger.svg";
 
 const InProgress = ({button, buttonTitle, data, showModal, continious, scanAllowed}:{button:any,buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {
+    let audio = new Audio("/ES_MM Error 21 - SFX Producer.mp3")
+    audio.play()
     if (continious) setTimeout(() => closeModal(), 3000)
   }, [])
 

@@ -6,6 +6,8 @@ import IconDanger from "assets/images/icon-closed.svg"
 
 const NotFound = ({button, buttonTitle, showModal, continious, scanAllowed}:{button:any,buttonTitle:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {
+    let audio = new Audio("/ES_MM Error 21 - SFX Producer.mp3")
+    audio.play()
     if (continious) setTimeout(() => closeModal(), 3000)
   }, [])
   

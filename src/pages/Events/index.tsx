@@ -34,10 +34,8 @@ const Events = () => {
         .catch(function (error) {
           console.log(error)
         })
-        console.log("evts", evts)
         setEvents(evts)
         evts.forEach(async (event: any) => {
-          console.log("event is", event)
           await saveEvents(event)
           const att = await axios.get(`https://pa-test.esynergy.lv/api/v1/pwa/events/${event.id.toString()}/attendance`, {
             headers: {
@@ -112,7 +110,7 @@ const Events = () => {
                     )
                 })}
 
-          <li className="items">
+          {/* <li className="items">
             <div className="checkbox">
               <input type="checkbox" value="3" id="checkboxInputThree" name="" />
               <label htmlFor="checkboxInputThree"></label>
@@ -121,67 +119,7 @@ const Events = () => {
               <h3 className="text__title ">Lunch series C</h3>
               <span className="text__caption">7A; 7B; 7C</span>
             </div>
-          </li>
-          <li className="items">
-            <div className="checkbox">
-              <input type="checkbox" value="1" id="checkboxInputOne" name="" />
-              <label htmlFor="checkboxInputOne"></label>
-            </div>
-            <div className="text">
-              <h3 className="text__title ">Lunch series A</h3>
-              <span className="text__caption">5A; 5B; 5C</span>
-            </div>
-          </li>
-          <li className="items">
-            <div className="checkbox">
-              <input type="checkbox" value="2" id="checkboxInputTwo" name="" />
-              <label htmlFor="checkboxInputTwo"></label>
-            </div>{" "}
-            <div className="text">
-              <h3 className="text__title ">Lunch series B</h3>
-              <span className="text__caption">6A; 6B; 6C</span>
-            </div>
-          </li>
-          <li className="items">
-            <div className="checkbox">
-              <input type="checkbox" value="3" id="checkboxInputThree" name="" />
-              <label htmlFor="checkboxInputThree"></label>
-            </div>{" "}
-            <div className="text">
-              <h3 className="text__title ">Lunch series C</h3>
-              <span className="text__caption">7A; 7B; 7C</span>
-            </div>
-          </li>
-          <li className="items">
-            <div className="checkbox">
-              <input type="checkbox" value="1" id="checkboxInputOne" name="" />
-              <label htmlFor="checkboxInputOne"></label>
-            </div>
-            <div className="text">
-              <h3 className="text__title ">Lunch series A</h3>
-              <span className="text__caption">5A; 5B; 5C</span>
-            </div>
-          </li>
-          <li className="items">
-            <div className="checkbox">
-              <input type="checkbox" value="2" id="checkboxInputTwo" name="" />
-              <label htmlFor="checkboxInputTwo"></label>
-            </div>{" "}
-            <div className="text">
-              <h3 className="text__title ">Lunch series B</h3>
-              <span className="text__caption">6A; 6B; 6C</span>
-            </div>
-          </li>
-          <li className="items">
-            <div className="checkbox">
-              <input type="checkbox" value="3" id="checkboxInputThree" name="" />
-              <label htmlFor="checkboxInputThree"></label>
-            </div>{" "}
-            <div className="text">
-              <h3 className="text__title ">Lunch series C</h3>
-              <span className="text__caption">7A; 7B; 7C</span>
-            </div>
-          </li>
+          </li> */}
           </ul>
           <div className="contentButton">
             <button className="submitButton" type="submit">

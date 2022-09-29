@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "components/button";
 import "./style.scss";
 import checkedIcon from "assets/images/icon-checked.svg";
@@ -78,6 +78,11 @@ const Attendance = ({ events, attendee, showModal, showVerified, setUpdateAtt }:
       showModal(false)        
     }
   }
+
+  useEffect(() => {
+    let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3")
+    audio.play()
+  }, [])
 
   return (
     <div className="attendance">
