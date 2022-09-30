@@ -96,7 +96,6 @@ const RegistrationQR = () => {
       const selected = await getSelectedEvents()
       const selectedInt = selected?.map(ev => parseInt(ev))
       let att: any[] = []
-      let tempAtt: any[] = []
       let events = []
       setContinious(cont)
       if (await isReachable("https://pa-test.esynergy.lv")) {
@@ -128,10 +127,10 @@ const RegistrationQR = () => {
           
           newAtt.forEach((attendance: any) => {
             attendance.attendance_id = event.id
-            tempAtt.push(attendance)
+            const index = att.findIndex((atten:any) => atten.id === attendance.id)
+            if (!index) att.push(attendance)
           })
         })
-        att = tempAtt.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)
       } else {
         const storedAttendances = await getAttendance()
         const storedEvents = await getEvents()
