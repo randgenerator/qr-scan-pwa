@@ -6,6 +6,7 @@ import Modal from "components/modal";
 
 const AttendanceList = () => {
   const [attendances, setAttendances] = useState<any>([])
+  const [groupedAttendances, setGroupedAttendances] = useState<any>([])
   const [sorted, setSorted] = useState<any>([])
   const [selectedEvents, setSelectedEvents] = useState<any>([])
   const [search, setSearch] = useState<any>([])
@@ -33,7 +34,10 @@ const AttendanceList = () => {
       }, {})
       let sort = Object.values(grouped)
       setSorted(sort.sort((a:any, b:any) => a.letter - b.letter))
-      setSearch(tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name)))    
+      const sortedAtt = tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name))
+      const groupedById = sortedAtt.filter((att,index,allAtt)=>allAtt.findIndex(v2=>(v2.qr_uuid===att.qr_uuid))===index)
+      setSearch(groupedById)
+      setGroupedAttendances(groupedById)
     }
 
     getEventsDB()
@@ -41,9 +45,9 @@ const AttendanceList = () => {
 
   useEffect(() => {
     if (searchField === "") {
-      setSearch(attendances)
+      setSearch(groupedAttendances)
     } else {
-      setSearch(attendances.filter((att:any) => att.full_name.includes(searchField) || att.class_name.includes(searchField)))
+      setSearch(groupedAttendances.filter((att:any) => att.full_name.includes(searchField) || att.class_name.includes(searchField)))
     }
   }, [searchField])
 
@@ -57,6 +61,8 @@ const AttendanceList = () => {
         newAtt[index].verified = 0
       }      
       setAttendances(newAtt)
+      const groupedById = newAtt.filter((att,index,allAtt)=>allAtt.findIndex(v2=>(v2.qr_uuid===att.qr_uuid))===index)
+      setGroupedAttendances(groupedById)
     }
   }, [updateAtt])
 

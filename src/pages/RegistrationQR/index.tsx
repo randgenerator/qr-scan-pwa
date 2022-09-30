@@ -150,6 +150,13 @@ const RegistrationQR = () => {
     setScanAllowed(!scanAllowed)
   }
 
+  useEffect(() => {
+    if (scanAllowed) {
+      let audio = new Audio("/ES_Multimedia 808 - SFX Producer.mp3")
+      audio.play()
+    }    
+  }, [scanAllowed])
+
   return (
     <div className="main">
       {showNotAttending && <Modal.NotAttending 
