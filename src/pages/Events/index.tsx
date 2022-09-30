@@ -102,10 +102,12 @@ const Events = () => {
                         name="" />
                         <label htmlFor={event.id.toString()}></label>
                       </div>
-                      <div className="text">
-                        <h3 className="text__title ">{event.service_series_name}</h3>
-                        <span className="text__caption">{event.description}</span>
-                      </div>
+                      <label className="fullWidth" htmlFor={event.id.toString()}>
+                        <div className="text">
+                          <h3 className="text__title ">{event.service_series_name}</h3>
+                          <span className="text__caption">{event.description}</span>                        
+                        </div>
+                      </label>
                     </li>
                     )
                 })}

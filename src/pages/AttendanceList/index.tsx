@@ -104,9 +104,9 @@ const AttendanceList = () => {
             <div className="list__items" data-qr={attendee.qr_uuid} key={attendee.id} onClick={handleRegistration}>
               <div className="item" data-qr={attendee.qr_uuid}>
                 <h3 data-qr={attendee.qr_uuid}>{attendee.full_name}</h3>
-                <span data-qr={attendee.qr_uuid}>{attendee.full_name}</span>
+                <span data-qr={attendee.qr_uuid}>{attendee.class_name}</span>
               </div>
-              {attendee.verified === 1 ? <span data-qr={attendee.qr_uuid} className="verified">Attendance verified</span> : attendee.status.toLowerCase().includes("attending") ? <span data-qr={attendee.qr_uuid} className="attending">Attending</span> : attendee.status.toLowerCase().includes("not_attending") ? <span data-qr={attendee.qr_uuid} className="notattending">Not Attending</span> : attendee.status.toLowerCase().includes("cancelled") ? <span data-qr={attendee.qr_uuid} className="notattending">Cancelled</span> : ""}
+              {attendee.verified === 1 ? <span data-qr={attendee.qr_uuid} className="verified">Attendance verified</span> : attendee.status.toLowerCase().includes("attending") ? <span data-qr={attendee.qr_uuid} className="attending">Attending</span> : attendee.status.toLowerCase().includes("not_attending") ? <span data-qr={attendee.qr_uuid} className="notattending">Not Attending</span> : <span data-qr={attendee.qr_uuid} className="attending">Attending</span> }
             </div>
           )
       })}

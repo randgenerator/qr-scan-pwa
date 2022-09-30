@@ -100,13 +100,13 @@ const Attendance = ({ events, attendee, showModal, showVerified, setUpdateAtt }:
               if (att) {
                 return (
                   <>
-                  {att.verified === 1 ? <img className="checkedIcon" src={checkedIcon} alt="checkedIcon" /> : ""}
+                    {att.verified === 1 ? <img className="checkedIcon" src={checkedIcon} alt="checkedIcon" /> : ""}
 
-                  <h4>{event.service_series_name}</h4>
+                    <h4>{event.service_series_name}</h4>
 
-                  {att.verified === 1 ? <span className="attendanceVerified">Attendance verified</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Attending</span> : att.status.toLowerCase().includes("not_attending") ? <span className="notattending">Not Attending</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Cancelled</span> : ""}
-                  
-                  {att.verified === 0 ? <Button title="Register attendance" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
+                    {att.verified === 1 ? <span className="attendanceVerified">Attendance verified</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Attending</span> : att.status.toLowerCase().includes("not_attending") ? <span className="notattending">Not Attending</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Cancelled</span> : ""}
+                    
+                    {att.verified === 0 ? <Button title="Register attendance" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
                   
                   </>
                 )

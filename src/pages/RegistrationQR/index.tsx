@@ -31,6 +31,7 @@ const RegistrationQR = () => {
 		if(result){
       const path = new URL(result).pathname
       const pathnames = path.split("/")
+      //change pathnames parameter number based on qr url
       const attendee = attendances.filter((att: any) => att.qr_uuid === pathnames[2])
 			if (attendee.length === 1) {
         setScanAllowed(false)
