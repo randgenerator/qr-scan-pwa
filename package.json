@@ -19,7 +19,7 @@
     "is-reachable": "^5.2.1",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
-    "react-auth-kit": "^2.1.1",
+    "react-auth-kit": "^2.3.0",
     "react-dom": "^18.2.0",
     "react-qr-reader-es6": "^2.2.1-2",
     "react-router-dom": "^6.3.0",

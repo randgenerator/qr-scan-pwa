@@ -39,7 +39,8 @@ const Login = () => {
         
         if(signIn({token: token.token,
             expiresIn: token.expires_in / 60,
-            tokenType: "Bearer"
+            tokenType: "Bearer",
+            authState: {email: email}
         })) {
             await addToken(token.token)
             navigate("/events");
