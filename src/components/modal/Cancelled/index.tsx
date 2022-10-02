@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import "./style.scss";
 import Button from "components/button";
 
-import IconChecked from "assets/images/icon-checked.svg"
+import IconChecked from "assets/images/icon-danger.svg"
 
-const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed, list}:{button:any, list:any, buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
+const Cacnelled = ({button, buttonTitle, data, showModal, continious, scanAllowed, list}:{button:any, list:any, buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {
-    let audio = new Audio("/ES_Multimedia Success 793 - SFX Producer.mp3")
+    let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3")
     audio.play()
     if (continious) setTimeout(() => closeModal(), 3000)
   }, [])
@@ -21,7 +21,7 @@ const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed
     <div className={list ? "modalTransparent" : "modalOne"}>
       <div className="modalOne__wrapper">
         <img src={IconChecked} alt="iconChecked" />
-        <h3>Attendance verified!</h3>
+        <h3>Attendance cancelled!</h3>
         <p>{data != undefined ? data : ""}</p>
         {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
 
@@ -30,4 +30,4 @@ const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed
   );
 };
 
-export default Verified;
+export default Cacnelled;

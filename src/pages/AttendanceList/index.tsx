@@ -15,6 +15,7 @@ const AttendanceList = () => {
   const [selectedAttendee, setSelectedAttendee] = useState<any>([])
   const [showSeveral, setShowSeveral] = useState<boolean>(false)
   const [showVerified, setShowVerified] = useState<boolean>(false)
+  const [showCancelled, setShowCancelled] = useState<boolean>(false)
   const [updateAtt, setUpdateAtt] = useState<number>()
 
   useEffect(() => {
@@ -78,18 +79,28 @@ const AttendanceList = () => {
 
   return (
     <div className="list">
+      {showCancelled && <Modal.Cancelled 
+        list={true}
+        showModal={setShowCancelled} 
+        scanAllowed={undefined} 
+        button={false} 
+        buttonTitle="Verify next"
+        continious={true}
+        data={`${selectedAttendee[0].full_name},  ${selectedAttendee[0].class_name}`} />}
       {showVerified && <Modal.Verified 
+        list={true}
         showModal={setShowVerified} 
         scanAllowed={undefined} 
-        button={true} 
+        button={false} 
         buttonTitle="Verify next"
-        continious={false}
-        data={undefined} />}
+        continious={true}
+        data={`${selectedAttendee[0].full_name},  ${selectedAttendee[0].class_name}`} />}
       {showRegistration && <Modal.Attendance
         setUpdateAtt={setUpdateAtt}
         showModal={setShowRegistration} 
         attendee={selectedAttendee}
         showVerified={setShowVerified}
+        showCancelled={setShowCancelled}
         events={selectedEvents} />}
       <div className="list__search">
         <div className="input">
@@ -106,7 +117,7 @@ const AttendanceList = () => {
                 <h3 data-qr={attendee.qr_uuid}>{attendee.full_name}</h3>
                 <span data-qr={attendee.qr_uuid}>{attendee.class_name}</span>
               </div>
-              {attendee.verified === 1 ? <span data-qr={attendee.qr_uuid} className="verified">Attendance verified</span> : attendee.status.toLowerCase().includes("attending") ? <span data-qr={attendee.qr_uuid} className="attending">Attending</span> : attendee.status.toLowerCase().includes("not_attending") ? <span data-qr={attendee.qr_uuid} className="notattending">Not Attending</span> : <span data-qr={attendee.qr_uuid} className="attending">Attending</span> }
+              {attendee.verified === 1 ? <span data-qr={attendee.qr_uuid} className="verified">Attendance verified</span> : attendee.status.toLowerCase().includes("attending") ? <span data-qr={attendee.qr_uuid} className="attending">Attending</span> : attendee.status.toLowerCase().includes("cancelled") ? <span data-qr={attendee.qr_uuid} className="notattending">Not Attending</span> : <span data-qr={attendee.qr_uuid} className="attending">Attending</span> }
             </div>
           )
       })}

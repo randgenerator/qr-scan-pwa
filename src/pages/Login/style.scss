@@ -1,0 +1,78 @@
+.login {
+  height: 100vh;
+  background: #eff0fb;
+  padding: 18px 16px;
+  &__content {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 26px;
+    margin-bottom: 46px;
+  }
+  &__title {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    color: #000000;
+    margin-bottom: 26px;
+  }
+
+  &__form {
+    .input-title {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 22px;
+      color: #000000;
+      margin-bottom: 8px;
+    }
+    .input-email {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #eaebf6;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 26px;
+    }
+    .password {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #ffffff;
+      border: 1px solid #eaebf6;
+      border-radius: 6px;
+      .input-password {
+        width: 100%;
+        border: none;
+        background-color: transparent;
+      }
+      button {
+        width: 14px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        background-color: transparent;
+        img {
+          width: 14px;
+        }
+      }
+    }
+    .forgotPassword {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 22px;
+      color: #7159bd;
+      margin-top: 16px;
+    }
+    .btn-submit {
+      width: 100%;
+      text-align: center;
+      padding: 9px 0;
+      border: none;
+      background: #7159bd;
+      border-radius: 6px;
+      color: #ffffff;
+      cursor: pointer;
+      margin-top: 26px;
+    }
+  }
+}

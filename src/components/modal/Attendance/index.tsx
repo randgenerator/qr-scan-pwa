@@ -6,7 +6,7 @@ import axios from "axios";
 import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
 import isReachable from "is-reachable";
 
-const Attendance = ({ events, attendee, showModal, showVerified, setUpdateAtt }:{events:any, attendee:any, showModal:any, showVerified:any, setUpdateAtt:any}) => {
+const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, setUpdateAtt }:{events:any, showCancelled:any, attendee:any, showModal:any, showVerified:any, setUpdateAtt:any}) => {
   const [confirm, setConfirm] = useState<boolean>(false)
 
   const closeModal = () => {
@@ -62,6 +62,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, setUpdateAtt }:
       .then(async function (response) {
         await unverifyAttendance(parseInt(e.target.value))
         setUpdateAtt(e.target.value)
+        showCancelled(true)
         showModal(false)
       })
       .catch(function (error) {
@@ -75,7 +76,8 @@ const Attendance = ({ events, attendee, showModal, showVerified, setUpdateAtt }:
       } 
       setUpdateAtt(e.target.value)
       await saveOffline(offlineData)
-      showModal(false)        
+      showCancelled(true)
+      showModal(false)  
     }
   }
 
@@ -104,7 +106,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, setUpdateAtt }:
 
                     <h4>{event.service_series_name}</h4>
 
-                    {att.verified === 1 ? <span className="attendanceVerified">Attendance verified</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Attending</span> : att.status.toLowerCase().includes("not_attending") ? <span className="notattending">Not Attending</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Cancelled</span> : ""}
+                    {att.verified === 1 ? <span className="attendanceVerified">Attendance verified</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Attending</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Not Attending</span> : <span className="attending">Attending</span>}
                     
                     {att.verified === 0 ? <Button title="Register attendance" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
                   

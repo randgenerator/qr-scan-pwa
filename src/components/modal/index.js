@@ -4,6 +4,7 @@ import Verified from "./Verified";
 import NotFound from "./NotFound";
 import SeveralEvents from "./SeveralEvents";
 import NotAttending from "./NotAttending";
+import Cancelled from "./Cancelled"
 
 const ModalComponent = {
 	Attendance,
@@ -11,7 +12,8 @@ const ModalComponent = {
 	Verified,
 	NotFound,
 	SeveralEvents,
-	NotAttending
+	NotAttending,
+	Cancelled
 };
 
 export default ModalComponent;

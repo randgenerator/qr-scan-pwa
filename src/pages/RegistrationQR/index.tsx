@@ -19,6 +19,7 @@ const RegistrationQR = () => {
   const [showNotFound, setShowNotFound] = useState<boolean>(false)
   const [showSeveral, setShowSeveral] = useState<boolean>(false)
   const [showNotAttending, setShowNotAttending] = useState<boolean>(false)
+  const [multipleCancel, setMultipleCancel] = useState<boolean>(false)
   const [scanAllowed, setScanAllowed] = useState<boolean>(true)
   const [continious, setContinious] = useState<any>(true)
   const [updateAtt, setUpdateAtt] = useState<number>()
@@ -39,7 +40,7 @@ const RegistrationQR = () => {
         setScanAllowed(false)
         const token = await getToken()
         setScannedAttendee(attendee[0])
-        if (attendee[0].status.toLowerCase().includes("not_attending")) {
+        if (attendee[0].status.toLowerCase().includes("cancelled")) {
           setEventData(selectedEvents.find((event:any) => event.id === attendee[0].attendance_id))
           setScanAllowed(false)
           setShowNotAttending(true)
@@ -65,6 +66,15 @@ const RegistrationQR = () => {
           })
         }
       } else if (attendee.length > 1) {
+        let countCancelled = 0
+        attendee.foreach((att:any) => {
+          if (att.status.toLowerCase().includes("cancelled")) countCancelled++
+        })
+        if (countCancelled > 0) {
+          setMultipleCancel(true)
+        } else {
+          setMultipleCancel(false)
+        }
         setScanAllowed(false)
         setScannedAttendeeMultiple(attendee)
         setScannedAttendee(attendee[0])
@@ -174,6 +184,7 @@ const RegistrationQR = () => {
         showError={setShowAlreadyVerified} 
         event={eventData} />}
       {showVerified && <Modal.Verified 
+        list={false}
         showModal={setShowVerified} 
         scanAllowed={setScanAllowed} 
         button={continious ? false : true} 
@@ -181,6 +192,7 @@ const RegistrationQR = () => {
         continious={continious}
         data={`${scannedAttendee.full_name},  ${scannedAttendee.class_name.toUpperCase()}`} />}
       {showSeveral && <Modal.SeveralEvents 
+        multiple={multipleCancel}
         setUpdateAtt={setUpdateAtt}
         showModal={setShowSeveral} 
         scanAllowed={setScanAllowed} 
