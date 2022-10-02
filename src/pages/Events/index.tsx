@@ -21,9 +21,9 @@ const Events = () => {
   const [events, setEvents] = useState<Array<Event>>([]);
   useEffect(()=> {
     const initEvents = async () => {
-      if (await isReachable("https://pa-test.esynergy.lv")) {
+      if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
         const token = await getToken()
-        const evts = await axios.get("https://pa-test.esynergy.lv/api/v1/pwa/events/initiated", {
+        const evts = await axios.get(`${process.env.REACT_APP_API_URL}/pwa/events/initiated`, {
             headers: {
                 'Authorization': `Bearer ${token}`
               }
@@ -37,7 +37,7 @@ const Events = () => {
         setEvents(evts)
         evts.forEach(async (event: any) => {
           await saveEvents(event)
-          const att = await axios.get(`https://pa-test.esynergy.lv/api/v1/pwa/events/${event.id.toString()}/attendance`, {
+          const att = await axios.get(`${process.env.REACT_APP_API_URL}/pwa/events/${event.id.toString()}/attendance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
               }

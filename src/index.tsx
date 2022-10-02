@@ -11,7 +11,7 @@ import isReachable from 'is-reachable';
 
 const init = async () => {
   await initDb()
-  if (await isReachable("https://pa-test.esynergy.lv")) {
+  if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
     await clearDb()
   }
 }

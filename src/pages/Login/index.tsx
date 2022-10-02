@@ -26,7 +26,7 @@ const Login = () => {
     let handleLogin = async (e: any) => {
         
         e.preventDefault();
-        const token = await axios.post("https://pa-test.esynergy.lv/api/v1/auth/login", {
+        const token = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {
             email: email,
             password: password
         })

@@ -45,7 +45,7 @@ const RegistrationQR = () => {
           setScanAllowed(false)
           setShowNotAttending(true)
         } else {
-          await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${attendee[0].id}/verify`, {}, {
+          await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`, {}, {
             headers: {
                 'Authorization': `Bearer ${token}`
               }
@@ -109,8 +109,8 @@ const RegistrationQR = () => {
       let tempAtt: any[] = []
       let events = []
       setContinious(cont)
-      if (await isReachable("https://pa-test.esynergy.lv")) {
-        const evts = await axios.get("https://pa-test.esynergy.lv/api/v1/pwa/events/initiated", {
+      if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+        const evts = await axios.get(`${process.env.REACT_APP_API_URL}/pwa/events/initiated`, {
             headers: {
                 'Authorization': `Bearer ${token}`
               }
@@ -124,7 +124,7 @@ const RegistrationQR = () => {
 
         events = evts.filter((evt:any) => selectedInt?.includes(evt.id))
         events.forEach(async (event: any) => {
-          const newAtt = await axios.get(`https://pa-test.esynergy.lv/api/v1/pwa/events/${event.id.toString()}/attendance`, {
+          const newAtt = await axios.get(`${process.env.REACT_APP_API_URL}/pwa/events/${event.id.toString()}/attendance`, {
             headers: {
                 'Authorization': `Bearer ${token}`
               }

@@ -8,9 +8,9 @@ import isReachable from "is-reachable";
 
 const NotAttending = ({event, showModal, data, scanAllowed, showError, showSuccess, setUpdateAtt}:{event:any, showModal:any, data:any, setUpdateAtt:any, scanAllowed:any, showError:any, showSuccess:any}) => {
   const register = async () => {
-    if (await isReachable("https://pa-test.esynergy.lv")) {
+    if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
       const token = await getToken()
-      await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${data.id}/verify`, {}, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${data.id}/verify`, {}, {
         headers: {
             'Authorization': `Bearer ${token}`
           }

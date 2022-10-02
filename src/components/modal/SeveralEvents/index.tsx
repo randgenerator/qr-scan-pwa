@@ -11,9 +11,9 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
 
   const handleRegister = async (e:any) => {
     const id = e.target.value
-    if (await isReachable("https://pa-test.esynergy.lv")) {
+    if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
       const token = await getToken()
-      await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${id}/verify`, {}, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/verify`, {}, {
         headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -54,9 +54,9 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
 
   const cancelRegister = async (e:any) => {
     const id = e.target.value
-    if (await isReachable("https://pa-test.esynergy.lv")) {
+    if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
       const token = await getToken()
-      await axios.post(`https://pa-test.esynergy.lv/api/v1/pwa/attendance/${id}/unverify`, {}, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/unverify`, {}, {
         headers: {
             'Authorization': `Bearer ${token}`
           }
