@@ -106,7 +106,6 @@ const RegistrationQR = () => {
       const selected = await getSelectedEvents()
       const selectedInt = selected?.map(ev => parseInt(ev))
       let att: any[] = []
-      let tempAtt: any[] = []
       let events = []
       setContinious(cont)
       if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
@@ -138,11 +137,9 @@ const RegistrationQR = () => {
           
           newAtt.forEach((attendance: any) => {
             attendance.attendance_id = event.id
-            tempAtt.push(attendance)
+            att.push(attendance)
           })
         })
-        console.log("tempAtt", tempAtt)
-        att = [...new Map(tempAtt.map(v => [v.id, v])).values()]
       } else {
         const storedAttendances = await getAttendance()
         const storedEvents = await getEvents()
