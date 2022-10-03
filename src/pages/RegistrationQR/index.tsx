@@ -34,8 +34,6 @@ const RegistrationQR = () => {
       const pathnames = path.split("/")
       //change pathnames parameter number based on qr url
       const attendee = attendances.filter((att: any) => att.qr_uuid === pathnames[2])
-      console.log("attendee after scan", attendee)
-      console.log("attendee length", attendee.length)
 			if (attendee.length === 1) {
         setScanAllowed(false)
         const token = await getToken()
@@ -67,7 +65,7 @@ const RegistrationQR = () => {
         }
       } else if (attendee.length > 1) {
         let countCancelled = 0
-        attendee.foreach((att:any) => {
+        attendee.forEach((att:any) => {
           if (att.status.toLowerCase().includes("cancelled")) countCancelled++
         })
         if (countCancelled > 0) {
@@ -146,7 +144,6 @@ const RegistrationQR = () => {
         events = storedEvents.filter((evt:any) => selectedInt?.includes(evt.id))
         att = storedAttendances.filter(attendance => selectedInt?.includes(attendance.attendance_id))
       }
-      console.log("att is", att)
       setSelectedEvents(events)
       setAttendances(att)
     }
