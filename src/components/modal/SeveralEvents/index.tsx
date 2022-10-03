@@ -99,9 +99,9 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
               <>
               <div className="lunchSeries">
                 <h4 className="lunchTitle">{event.service_series_name}</h4>
-                <span className={att.verified === 1 ? "verified" : att.status.toLowerCase() == "attending" ? "attending" : "notAttending"}>{att.verified === 1 ? "Attendance verified" : att.status}</span>
+                <span className={att[0].verified === 1 ? "verified" : att[0].status.toLowerCase() == "attending" ? "attending" : "notAttending"}>{att[0].verified === 1 ? "Attendance verified" : att.status}</span>
               </div>
-              {att.verified === 0 ? <Button value={att.id} title="Register attendance" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={handleRegister} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelRegister : confirmDialog} />}
+              {att[0].verified === 0 ? <Button value={att[0].id} title="Register attendance" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={handleRegister} /> : <Button value={att[0].id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelRegister : confirmDialog} />}
                   
               </>
             )
