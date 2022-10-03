@@ -23,14 +23,12 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
         setUpdateAtt(parseInt(id))
         showModal(false)
         showSuccess(true)
-        setTimeout(() => scanAllowed(true), 3000)
       })
       .catch(function (error) {
         if (error.response.data.error) {
           if (error.response.data.error.includes("already")) {
             showModal(false)
             showError(true)
-            setTimeout(() => scanAllowed(true), 3000)
           }
         }
       })
@@ -44,7 +42,6 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
       setUpdateAtt(parseInt(id))
       showSuccess(true)
       showModal(false)
-      setTimeout(() => scanAllowed(true), 3000)
     }    
   }
 
@@ -80,9 +77,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
         status: "cancel"
       } 
       await saveOffline(offlineData)
-      showSuccess(true)
       showModal(false)
-      setTimeout(() => scanAllowed(true), 3000)
     }    
   }
 

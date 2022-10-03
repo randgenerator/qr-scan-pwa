@@ -8,7 +8,6 @@ const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed
   useEffect(() => {
     let audio = new Audio("/ES_Multimedia Success 793 - SFX Producer.mp3")
     audio.play()
-    console.log("is cont",continious)
     if (continious) setTimeout(() => closeModal(), 3000)
   }, [])
 
