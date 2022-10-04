@@ -88,7 +88,6 @@ const AttendanceList = () => {
         continious={true}
         data={`${selectedAttendee[0].full_name},  ${selectedAttendee[0].class_name}`} />}
       {showVerified && <Modal.Verified 
-        list={true}
         showModal={setShowVerified} 
         scanAllowed={undefined} 
         button={false} 

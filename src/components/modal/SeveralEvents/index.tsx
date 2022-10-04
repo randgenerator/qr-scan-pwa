@@ -81,6 +81,11 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
     }    
   }
 
+  const closeModal = () => {
+    if (scanAllowed) scanAllowed(true)
+    showModal(false)
+  }
+
   useEffect(() => {
     let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3")
     audio.play()
@@ -103,7 +108,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
                   <span className={att.verified === 1 ? "verified" : att.status.toLowerCase() == "attending" ? "attending" : "notAttending"}>{att.verified === 1 ? "Attendance verified" : att.status}</span>
                 </div>
                 {att.verified === 0 ? <Button value={att.id} title="Register attendance" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={handleRegister} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelRegister : confirmDialog} />}
-                    
+                {multiple && <Button title="Scan next" iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
                 </>
               )
             }            

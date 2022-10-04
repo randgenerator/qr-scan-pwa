@@ -59,16 +59,16 @@ const Login = () => {
                 <input 
                   className="input-email" 
                   type="email" 
-                  placeholder="peteris.kalnins@gmail.com" 
+                  placeholder="E-pasts" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}/>
-                <h4 className="input-title">Password</h4>
+                <h4 className="input-title">Parole</h4>
                 <div className="password">
                   <input
                     type={passwordType}
                     name="password"
                     className="input-password"
-                    placeholder="Password"
+                    placeholder="Parole"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -80,7 +80,7 @@ const Login = () => {
                     )}
                   </button>
                 </div>
-                <p className="forgotPassword">Aizmirsāt paroli?</p>
+                <a href="https://pa-test.esynergy.lv/forgot-password"><p className="forgotPassword">Aizmirsāt paroli?</p></a>
                 <button className="btn-submit" type="submit">
                   Pieslēgties
                 </button>

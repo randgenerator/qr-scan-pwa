@@ -178,7 +178,6 @@ const RegistrationQR = () => {
         showError={setShowAlreadyVerified} 
         event={eventData} />}
       {showVerified && <Modal.Verified 
-        list={false}
         showModal={setShowVerified} 
         scanAllowed={setScanAllowed} 
         button={continious ? false : true} 
