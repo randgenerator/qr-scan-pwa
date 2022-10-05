@@ -12,12 +12,10 @@
   background: rgba(255, 143, 31, 0.45);
   &__wrapper {
     width: 100%;
-    padding: 20px 12px 12px;
+    padding: 20px 12px 20px;
     background: #ffffff;
     border-radius: 8px;
     margin: 40px 20px;
-    overflow: scroll;
-    height: 440px;
     img {
       display: block;
       width: 42px;
@@ -50,21 +48,6 @@
         font-weight: 600;
         font-size: 13px;
         color: #ff8f1f;
-      }
-      .attending {
-        font-weight: 600;
-        font-size: 13px;
-        color: #ff8f1f;
-      }
-      .verified {
-        font-weight: 600;
-        font-size: 13px;
-        color: #00be7e;
-      }
-      .notAttending {
-        font-weight: 600;
-        font-size: 13px;
-        color: #ff3141;
       }
     }
   }

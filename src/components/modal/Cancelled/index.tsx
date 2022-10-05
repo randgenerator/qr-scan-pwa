@@ -21,7 +21,7 @@ const Cacnelled = ({button, buttonTitle, data, showModal, continious, scanAllowe
     <div className={list ? "modalTransparent" : "modalOne"}>
       <div className="modalOne__wrapper">
         <img src={IconChecked} alt="iconChecked" />
-        <h3>Attendance cancelled!</h3>
+        <h3>Apmeklējums atcelts!</h3>
         <p>{data != undefined ? data : ""}</p>
         {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
 

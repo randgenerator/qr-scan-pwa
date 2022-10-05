@@ -181,7 +181,7 @@ const RegistrationQR = () => {
         showModal={setShowVerified} 
         scanAllowed={setScanAllowed} 
         button={continious ? false : true} 
-        buttonTitle="Scan next"
+        buttonTitle="Skenēt nākamo"
         continious={continious}
         data={`${scannedAttendee.full_name},  ${scannedAttendee.class_name.toUpperCase()}`} />}
       {showSeveral && <Modal.SeveralEvents 
@@ -198,17 +198,17 @@ const RegistrationQR = () => {
         scanAllowed={setScanAllowed} 
         continious={continious}
         button={continious ? false : true} 
-        buttonTitle="Scan next" 
+        buttonTitle="Skenēt nākamo" 
         data={`${scannedAttendee.full_name},  ${scannedAttendee.class_name.toUpperCase()}`} />}
       {showNotFound && <Modal.NotFound 
         showModal={setShowNotFound} 
         scanAllowed={setScanAllowed} 
         continious={continious}
         button={continious ? false : true} 
-        buttonTitle="Scan next" />}
+        buttonTitle="Skenēt nākamo" />}
       <div className="main__top">
         <p>
-          Registering attendants for {selectedEvents.length} events. <Link to="/events">Edit</Link>{" "}
+        Tiek reģistrēti apmeklējumi {selectedEvents.length} pasākumos. <Link to="/events">Rediģēt</Link>{" "}
         </p>
       </div>
       <div className="scanArea">
@@ -218,11 +218,11 @@ const RegistrationQR = () => {
                   onError={handleError}
                   onScan={handleScan}
         />}
-        {!scanAllowed && "Registration paused"}
+        {!scanAllowed && "Reģistrācija apturēta"}
       </div>
       <div className="main__bottom">
         <button className="btn" onClick={handlePause} type="button">
-          Pause registration
+          Apturēt reģistrāciju
         </button>
       </div>
     </div>

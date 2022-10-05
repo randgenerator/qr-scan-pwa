@@ -95,7 +95,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
     <div className="severalEvents">
       <div className="severalEvents__wrapper">
         <img src={IconDanger} alt="iconChecked" />
-        <h3>{multiple ? "Attendant marked not attending!" : "Attendant marked attending several events!"}</h3>
+        <h3>{multiple ? "Apmeklētājs piedalās vairākos pasākumos!" : "Attendant marked attending several events!"}</h3>
         <p>{`${attendee[0].full_name}, ${attendee[0].class_name}`}</p>
         <div>
           {events.map((event:any) => {
@@ -105,10 +105,10 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
                 <>
                 <div className="lunchSeries">
                   <h4 className="lunchTitle">{event.service_series_name}</h4>
-                  <span className={att.verified === 1 ? "verified" : att.status.toLowerCase() == "attending" ? "attending" : "notAttending"}>{att.verified === 1 ? "Attendance verified" : att.status}</span>
+                  <span className={att.verified === 1 ? "verified" : att.status.toLowerCase() == "attending" ? "attending" : "notAttending"}>{att.verified === 1 ? "Apmeklējums reģistrēts" : att.status}</span>
                 </div>
-                {att.verified === 0 ? <Button value={att.id} title="Register attendance" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={handleRegister} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelRegister : confirmDialog} />}
-                {multiple && <Button title="Scan next" iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
+                {att.verified === 0 ? <Button value={att.id} title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={handleRegister} /> : <Button value={att.id} title={confirm ? "Apstiprināt?" : "Atcelt apmeklējumu"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelRegister : confirmDialog} />}
+                {multiple && <Button title="Skenēt nākamo" iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
                 </>
               )
             }            

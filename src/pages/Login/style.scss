@@ -26,6 +26,7 @@
     }
     .input-email {
       width: 100%;
+      height: 42px;
       background: #ffffff;
       border: 1px solid #eaebf6;
       border-radius: 6px;
@@ -34,25 +35,29 @@
     }
     .password {
       display: flex;
+      height: 42px;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
+      padding: 0 12px;
       background: #ffffff;
       border: 1px solid #eaebf6;
       border-radius: 6px;
       .input-password {
         width: 100%;
+        height: 42px;
         border: none;
         background-color: transparent;
       }
       button {
-        width: 14px;
+        height: 16px;
+        width: 16px;
         border: none;
         outline: none;
         cursor: pointer;
         background-color: transparent;
         img {
-          width: 14px;
+          margin: auto;
+          width: 16px;
         }
       }
     }

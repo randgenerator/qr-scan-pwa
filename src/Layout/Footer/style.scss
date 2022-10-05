@@ -4,6 +4,7 @@
   width: 100%;
   display: flex;
   align-items: center;
+  z-index: 9;
   .scanQRcode {
     width: 100%;
     display: flex;
@@ -15,7 +16,6 @@
     img {
       display: block;
       width: 24px;
-      margin: 0 auto;
     }
   }
   .list {
@@ -30,7 +30,6 @@
     img {
       display: block;
       width: 24px;
-      margin: 0 auto;
     }
   }
   .active {

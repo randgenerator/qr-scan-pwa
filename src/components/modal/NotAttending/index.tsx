@@ -63,11 +63,11 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
         <div className="events">
           <div className="lunchSeries">
             <h4 className="lunchTitle">{event.service_series_name}</h4>
-            <span>Not attending</span>
+            <span>Pieteikts kavējums</span>
           </div>
-          <Button title="Register attendance" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} />
+          <Button title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} />
         </div>
-        <Button title="Scan next" type="fiolet" iconArrow={true} iconLogOut={undefined} onClick={handleClose} />
+        <Button title="Skenēt nākamo" type="fiolet" iconArrow={true} iconLogOut={undefined} onClick={handleClose} />
       </div>
     </div>
   );

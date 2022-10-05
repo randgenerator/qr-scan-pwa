@@ -11,9 +11,9 @@ const Header = () => {
 
   return (
     <div className="header">        
-        {location.pathname != "/events" ? <div className="leftIcon"><img src={IconLeft} alt="leftIcon" /><Link to="/events"><span>Events</span></Link></div> : ""}
+        {location.pathname != "/events" ? <div className="leftIcon"><img src={IconLeft} alt="leftIcon" /><Link to="/events"><span>Pasākumi</span></Link></div> : ""}
       
-      <h3 className="title">{location.pathname === "/events" ? "Events" : location.pathname === "/registration" ? "Scan QR Code" : location.pathname === "/attendanceList" ? "Attendance List" : "Settings"}</h3>
+      <h3 className="title">{location.pathname === "/events" ? "Pasākumi" : location.pathname === "/registration" ? "QR skenēšana" : location.pathname === "/attendanceList" ? "Apmeklējumu saraksts" : "Iestatījumi"}</h3>
       <Link to="/settings"><img className="settingsIcon" src={IconSettings} alt="settingsIcon" /></Link>
     </div>
   );

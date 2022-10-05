@@ -104,7 +104,7 @@ const AttendanceList = () => {
       <div className="list__search">
         <div className="input">
           <img src={SearchIcon} alt="searchIcon" />
-          <input type="text" value={searchField} placeholder="search" onChange={(e) => setSearchField(e.target.value)} />
+          <input type="text" value={searchField} placeholder="Meklēt" onChange={(e) => setSearchField(e.target.value)} />
         </div>
         {searchField && <button type="button" onClick={clearSearch}>Cancel</button>}
       </div>
@@ -116,7 +116,7 @@ const AttendanceList = () => {
                 <h3 data-qr={attendee.qr_uuid}>{attendee.full_name}</h3>
                 <span data-qr={attendee.qr_uuid}>{attendee.class_name}</span>
               </div>
-              {attendee.verified === 1 ? <span data-qr={attendee.qr_uuid} className="verified">Attendance verified</span> : attendee.status.toLowerCase().includes("attending") ? <span data-qr={attendee.qr_uuid} className="attending">Attending</span> : attendee.status.toLowerCase().includes("cancelled") ? <span data-qr={attendee.qr_uuid} className="notattending">Not Attending</span> : <span data-qr={attendee.qr_uuid} className="attending">Attending</span> }
+              {attendee.verified === 1 ? <span data-qr={attendee.qr_uuid} className="verified">Apmeklējums reģistrēts</span> : attendee.status.toLowerCase().includes("attending") ? <span data-qr={attendee.qr_uuid} className="attending">Plānots</span> : attendee.status.toLowerCase().includes("cancelled") ? <span data-qr={attendee.qr_uuid} className="notattending">Pieteikts kavējums</span> : <span data-qr={attendee.qr_uuid} className="attending">Plānots</span> }
             </div>
           )
       })}

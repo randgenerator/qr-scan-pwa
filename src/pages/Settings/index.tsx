@@ -33,13 +33,13 @@ const Settings = () => {
   return (
     <div className="settings">
       <div className="settings__top">
-        <h3 className="title">Settings</h3>
+        <h3 className="title">Iestatījumi</h3>
         <img className="closeIcon" src={CloseIcon} onClick={() => navigate(-1)} alt="closeIcon" />
       </div>
       <div className="settings__content">
-        <h3 className="title">Registration mode</h3>
+        <h3 className="title">Reģistrācijas režīms</h3>
         <div className="change-mode">
-          <h3> Continuous registration</h3>
+          <h3>Nepārtraukta reģistrācija</h3>
           <div className="checkboxWrapper">
             <input type="checkbox" key={Math.random()} checked={continuous} id="checkboxThreeInput" onChange={handleChange} name="" />
             <label htmlFor="checkboxThreeInput"></label>
@@ -47,7 +47,7 @@ const Settings = () => {
         </div>
       </div>
       <div className="logout">
-         <Button title="Log out" iconLogOut={true} type="redBordered" iconArrow={true} onClick={handleSignOut} />
+         <Button title="Izlogoties" iconLogOut={true} type="redBordered" iconArrow={true} onClick={handleSignOut} />
       </div>
     </div>
   );

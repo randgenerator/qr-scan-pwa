@@ -106,15 +106,15 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
 
                     <h4>{event.service_series_name}</h4>
 
-                    {att.verified === 1 ? <span className="attendanceVerified">Attendance verified</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Attending</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Not Attending</span> : <span className="attending">Attending</span>}
+                    {att.verified === 1 ? <span className="attendanceVerified">Apmeklējums reģistrēts</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Plānots</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Pieteikts kavējums</span> : <span className="attending">Plānots</span>}
                     
-                    {att.verified === 0 ? <Button title="Register attendance" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title={confirm ? "Confirm?" : "Cancel attendance"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
+                    {att.verified === 0 ? <Button title="Reģistrēt apmeklējumu" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title={confirm ? "Apstiprināt?" : "Atcelt apmeklējumu"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
                   
                   </>
                 )
               }
             })}
-            <div className="cancel"><Button title="Cancel" type="fiolBordered" iconArrow={undefined} iconLogOut={undefined} onClick={closeModal} /></div>
+            <div className="cancel"><Button title="Atcelt" type="fiolBordered" iconArrow={undefined} iconLogOut={undefined} onClick={closeModal} /></div>
             </div>
             
           </div>

@@ -20,7 +20,7 @@ const NotFound = ({button, buttonTitle, showModal, continious, scanAllowed}:{but
     <div className="modalSecond">
       <div className="modalSecond__wrapper">
       <img src={IconDanger} alt="iconChecked" />
-        <h3>Attendant not found!</h3>
+        <h3>Apmeklētājs nav atrasts!</h3>
         {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
 
       </div>

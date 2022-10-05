@@ -88,7 +88,7 @@ const Events = () => {
     <form onSubmit={handleSubmit}>
       <div className="events">
         <div className="events__content">
-          <h3 className="content-title">Select events to register attendants</h3>
+          <h3 className="content-title">Atzīmējiet pasākumus, kuros reģistrēsiet dalībniekus</h3>
           <ul className="select-events">
                 {events.map((event) => {
                   return (
@@ -125,7 +125,7 @@ const Events = () => {
           </ul>
           <div className="contentButton">
             <button className="submitButton" type="submit">
-              Start registration
+            Sākt reģistrāciju
             </button>
           </div>
         </div>
