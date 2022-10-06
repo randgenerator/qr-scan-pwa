@@ -16,21 +16,6 @@
     background: #ffffff;
     border-radius: 8px;
     margin: 40px 20px;
-    .attending {
-      font-weight: 600;
-      font-size: 13px;
-      color: #ff8f1f;
-    }
-    .verified {
-      font-weight: 600;
-      font-size: 13px;
-      color: #00be7e;
-    }
-    .notAttending {
-      font-weight: 600;
-      font-size: 13px;
-      color: #ff3141;
-    }
     img {
       display: block;
       width: 42px;
@@ -54,6 +39,21 @@
       border-bottom: 1px solid #eeeeee;
       padding-bottom: 12px;
       margin-bottom: 20px;
+      .attending {
+        font-weight: 600;
+        font-size: 13px;
+        color: #ff8f1f;
+      }
+      .verified {
+        font-weight: 600;
+        font-size: 13px;
+        color: #00be7e;
+      }
+      .notAttending {
+        font-weight: 600;
+        font-size: 13px;
+        color: #ff3141;
+      }
       .lunchTitle {
         font-weight: 400;
         font-size: 17px;
