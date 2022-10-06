@@ -1,14 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import "./style.scss";
 import Button from "components/button";
 
 import IconChecked from "assets/images/icon-checked.svg"
 
 const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed}:{button:any, buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
-  useEffect(() => {
+  useEffect(() => {    
+    if (continious) setTimeout(() => closeModal(), 3000)
+  }, [])
+
+  useLayoutEffect(() => {
     let audio = new Audio("/ES_Multimedia Success 793 - SFX Producer.mp3")
     audio.play()
-    if (continious) setTimeout(() => closeModal(), 3000)
   }, [])
 
   const closeModal = () => {

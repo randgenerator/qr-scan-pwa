@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import "./style.scss";
 import IconDanger from "assets/images/icon-danger.svg";
 import axios from "axios";
@@ -86,7 +86,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
     showModal(false)
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3")
     audio.play()
   }, [])

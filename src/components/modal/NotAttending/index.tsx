@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import "./style.scss";
 import Button from "components/button";
 import IconDanger from "assets/images/icon-danger.svg";
@@ -49,7 +49,7 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
     showModal(false)
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3")
     audio.play()
   }, [])

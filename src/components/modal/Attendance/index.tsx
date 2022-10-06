@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import Button from "components/button";
 import "./style.scss";
 import checkedIcon from "assets/images/icon-checked.svg";
@@ -81,7 +81,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
     }
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3")
     audio.play()
   }, [])

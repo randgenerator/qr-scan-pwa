@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./style.scss";
 import QrReader from 'react-qr-reader-es6';
@@ -160,7 +160,7 @@ const RegistrationQR = () => {
     setScanAllowed(!scanAllowed)
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (scanAllowed) {
       let audio = new Audio("/ES_Multimedia 808 - SFX Producer.mp3")
       audio.play()
