@@ -95,7 +95,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
     <div className="severalEvents">
       <div className="severalEvents__wrapper">
         <img src={IconDanger} alt="iconChecked" />
-        <h3>{multiple ? "Apmeklētājs piedalās vairākos pasākumos!" : "Attendant marked attending several events!"}</h3>
+        <h3>{multiple ? "Attendant marked not attending!" : "Attendant marked attending several events!"}</h3>
         <p>{`${attendee[0].full_name}, ${attendee[0].class_name}`}</p>
         <div>
           {events.map((event:any) => {
