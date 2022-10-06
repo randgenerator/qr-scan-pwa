@@ -80,7 +80,7 @@ const Login = () => {
                     )}
                   </button>
                 </div>
-                <a href="https://pa-test.esynergy.lv/forgot-password"><p className="forgotPassword">Aizmirsāt paroli?</p></a>
+                <a href={`${process.env.REACT_APP_API_BASE_URL}/forgot-password`}><p className="forgotPassword">Aizmirsāt paroli?</p></a>
                 <button className="btn-submit" type="submit">
                   Pieslēgties
                 </button>
