@@ -20,13 +20,13 @@ const Footer = () => {
       <div className={activeScan ? "scanQRcode active" : "scanQRcode "}>
       <Link to="/registration" onClick={handleChange}>
       <img src={ScanIcon} alt="scanIcon" />
-        <h3>Scan QR Code</h3>
+        <h3>QR skenēšana</h3>
       </Link>
       </div>
       <div className={activeList ? "list active" : "list"}>
       <Link to="/attendanceList" onClick={handleChange}>
        <img src={ListIcon} alt="listIcon" />
-        <h3>Attendance list</h3>
+        <h3>Apmeklējumu saraksts</h3>
       </Link>
       </div>
     </div>
