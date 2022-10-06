@@ -58,7 +58,7 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
     <div className="notAttending">
       <div className="notAttending__wrapper">
         <img src={IconDanger} alt="iconChecked" />
-        <h3>Attendant marked not attending!</h3>
+        <h3>Dalībniekam pieteikts kavējums!</h3>
         <p>{data != undefined ? `${data.full_name}, ${data.class_name}` : ""}</p>
         <div className="events">
           <div className="lunchSeries">
