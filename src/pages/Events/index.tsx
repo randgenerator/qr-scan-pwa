@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getToken, setSelectedEvents, saveEvents, saveAttendance, getEvents } from "store/db";
 import "./style.scss";
-import IconSettings from "assets/images/icon-settings.svg";
 import { useNavigate } from "react-router-dom";
 import isReachable from "is-reachable";
 
@@ -33,6 +32,7 @@ const Events = () => {
         })
         .catch(function (error) {
           console.log(error)
+          return []
         })
         setEvents(evts)
         evts.forEach(async (event: any) => {
