@@ -1,0 +1,53 @@
+.chooseAuth {
+  max-width: 515px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 37px 70px 46px;
+  .title {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 25px;
+    text-align: center;
+    color: #262626;
+    margin-bottom: 16px;
+  }
+  .description {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #262626;
+    margin-bottom: 26px;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f6f6f9;
+      border: 1px solid #dedfe9;
+      border-radius: 8px;
+      padding: 16px 24px;
+      cursor: pointer;
+      p {
+        display: flex;
+        align-items: center;
+        img {
+          width: 24px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 686px) {
+  .chooseAuth {
+    padding: 28px 26px 16px;
+  }
+}
