@@ -24,6 +24,8 @@ const Login = () => {
     const [is2fa, setIs2fa] = useState<boolean>(false)
     const [loginActive, setLoginActive] = useState<boolean>(true)
     const [authSelection, setAuthSelection] = useState<boolean>(false)
+    const [error2fa, setError2fa] = useState<string>()
+    const [showError, setShowError] = useState<boolean>(false)
 
     const navigate = useNavigate();
 
@@ -61,12 +63,16 @@ const Login = () => {
       })
       .catch(function(error) {
           console.log("axios error", error)
+          if (error.response.data.error.includes("invalid_code")) {
+            setError2fa("Invalid code")
+            setShowError(true)
+          }          
       })
-      if (token.twoFA == "two_fa_required") {
+      if (token?.twoFA == "two_fa_required") {
         setEmail(token.email)
         setPhone(token.telephone)
         setLoginActive(false)
-      } else if (token.token) {
+      } else if (token?.token) {
         if(signIn({token: token.token,
           expiresIn: token.expires_in / 60,
           tokenType: "Bearer",
@@ -171,6 +177,7 @@ const Login = () => {
           <div className="form">
             <span className="checkSms">Ievadiet 4 ciparu drošības kodu</span>
             <form onSubmit={handleLogin}>
+              {showError && <p style={{color: "red"}}>{error2fa}</p>}
             <input 
                   className="inputCode" 
                   type="text"
