@@ -25,7 +25,9 @@ const Login = () => {
     const [loginActive, setLoginActive] = useState<boolean>(true)
     const [authSelection, setAuthSelection] = useState<boolean>(false)
     const [error2fa, setError2fa] = useState<string>()
+    const [errorLogin, setErrorLogin] = useState<string>()
     const [showError, setShowError] = useState<boolean>(false)
+    const [showLoginError, setShowLoginError] = useState<boolean>(false)
 
     const navigate = useNavigate();
 
@@ -63,10 +65,13 @@ const Login = () => {
       })
       .catch(function(error) {
           console.log("axios error", error)
-          if (error.response.data.error.includes("invalid_code")) {
+          if (error.response.data.error?.includes("invalid_code")) {
             setError2fa("Invalid code")
             setShowError(true)
-          }          
+          } else if (error.response.data.message?.includes("Unauthorized")) {
+            setErrorLogin("Invalid credentials")
+            setShowLoginError(true)
+          }
       })
       if (token?.twoFA == "two_fa_required") {
         setEmail(token.email)
@@ -94,6 +99,7 @@ const Login = () => {
             <button className={byEmail ? "phone" : "phone active"} onClick={() => setByEmail(false)}><h3>ar telefona numuru</h3></button>
             </div>
             <div className="login__form">
+              {showLoginError && <p style={{color: "red"}}>{errorLogin}</p>}
               <form onSubmit={handleLogin}>
                 {!byEmail && <><h4 className="input-title">Telephone</h4>
                 <input 
@@ -178,7 +184,7 @@ const Login = () => {
             <span className="checkSms">Ievadiet 4 ciparu drošības kodu</span>
             <form onSubmit={handleLogin}>
               {showError && <p style={{color: "red"}}>{error2fa}</p>}
-            <input 
+              <input 
                   className="inputCode" 
                   type="text"
                   placeholder="Ievadiet kodu šeit" 
@@ -186,7 +192,7 @@ const Login = () => {
                   onChange={(e) => {
                     setCode(e.target.value) 
                     setIs2fa(true)
-                  }}/>
+                }}/>
               <button type="submit">Apstiprināt</button>
             </form>
             {byEmail && <p className="checkSpamFolder">Nesaņēmāt e-pastu? Pārbaudiet savu SPAM iesūtni</p>}
