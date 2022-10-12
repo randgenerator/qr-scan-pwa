@@ -28,6 +28,7 @@ const Login = () => {
     const [errorLogin, setErrorLogin] = useState<string>()
     const [showError, setShowError] = useState<boolean>(false)
     const [showLoginError, setShowLoginError] = useState<boolean>(false)
+    const [resendSms, setResendSms] = useState<boolean>(false)
 
     const navigate = useNavigate();
 
@@ -52,12 +53,17 @@ const Login = () => {
           email: email,
           password: password
         }
-      } else {
+      } else if (resendSms) {
         data = {
           code: "371",
           telephone: phone,
           password: password,
           resend: "sms"
+        }
+      } else {
+        data = {
+          telephone: phone,
+          password: password
         }
       }
       if (is2fa) data.twoFA = code
@@ -155,6 +161,7 @@ const Login = () => {
           <div className="buttons">
             <button type="button" onClick={() => {
               setByEmail(false)
+              setResendSms(true)
               setAuthSelection(false)
               handleLogin()
             }} className="phoneButton">
@@ -165,6 +172,7 @@ const Login = () => {
             </button>
             <button type="button" onClick={() => {
               setByEmail(true)
+              setResendSms(false)
               setAuthSelection(false)
               handleLogin()
             }} className="emailButton">
@@ -180,8 +188,8 @@ const Login = () => {
       return (
         <div className="sendsms">
           <img className="iconMessage" src={IconMessage} alt="icon sms" />
-          <h2 className="title">{byEmail ? "Lūdzu pārbaudiet savu e-pasta pastkasti" : "Mēs nosūtījām jums SMS"}</h2>
-          <p className="description">{byEmail ? "Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz adresi" : "Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz jūsu telefonu"} <span>{byEmail ? email : phone}</span></p>
+          <h2 className="title">Lūdzu pārbaudiet savu e-pasta pastkasti</h2>
+          <p className="description">Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz adresi <span>{email}</span></p>
           <div className="form">
             <span className="checkSms">Ievadiet 4 ciparu drošības kodu</span>
             <form onSubmit={handleLogin}>
@@ -197,7 +205,7 @@ const Login = () => {
                 }}/>
               <button type="submit">Apstiprināt</button>
             </form>
-            {byEmail && <p className="checkSpamFolder">Nesaņēmāt e-pastu? Pārbaudiet savu SPAM iesūtni</p>}
+            <p className="checkSpamFolder">Nesaņēmāt e-pastu? Pārbaudiet savu SPAM iesūtni</p>
             <p onClick={resend2fa} className="smsCode"><a>Nosūtīt kodu vēlreiz</a></p>
           </div>
         </div>
