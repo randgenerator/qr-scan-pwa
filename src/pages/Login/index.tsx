@@ -54,6 +54,7 @@ const Login = () => {
         }
       } else {
         data = {
+          code: "371",
           telephone: phone,
           password: password,
           resend: "sms"
