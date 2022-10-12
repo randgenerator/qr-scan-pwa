@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./style.scss";
 import { addToken } from "store/db";
@@ -45,20 +45,26 @@ const Login = () => {
       setAuthSelection(true)
     }
 
+    useEffect(() => {
+      if (resendSms) handleLogin()
+    },[resendSms])
+
     let handleLogin = async (e?: any) => {
       if (e) e.preventDefault()
       let data: any
-      if (byEmail) {
-        data = {
-          email: email,
-          password: password
-        }
-      } else if (resendSms) {
+      if (resendSms) {
+        console.log("resend")
         data = {
           code: "371",
           telephone: phone,
           password: password,
           resend: "sms"
+        }
+      } else if (byEmail) {
+        console.log("by email")
+        data = {
+          email: email,
+          password: password
         }
       } else {
         data = {
@@ -163,7 +169,6 @@ const Login = () => {
               setByEmail(false)
               setResendSms(true)
               setAuthSelection(false)
-              handleLogin()
             }} className="phoneButton">
               <p>
                 <img src={PhoneIcon} alt="phoneIcon" /> Nosūtīt kā SMS
@@ -188,8 +193,8 @@ const Login = () => {
       return (
         <div className="sendsms">
           <img className="iconMessage" src={IconMessage} alt="icon sms" />
-          <h2 className="title">Lūdzu pārbaudiet savu e-pasta pastkasti</h2>
-          <p className="description">Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz adresi <span>{email}</span></p>
+          <h2 className="title">{resendSms ? "Mēs nosūtījām jums SMS" : "Lūdzu pārbaudiet savu e-pasta pastkasti" }</h2>
+          <p className="description">{resendSms ? "Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz jūsu telefonu" : "Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz adresi"} <span>{resendSms ? phone : email}</span></p>
           <div className="form">
             <span className="checkSms">Ievadiet 4 ciparu drošības kodu</span>
             <form onSubmit={handleLogin}>
@@ -205,7 +210,7 @@ const Login = () => {
                 }}/>
               <button type="submit">Apstiprināt</button>
             </form>
-            <p className="checkSpamFolder">Nesaņēmāt e-pastu? Pārbaudiet savu SPAM iesūtni</p>
+            {resendSms && <p className="checkSpamFolder">Nesaņēmāt e-pastu? Pārbaudiet savu SPAM iesūtni</p>}
             <p onClick={resend2fa} className="smsCode"><a>Nosūtīt kodu vēlreiz</a></p>
           </div>
         </div>
