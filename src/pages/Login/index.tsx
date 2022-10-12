@@ -55,7 +55,8 @@ const Login = () => {
       } else {
         data = {
           telephone: phone,
-          password: password
+          password: password,
+          resend: "sms"
         }
       }
       if (is2fa) data.twoFA = code
