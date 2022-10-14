@@ -52,7 +52,6 @@ const Login = () => {
     },[resendSms])
 
     let handleLogin = async (e?: any) => {
-      console.log("sup?")
       setLoading(true)
       if (e) e.preventDefault()
       let data: any
@@ -204,7 +203,6 @@ const Login = () => {
     } else {
       return (
         <div className="sendsms">
-          {/* {loading && <Spinner />} */}
           <img className="iconMessage" src={IconMessage} alt="icon sms" />
           <h2 className="title">{resendSms ? "Mēs nosūtījām jums SMS" : "Lūdzu pārbaudiet savu e-pasta pastkasti" }</h2>
           <p className="description">{resendSms ? "Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz jūsu telefonu" : "Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz adresi"} <span>{resendSms ? phone : email}</span></p>
