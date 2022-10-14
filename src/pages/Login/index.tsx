@@ -79,6 +79,7 @@ const Login = () => {
           return response.data
       })
       .catch(function(error) {
+          setLoading(false)
           console.log("axios error", error)
           if (error.response.data.error?.includes("invalid_code")) {
             setError2fa("Invalid code")
