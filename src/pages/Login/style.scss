@@ -91,6 +91,8 @@
           width: 16px;
         }
       }
+      
+
     }
     .forgotPassword {
       font-weight: 400;
@@ -109,6 +111,12 @@
       color: #ffffff;
       cursor: pointer;
       margin-top: 26px;
+    }
+    button:disabled,
+    button[disabled]{
+      cursor: progress;
+      background-color: #a693e5;
+      color: #7159bd;
     }
   }
 }

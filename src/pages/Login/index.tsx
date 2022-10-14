@@ -12,6 +12,7 @@ import IconArrow from "assets/images/icon-arrow.svg";
 import EmailIcon from "assets/images/Information.png";
 import PhoneIcon from "assets/images/mobile-alt.png";
 import "./sendsms.scss"
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Login = () => {
     const signIn = useSignIn()
@@ -29,6 +30,7 @@ const Login = () => {
     const [showError, setShowError] = useState<boolean>(false)
     const [showLoginError, setShowLoginError] = useState<boolean>(false)
     const [resendSms, setResendSms] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const navigate = useNavigate();
 
@@ -50,10 +52,11 @@ const Login = () => {
     },[resendSms])
 
     let handleLogin = async (e?: any) => {
+      console.log("sup?")
+      setLoading(true)
       if (e) e.preventDefault()
       let data: any
       if (resendSms) {
-        console.log("resend")
         data = {
           code: "371",
           telephone: phone,
@@ -61,7 +64,6 @@ const Login = () => {
           resend: "sms"
         }
       } else if (byEmail) {
-        console.log("by email")
         data = {
           email: email,
           password: password
@@ -91,6 +93,7 @@ const Login = () => {
         setEmail(token.email)
         setPhone(token.telephone)
         setLoginActive(false)
+        setLoading(false)
       } else if (token?.token) {
         if(signIn({token: token.token,
           expiresIn: token.expires_in / 60,
@@ -98,11 +101,13 @@ const Login = () => {
           authState: {email: email}
         })) {
             await addToken(token.token)
+            setLoading(false)
             navigate("/events");
         }
       }
     }
 
+    
     if (loginActive) {
       return (
         <div className="login">
@@ -148,7 +153,14 @@ const Login = () => {
                   </button>
                 </div>
                 <a href={`${process.env.REACT_APP_API_BASE_URL}/forgot-password`}><p className="forgotPassword">Aizmirsāt paroli?</p></a>
-                <button className="btn-submit" type="submit">
+                <button className="btn-submit" disabled={loading} type="submit">
+                  {loading &&  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: '#fff',
+                      position: 'absolute'
+                    }}
+                  />}
                   Pieslēgties
                 </button>
               </form>
@@ -192,6 +204,7 @@ const Login = () => {
     } else {
       return (
         <div className="sendsms">
+          {/* {loading && <Spinner />} */}
           <img className="iconMessage" src={IconMessage} alt="icon sms" />
           <h2 className="title">{resendSms ? "Mēs nosūtījām jums SMS" : "Lūdzu pārbaudiet savu e-pasta pastkasti" }</h2>
           <p className="description">{resendSms ? "Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz jūsu telefonu" : "Lai ielogotos, ievadiet 4 ciparu droršības kodu, ko nosūtījām uz adresi"} <span>{resendSms ? phone : email}</span></p>
@@ -208,7 +221,16 @@ const Login = () => {
                     setCode(e.target.value) 
                     setIs2fa(true)
                 }}/>
-              <button type="submit">Apstiprināt</button>
+              <button type="submit">
+                Apstiprināt
+                {loading &&  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: '#fff',
+                      position: 'absolute'
+                    }}
+                  />}
+                </button>
             </form>
             {resendSms && <p className="checkSpamFolder">Nesaņēmāt e-pastu? Pārbaudiet savu SPAM iesūtni</p>}
             <p onClick={resend2fa} className="smsCode"><a>Nosūtīt kodu vēlreiz</a></p>
