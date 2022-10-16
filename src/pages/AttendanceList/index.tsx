@@ -64,6 +64,7 @@ const AttendanceList = () => {
       setAttendances(newAtt)
       const groupedById = newAtt.filter((att,index,allAtt)=>allAtt.findIndex(v2=>(v2.qr_uuid===att.qr_uuid))===index)
       setGroupedAttendances(groupedById)
+      setSearch(groupedById)
     }
   }, [updateAtt])
 
