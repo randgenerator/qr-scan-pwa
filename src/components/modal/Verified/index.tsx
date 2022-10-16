@@ -6,13 +6,20 @@ import IconChecked from "assets/images/icon-checked.svg"
 
 const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed}:{button:any, buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {    
-    if (continious) setTimeout(() => closeModal(), 2000)
+    if (continious) {
+      setTimeout(() => allowScan(), 1000)
+      setTimeout(() => closeModal(), 2000)
+    }
   }, [])
 
   useLayoutEffect(() => {
     let audio = new Audio("/ES_Multimedia Success 793 - SFX Producer.mp3")
     audio.play()
   }, [])
+
+  const allowScan = () => {
+    if (scanAllowed) scanAllowed(true)
+  }
 
   const closeModal = () => {
     if (scanAllowed) scanAllowed(true)

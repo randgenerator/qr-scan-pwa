@@ -5,7 +5,10 @@ import IconDanger from "assets/images/icon-danger.svg";
 
 const InProgress = ({button, buttonTitle, data, showModal, continious, scanAllowed}:{button:any,buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {
-    if (continious) setTimeout(() => closeModal(), 2000)
+    if (continious) {
+      setTimeout(() => scanAllowed(true), 1000)
+      setTimeout(() => closeModal(), 2000)
+    }
   }, [])
 
   useLayoutEffect(() => {
@@ -14,7 +17,6 @@ const InProgress = ({button, buttonTitle, data, showModal, continious, scanAllow
   }, [])
 
   const closeModal = () => {
-    scanAllowed(true)
     showModal(false)
   }
 

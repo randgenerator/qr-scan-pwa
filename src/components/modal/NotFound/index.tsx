@@ -6,7 +6,10 @@ import IconDanger from "assets/images/icon-closed.svg"
 
 const NotFound = ({button, buttonTitle, showModal, continious, scanAllowed}:{button:any,buttonTitle:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {
-    if (continious) setTimeout(() => closeModal(), 2000)
+    if (continious) {
+      setTimeout(() => scanAllowed(true), 1000)
+      setTimeout(() => closeModal(), 2000)
+    }
   }, [])
   
   useLayoutEffect(() => {
@@ -15,7 +18,6 @@ const NotFound = ({button, buttonTitle, showModal, continious, scanAllowed}:{but
   }, [])
   
   const closeModal = () => {
-    scanAllowed(true)
     showModal(false)
   }
   
