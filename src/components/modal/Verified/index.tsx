@@ -6,7 +6,7 @@ import IconChecked from "assets/images/icon-checked.svg"
 
 const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed}:{button:any, buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {    
-    if (continious) setTimeout(() => closeModal(), 3000)
+    if (continious) setTimeout(() => closeModal(), 2000)
   }, [])
 
   useLayoutEffect(() => {
