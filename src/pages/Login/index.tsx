@@ -90,8 +90,8 @@ const Login = () => {
           }
       })
       if (token?.twoFA == "two_fa_required") {
-        setEmail(token.email)
-        setPhone(token.telephone)
+        // setEmail(token.email)
+        // setPhone(token.telephone)
         setLoginActive(false)
         setLoading(false)
       } else if (token?.token) {
