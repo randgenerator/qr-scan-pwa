@@ -220,7 +220,7 @@ const Login = () => {
                     setCode(e.target.value) 
                     setIs2fa(true)
                 }}/>
-              <button type="submit">
+              <button type="submit" disabled={loading}>
                 Apstiprināt
                 {loading &&  <CircularProgress
                     size={24}

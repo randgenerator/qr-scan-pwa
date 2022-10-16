@@ -26,7 +26,7 @@ const Cacnelled = ({button, buttonTitle, data, showModal, continious, scanAllowe
         <img src={IconChecked} alt="iconChecked" />
         <h3>Apmeklējums atcelts!</h3>
         <p>{data != undefined ? data : ""}</p>
-        {button && <Button title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
+        {button && <Button disabled={false} title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
 
       </div>
     </div>

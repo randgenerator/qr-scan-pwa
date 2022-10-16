@@ -9,10 +9,12 @@ import SendOffline from "offline";
 
 const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAllowed, showSuccess, setUpdateAtt}:{events:any, multiple:any, setUpdateAtt:any, attendee:any, showModal:any, showError: any, scanAllowed:any, showSuccess: any}) => {
   const [confirm, setConfirm] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleRegister = async (e:any) => {
     const id = e.target.value
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      setLoading(true)
       await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/verify`, {}, {
@@ -24,17 +26,20 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
         await verifyAttendance(parseInt(id))
         setUpdateAtt(parseInt(id))
         showModal(false)
+        setLoading(false)
         showSuccess(true)
       })
       .catch(function (error) {
         if (error.response.data.error) {
           if (error.response.data.error.includes("already")) {
             showModal(false)
+            setLoading(false)
             showError(true)
           }
         }
       })
     } else {
+      setLoading(true)
       await verifyAttendance(id)
       const offlineData = {
         id: id,
@@ -43,6 +48,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
       await saveOffline(offlineData)
       setUpdateAtt(parseInt(id))
       showSuccess(true)
+      setLoading(false)
       showModal(false)
     }    
   }
@@ -54,6 +60,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
   const cancelRegister = async (e:any) => {
     const id = e.target.value
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      setLoading(true)
       await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/unverify`, {}, {
@@ -65,14 +72,17 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
         await unverifyAttendance(parseInt(id))
         setUpdateAtt(parseInt(id))
         showModal(false)
+        setLoading(false)
         scanAllowed(true)
       })
       .catch(function (error) {
         console.log(error)
         showModal(false)
+        setLoading(false)
         scanAllowed(true)
       })
     } else {
+      setLoading(true)
       await unverifyAttendance(parseInt(id))
       setUpdateAtt(parseInt(id))
       const offlineData = {
@@ -81,6 +91,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
       } 
       await saveOffline(offlineData)
       showModal(false)
+      setLoading(false)
     }    
   }
 
@@ -110,8 +121,8 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
                   <h4 className="lunchTitle">{event.service_series_name}</h4>
                   <span className={att.verified === 1 ? "verified" : att.status.toLowerCase() == "attending" ? "attending" : "notAttending"}>{att.verified === 1 ? "Apmeklējums reģistrēts" : att.status}</span>
                 </div>
-                {att.verified === 0 ? <Button value={att.id} title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={handleRegister} /> : <Button value={att.id} title={confirm ? "Apstiprināt?" : "Atcelt apmeklējumu"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelRegister : confirmDialog} />}
-                {multiple && <Button title="Skenēt nākamo" iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
+                {att.verified === 0 ? <Button disabled={loading} value={att.id} title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={handleRegister} /> : <Button disabled={loading} value={att.id} title={confirm ? "Apstiprināt?" : "Atcelt apmeklējumu"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelRegister : confirmDialog} />}
+                {multiple && <Button disabled={false} title="Skenēt nākamo" iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
                 </>
               )
             }            

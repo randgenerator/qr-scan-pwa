@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import "./style.scss";
 import Button from "components/button";
 import IconDanger from "assets/images/icon-danger.svg";
@@ -8,8 +8,11 @@ import isReachable from "is-reachable";
 import SendOffline from "offline";
 
 const NotAttending = ({event, showModal, data, scanAllowed, showError, showSuccess, setUpdateAtt}:{event:any, showModal:any, data:any, setUpdateAtt:any, scanAllowed:any, showError:any, showSuccess:any}) => {
+  const [loading, setLoading] = useState<boolean>(false)
+
   const register = async () => {
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      setLoading(true)
       await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${data.id}/verify`, {}, {
@@ -21,18 +24,22 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
         await verifyAttendance(data.id)
         setUpdateAtt(data.id)
         showSuccess(true)
+        setLoading(false)
         showModal(false)
       })
       .catch(function (error) {
         if (error.response.data.error) {
           if (error.response.data.error.includes("already")) {
             showError(true)
+            setLoading(false)
             showModal(false)
           }
         }
+        setLoading(false)
         showModal(false)
       })
     } else {
+      setLoading(true)
       await verifyAttendance(data.id)
       const offlineData = {
         id: data.id,
@@ -41,6 +48,7 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
       await saveOffline(offlineData)
       setUpdateAtt(data.id)
       showSuccess(true)
+      setLoading(false)
       showModal(false)
     }
     
@@ -67,9 +75,9 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
             <h4 className="lunchTitle">{event.service_series_name}</h4>
             <span>Pieteikts kavējums</span>
           </div>
-          <Button title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} />
+          <Button disabled={loading} title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} />
         </div>
-        <Button title="Skenēt nākamo" type="fiolet" iconArrow={true} iconLogOut={undefined} onClick={handleClose} />
+        <Button disabled={false} title="Skenēt nākamo" type="fiolet" iconArrow={true} iconLogOut={undefined} onClick={handleClose} />
       </div>
     </div>
   );

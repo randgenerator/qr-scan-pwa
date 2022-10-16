@@ -9,6 +9,7 @@ import SendOffline from "offline";
 
 const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, setUpdateAtt }:{events:any, showCancelled:any, attendee:any, showModal:any, showVerified:any, setUpdateAtt:any}) => {
   const [confirm, setConfirm] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const closeModal = () => {
     showModal(false)
@@ -16,6 +17,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
 
   const register = async (e:any) => {
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      setLoading(true)
       await SendOffline()
       const token = await getToken()
       const resp = await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/verify`, {}, {
@@ -34,9 +36,11 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
         await verifyAttendance(parseInt(e.target.value))
         setUpdateAtt(e.target.value)
         showVerified(true)
+        setLoading(false)
         showModal(false)
       }
     } else {      
+      setLoading(true)
       await verifyAttendance(parseInt(e.target.value))
       const offlineData = {
         id: e.target.value,
@@ -45,6 +49,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
       await saveOffline(offlineData)
       setUpdateAtt(e.target.value)
       showVerified(true)
+      setLoading(false)
       showModal(false)
     }
   }
@@ -55,6 +60,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
 
   const cancelAttendance = async (e:any) => {
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      setLoading(true)
       await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/unverify`, {}, {
@@ -66,12 +72,14 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
         await unverifyAttendance(parseInt(e.target.value))
         setUpdateAtt(e.target.value)
         showCancelled(true)
+        setLoading(false)
         showModal(false)
       })
       .catch(function (error) {
         console.log(error)
       })
     } else {
+      setLoading(true)
       await unverifyAttendance(parseInt(e.target.value))
       const offlineData = {
         id: e.target.value,
@@ -80,6 +88,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
       setUpdateAtt(e.target.value)
       await saveOffline(offlineData)
       showCancelled(true)
+      setLoading(false)
       showModal(false)  
     }
   }
@@ -111,13 +120,13 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
 
                     {att.verified === 1 ? <span className="attendanceVerified">Apmeklējums reģistrēts</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Plānots</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Pieteikts kavējums</span> : <span className="attending">Plānots</span>}
                     
-                    {att.verified === 0 ? <Button title="Reģistrēt apmeklējumu" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button value={att.id} title={confirm ? "Apstiprināt?" : "Atcelt apmeklējumu"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
+                    {att.verified === 0 ? <Button disabled={loading} title="Reģistrēt apmeklējumu" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button disabled={loading} value={att.id} title={confirm ? "Apstiprināt?" : "Atcelt apmeklējumu"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
                   
                   </>
                 )
               }
             })}
-            <div className="cancel"><Button title="Atcelt" type="fiolBordered" iconArrow={undefined} iconLogOut={undefined} onClick={closeModal} /></div>
+            <div className="cancel"><Button disabled={false} title="Atcelt" type="fiolBordered" iconArrow={undefined} iconLogOut={undefined} onClick={closeModal} /></div>
             </div>
             
           </div>
