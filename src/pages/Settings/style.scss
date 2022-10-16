@@ -104,10 +104,10 @@
     }
   }
   .logout {
-    height: calc(100vh - 256px);
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    margin: 0 20px 24px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 20%;
   }
 }

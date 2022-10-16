@@ -10,6 +10,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
 
   &__wrapper {
     width: 100%;
@@ -39,6 +40,7 @@
     .content {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       max-width: 320px;
       padding: 12px 0;
       margin: 20px auto;
@@ -47,6 +49,7 @@
         display: flex;
         width: 100%;
         justify-content: space-between;
+        align-items: center;
         .checkedIcon {
           width: 32px;
           margin-right: 12px;

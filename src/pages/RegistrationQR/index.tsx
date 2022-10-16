@@ -64,14 +64,19 @@ const RegistrationQR = () => {
               }
             })
           } else {
-            await verifyAttendance(attendee[0].id)
-            const offlineData = {
-              id: attendee[0].id,
-              status: "verify"
-            } 
-            await saveOffline(offlineData)
-            setUpdateAtt(attendee[0].id)
-            setShowVerified(true)
+            if (attendee[0].verified == 0) {
+              await verifyAttendance(attendee[0].id)
+              const offlineData = {
+                id: attendee[0].id,
+                status: "verify"
+              } 
+              await saveOffline(offlineData)
+              setUpdateAtt(attendee[0].id)
+              setShowVerified(true)
+            } else {
+              setShowAlreadyVerified(true)
+            }
+            
           }      
         }
       } else if (attendee.length > 1) {
@@ -224,7 +229,7 @@ const RegistrationQR = () => {
       </div>
       <div className="scanArea">
         {scanAllowed && <QrReader
-                  delay={500}
+                  delay={100}
                   style={previewStyle}
                   onError={handleError}
                   onScan={handleScan}
