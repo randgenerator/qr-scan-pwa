@@ -80,7 +80,6 @@ const AttendanceList = () => {
   return (
     <div className="list">
       {showCancelled && <Modal.Cancelled 
-        list={true}
         showModal={setShowCancelled} 
         scanAllowed={undefined} 
         button={false} 

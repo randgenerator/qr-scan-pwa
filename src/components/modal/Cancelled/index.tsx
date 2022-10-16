@@ -4,7 +4,7 @@ import Button from "components/button";
 
 import IconChecked from "assets/images/icon-danger.svg"
 
-const Cacnelled = ({button, buttonTitle, data, showModal, continious, scanAllowed, list}:{button:any, list:any, buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
+const Cacnelled = ({button, buttonTitle, data, showModal, continious, scanAllowed}:{button:any, buttonTitle:any,data:any,showModal:any, continious:any, scanAllowed: any}) => {
   useEffect(() => {
     if (continious) setTimeout(() => closeModal(), 3000)
   }, [])
@@ -21,7 +21,7 @@ const Cacnelled = ({button, buttonTitle, data, showModal, continious, scanAllowe
 
 
   return (
-    <div className={list ? "modalTransparent" : "modalOne"}>
+    <div className="modalOne">
       <div className="modalOne__wrapper">
         <img src={IconChecked} alt="iconChecked" />
         <h3>Apmeklējums atcelts!</h3>
