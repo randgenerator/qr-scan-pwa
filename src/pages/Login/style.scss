@@ -3,10 +3,11 @@
   background: #eff0fb;
   padding: 18px 16px;
   &__content {
+    max-width: 515px;
     background: #ffffff;
     border-radius: 8px;
     padding: 26px;
-    margin-bottom: 46px;
+    margin: 0 auto 46px;
   }
   &__title {
     font-weight: 700;
