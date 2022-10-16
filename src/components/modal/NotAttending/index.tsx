@@ -11,8 +11,8 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
   const [loading, setLoading] = useState<boolean>(false)
 
   const register = async () => {
+    setLoading(true)
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-      setLoading(true)
       await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${data.id}/verify`, {}, {
@@ -39,7 +39,6 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
         showModal(false)
       })
     } else {
-      setLoading(true)
       await verifyAttendance(data.id)
       const offlineData = {
         id: data.id,

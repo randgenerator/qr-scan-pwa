@@ -16,8 +16,8 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
   }
 
   const register = async (e:any) => {
+    setLoading(true)
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-      setLoading(true)
       await SendOffline()
       const token = await getToken()
       const resp = await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/verify`, {}, {
@@ -39,8 +39,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
         setLoading(false)
         showModal(false)
       }
-    } else {      
-      setLoading(true)
+    } else {
       await verifyAttendance(parseInt(e.target.value))
       const offlineData = {
         id: e.target.value,
@@ -59,8 +58,8 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
   }
 
   const cancelAttendance = async (e:any) => {
-    if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-      setLoading(true)
+    setLoading(true)
+    if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {      
       await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/unverify`, {}, {
@@ -79,7 +78,6 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
         console.log(error)
       })
     } else {
-      setLoading(true)
       await unverifyAttendance(parseInt(e.target.value))
       const offlineData = {
         id: e.target.value,

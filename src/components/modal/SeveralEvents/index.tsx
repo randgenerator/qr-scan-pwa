@@ -13,8 +13,8 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
 
   const handleRegister = async (e:any) => {
     const id = e.target.value
+    setLoading(true)
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-      setLoading(true)
       await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/verify`, {}, {
@@ -39,7 +39,6 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
         }
       })
     } else {
-      setLoading(true)
       await verifyAttendance(id)
       const offlineData = {
         id: id,
@@ -59,8 +58,8 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
 
   const cancelRegister = async (e:any) => {
     const id = e.target.value
+    setLoading(true)
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-      setLoading(true)
       await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/unverify`, {}, {
@@ -82,7 +81,6 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
         scanAllowed(true)
       })
     } else {
-      setLoading(true)
       await unverifyAttendance(parseInt(id))
       setUpdateAtt(parseInt(id))
       const offlineData = {
