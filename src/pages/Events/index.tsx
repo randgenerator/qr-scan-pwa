@@ -4,6 +4,7 @@ import { getToken, setSelectedEvents, saveEvents, saveAttendance, getEvents } fr
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import isReachable from "is-reachable";
+import SendOffline from "offline";
 
 type Event = {
   id: number;
@@ -21,6 +22,7 @@ const Events = () => {
   useEffect(()=> {
     const initEvents = async () => {
       if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+        await SendOffline()
         const token = await getToken()
         const evts = await axios.get(`${process.env.REACT_APP_API_URL}/pwa/events/initiated`, {
             headers: {

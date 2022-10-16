@@ -5,6 +5,7 @@ import checkedIcon from "assets/images/icon-checked.svg";
 import axios from "axios";
 import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
 import isReachable from "is-reachable";
+import SendOffline from "offline";
 
 const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, setUpdateAtt }:{events:any, showCancelled:any, attendee:any, showModal:any, showVerified:any, setUpdateAtt:any}) => {
   const [confirm, setConfirm] = useState<boolean>(false)
@@ -15,6 +16,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
 
   const register = async (e:any) => {
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      await SendOffline()
       const token = await getToken()
       const resp = await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/verify`, {}, {
         headers: {
@@ -53,6 +55,7 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
 
   const cancelAttendance = async (e:any) => {
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/unverify`, {}, {
         headers: {

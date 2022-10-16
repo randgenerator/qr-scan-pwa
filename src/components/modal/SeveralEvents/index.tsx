@@ -5,6 +5,7 @@ import axios from "axios";
 import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
 import isReachable from "is-reachable";
 import Button from "components/button";
+import SendOffline from "offline";
 
 const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAllowed, showSuccess, setUpdateAtt}:{events:any, multiple:any, setUpdateAtt:any, attendee:any, showModal:any, showError: any, scanAllowed:any, showSuccess: any}) => {
   const [confirm, setConfirm] = useState<boolean>(false)
@@ -12,6 +13,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
   const handleRegister = async (e:any) => {
     const id = e.target.value
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/verify`, {}, {
         headers: {
@@ -52,6 +54,7 @@ const SeveralEvents = ({events, attendee, showModal, showError, multiple, scanAl
   const cancelRegister = async (e:any) => {
     const id = e.target.value
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/unverify`, {}, {
         headers: {

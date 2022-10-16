@@ -9,40 +9,12 @@ import reportWebVitals from 'reportWebVitals';
 import { clearDb, getOffline, getToken, initDb, removeOffline } from 'store/db';
 import isReachable from 'is-reachable';
 import axios from 'axios';
+import SendOffline from 'offline';
 
 const init = async () => {
   await initDb()
   if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-    const attendance = await getOffline()
-    const token = await getToken()
-    attendance.forEach(async (att:any) => {
-      if (att.status == "verify") {
-        await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${att.id}/verify`, {}, {
-          headers: {
-              'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(async function (response) {
-          await removeOffline(att.id)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-      } else {
-        await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${att.id}/unverify`, {}, {
-          headers: {
-              'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(async function (response) {
-          await removeOffline(att.id)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-      }
-      
-    })
+    await SendOffline()
     await clearDb()
   }
 }

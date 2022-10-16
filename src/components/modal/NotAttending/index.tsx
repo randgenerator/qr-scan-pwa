@@ -5,10 +5,12 @@ import IconDanger from "assets/images/icon-danger.svg";
 import axios from "axios";
 import { getToken, saveOffline, verifyAttendance } from "store/db";
 import isReachable from "is-reachable";
+import SendOffline from "offline";
 
 const NotAttending = ({event, showModal, data, scanAllowed, showError, showSuccess, setUpdateAtt}:{event:any, showModal:any, data:any, setUpdateAtt:any, scanAllowed:any, showError:any, showSuccess:any}) => {
   const register = async () => {
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      await SendOffline()
       const token = await getToken()
       await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${data.id}/verify`, {}, {
         headers: {

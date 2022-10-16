@@ -7,6 +7,7 @@ import { getToken, getSelectedEvents, getEvents, getAttendance, getConfig, verif
 import Modal from "components/modal";
 import axios from "axios";
 import isReachable from "is-reachable";
+import SendOffline from "offline";
 
 const RegistrationQR = () => {
   const [attendances, setAttendances] = useState<any>([])
@@ -44,6 +45,7 @@ const RegistrationQR = () => {
           setShowNotAttending(true)
         } else {
           if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+            await SendOffline()
             await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`, {}, {
               headers: {
                   'Authorization': `Bearer ${token}`
@@ -123,6 +125,7 @@ const RegistrationQR = () => {
       let events = []
       setContinious(cont)
       if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+        await SendOffline()
         const evts = await axios.get(`${process.env.REACT_APP_API_URL}/pwa/events/initiated`, {
             headers: {
                 'Authorization': `Bearer ${token}`
