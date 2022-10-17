@@ -126,9 +126,9 @@ const Events = () => {
           </li> */}
           </ul>
           <div className="contentButton">
-            <button className="submitButton" type="submit">
+            {selected.length > 0 && <button className="submitButton" type="submit">
             Sākt reģistrāciju
-            </button>
+            </button>}
           </div>
         </div>
       </div>
