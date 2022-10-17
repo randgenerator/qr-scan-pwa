@@ -103,32 +103,30 @@ const Attendance = ({ events, attendee, showModal, showVerified, showCancelled, 
           <h3>{attendee[0].full_name}</h3>
           <p>{attendee[0].class_name}</p>
         </div>
-        <div className="content">
-          <div className="items">
+        
             
-            <div>
             {events.map((event:any) => {
               const att = attendee.find((att:any) => att.attendance_id === event.id)
               if (att) {
                 return (
                   <>
-                    {att.verified === 1 ? <img className="checkedIcon" src={checkedIcon} alt="checkedIcon" /> : ""}
-
-                    <h4>{event.service_series_name}</h4>
-
-                    {att.verified === 1 ? <span className="attendanceVerified">Apmeklējums reģistrēts</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Plānots</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Pieteikts kavējums</span> : <span className="attending">Plānots</span>}
-                    
+                    <div className="content">
+                      <div className="items">
+                        {att.verified === 1 ? <img className="checkedIcon" src={checkedIcon} alt="checkedIcon" /> : ""}
+                        <div>
+                          <h4>{event.service_series_name}</h4>
+                          {att.verified === 1 ? <span className="attendanceVerified">Apmeklējums reģistrēts</span> : att.status.toLowerCase().includes("attending") ? <span className="attending">Plānots</span> : att.status.toLowerCase().includes("cancelled") ? <span className="notattending">Pieteikts kavējums</span> : <span className="attending">Plānots</span>}
+                        </div>
+                      </div>
+                    </div>
                     {att.verified === 0 ? <Button disabled={loading} title="Reģistrēt apmeklējumu" value={att.id} type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} /> : <Button disabled={loading} value={att.id} title={confirm ? "Apstiprināt?" : "Atcelt apmeklējumu"} type={confirm ? "red" : "redBordered"} iconArrow={undefined} iconLogOut={undefined} onClick={confirm ? cancelAttendance : confirmDialog} />}
-                  
                   </>
                 )
               }
             })}
             <div className="cancel"><Button disabled={false} title="Atcelt" type="fiolBordered" iconArrow={undefined} iconLogOut={undefined} onClick={closeModal} /></div>
-            </div>
             
-          </div>
-        </div>
+            
       </div>
     </div>
   );
