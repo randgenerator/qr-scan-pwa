@@ -55,14 +55,14 @@ const Login = () => {
       setLoading(true)
       if (e) e.preventDefault()
       let data: any
-      if (resendSms) {
-        data = {
-          code: "371",
-          telephone: phone,
-          password: password,
-          resend: "sms"
-        }
-      } else if (byEmail) {
+      // if (resendSms) {
+      //   data = {
+      //     code: "371",
+      //     telephone: phone,
+      //     password: password,
+      //   }
+      // } else 
+      if (byEmail) {
         data = {
           email: email,
           password: password
@@ -73,6 +73,7 @@ const Login = () => {
           password: password
         }
       }
+      if (resendSms) data.resend = "sms"
       if (is2fa) data.twoFA = code
       const token = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data)
       .then(function(response) {
@@ -105,6 +106,7 @@ const Login = () => {
             navigate("/events");
         }
       }
+      setLoading(false)
     }
 
     
