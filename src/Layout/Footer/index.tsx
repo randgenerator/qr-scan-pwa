@@ -10,21 +10,26 @@ const Footer = () => {
   const [activeList, setActiveList] = useState<boolean>(false)
   const [activeScan, setActiveScan] = useState<boolean>(true)
 
-  const handleChange = () => {
-    setActiveScan(!activeScan)
-    setActiveList(!activeList)
+  const selectQR = () => {
+    setActiveScan(true)
+    setActiveList(false)
+  }
+
+  const selectList = () => {
+    setActiveScan(false)
+    setActiveList(true)
   }
 
   return (
     <div className="footer">
       <div className={activeScan ? "scanQRcode active" : "scanQRcode "}>
-      <Link to="/registration" onClick={handleChange}>
+      <Link to="/registration" onClick={selectQR}>
       <img src={ScanIcon} alt="scanIcon" />
         <h3>QR skenēšana</h3>
       </Link>
       </div>
       <div className={activeList ? "list active" : "list"}>
-      <Link to="/attendanceList" onClick={handleChange}>
+      <Link to="/attendanceList" onClick={selectList}>
        <img src={ListIcon} alt="listIcon" />
         <h3>Apmeklējumu saraksts</h3>
       </Link>
