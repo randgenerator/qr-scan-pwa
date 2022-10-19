@@ -42,13 +42,13 @@ const AttendanceList = () => {
     }
 
     getEventsDB()
-  }, [])
+  }, [showVerified, showCancelled, showRegistration])
 
   useEffect(() => {
     if (searchField === "") {
       setSearch(groupedAttendances)
     } else {
-      setSearch(groupedAttendances.filter((att:any) => att.full_name.includes(searchField) || att.class_name.includes(searchField)))
+      setSearch(groupedAttendances.filter((att:any) => att.full_name.toLowerCase().includes(searchField.toLowerCase()) || att.class_name.toLowerCase().includes(searchField.toLowerCase())))
     }
   }, [searchField])
 
