@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./style.scss";
 import QrReader from 'react-qr-reader-es6';
-import { getToken, getSelectedEvents, getEvents, getAttendance, getConfig, verifyAttendance, saveOffline } from "store/db";
+import { getToken, getSelectedEvents, getEvents, getAttendance, getConfig, getMode, verifyAttendance, saveOffline } from "store/db";
 
 import Modal from "components/modal";
 import axios from "axios";
@@ -24,6 +24,16 @@ const RegistrationQR = () => {
   const [scanAllowed, setScanAllowed] = useState<boolean>(true)
   const [continious, setContinious] = useState<any>(true)
   const [updateAtt, setUpdateAtt] = useState<number>()
+  const [statusMode, setStatusMode] = useState<any>()
+
+  useEffect(() => {
+    const setMode = async () => {
+      const stat = await getMode()
+      setStatusMode(stat)
+    }
+    setMode()
+  }, [])
+
 
 	const handleError = (err: any) => {
 		console.log(err)
@@ -44,28 +54,7 @@ const RegistrationQR = () => {
           setScanAllowed(false)
           setShowNotAttending(true)
         } else {
-          if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-            await SendOffline()
-            await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`, {}, {
-              headers: {
-                  'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(async function (response) {
-              await verifyAttendance(attendee[0].id)
-              setUpdateAtt(attendee[0].id)
-              setShowVerified(true)
-            })
-            .catch(function (error) {
-              if (error.response.data.error) {
-                if (error.response.data.error.includes("already")) {
-                  setShowAlreadyVerified(true)
-                } else if (error.response.data.error.includes("No query results")) {
-                  setShowNotFound(true)
-                }
-              }
-            })
-          } else {
+          if (statusMode) {
             if (attendee[0].verified == 0) {
               await verifyAttendance(attendee[0].id)
               const offlineData = {
@@ -78,8 +67,81 @@ const RegistrationQR = () => {
             } else {
               setShowAlreadyVerified(true)
             }
+            setTimeout(() => {
+              SendOffline()
+            }, 5000)
+          
+        } else if(await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+          await SendOffline()
+          await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`, {}, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+              }
+          })
+          .then(async function (response) {
+            await verifyAttendance(attendee[0].id)
+            setUpdateAtt(attendee[0].id)
+            setShowVerified(true)
+          })
+          .catch(function (error) {
+            if (error.response.data.error) {
+              if (error.response.data.error.includes("already")) {
+                setShowAlreadyVerified(true)
+              } else if (error.response.data.error.includes("No query results")) {
+                setShowNotFound(true)
+              }
+            }
+          })
+        } else {
+          if (attendee[0].verified == 0) {
+            await verifyAttendance(attendee[0].id)
+            const offlineData = {
+              id: attendee[0].id,
+              status: "verify"
+            } 
+            await saveOffline(offlineData)
+            setUpdateAtt(attendee[0].id)
+            setShowVerified(true)
+          } else {
+            setShowAlreadyVerified(true)
+          }
+        }
+          // if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+          //   await SendOffline()
+          //   await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`, {}, {
+          //     headers: {
+          //         'Authorization': `Bearer ${token}`
+          //       }
+          //   })
+          //   .then(async function (response) {
+          //     await verifyAttendance(attendee[0].id)
+          //     setUpdateAtt(attendee[0].id)
+          //     setShowVerified(true)
+          //   })
+          //   .catch(function (error) {
+          //     if (error.response.data.error) {
+          //       if (error.response.data.error.includes("already")) {
+          //         setShowAlreadyVerified(true)
+          //       } else if (error.response.data.error.includes("No query results")) {
+          //         setShowNotFound(true)
+          //       }
+          //     }
+          //   })
+          // } else {
+          //   if (attendee[0].verified == 0) {
+          //     await verifyAttendance(attendee[0].id)
+          //     const offlineData = {
+          //       id: attendee[0].id,
+          //       status: "verify"
+          //     } 
+          //     await saveOffline(offlineData)
+          //     setUpdateAtt(attendee[0].id)
+          //     setShowVerified(true)
+          //   } else {
+          //     setShowAlreadyVerified(true)
+          //   }
             
-          }      
+          // }      
         }
       } else if (attendee.length > 1) {
         let countCancelled = 0

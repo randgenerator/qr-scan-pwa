@@ -25,10 +25,10 @@ const InProgress = ({button, buttonTitle, data, showModal, continious, scanAllow
       <div className="modalThird__wrapper">
         <img src={IconDanger} alt="iconChecked" />
         <h3>Apmeklētājs jau reģistrēts!</h3>
-        <p>{data}</p>
+        <p>{data}</p>{/* data.full_name */}
       {button && <Button disabled={false} title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
       </div>
-
+      <p></p>
     </div>
   );
 };
