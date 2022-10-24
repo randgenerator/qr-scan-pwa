@@ -19,6 +19,7 @@ const Settings = () => {
     }
     setMode()
   }, [])
+
   useEffect(() => {
     const setConf = async () => {
       const cont = await getConfig()
@@ -36,6 +37,7 @@ const Settings = () => {
     setStatus((check: any) => !check)
     await changeMode(e.target.checked)
   }
+  
   const handleSignOut = () => {
       signOut()
       navigate('/')
@@ -58,7 +60,7 @@ const Settings = () => {
           </div>
         </div>
         <div className="change-mode">
-          <h3>Nepārtraukta reģistrācija</h3>
+          <h3>Nepārtraukta SlowMode</h3>
           <div className="checkboxWrapper">
             <input type="checkbox" key={Math.random()} checked={status} id="checkboxSecondInput" onChange={handleChangeMode} name="" />
             <label htmlFor="checkboxSecondInput"></label>
