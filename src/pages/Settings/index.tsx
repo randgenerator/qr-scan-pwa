@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./style.scss";
 import CloseIcon from "assets/images/icon-close.svg";
 import Button from "components/button";
-import { changeConfig, getConfig, changeMode, getMode } from "store/db";
-import { useSignOut } from "react-auth-kit";
+import { changeConfig, getConfig, getMode, changeMode} from "store/db";
+import { useSignOut } from 'react-auth-kit'
 import { useNavigate } from "react-router-dom";
-import Switch from "components/Switch";
 
 const Settings = () => {
   const navigate = useNavigate();
