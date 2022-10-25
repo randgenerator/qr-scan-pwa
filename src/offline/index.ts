@@ -2,6 +2,7 @@ import { getOffline, getToken, removeOffline } from "store/db"
 import axios from "axios"
 
 const SendOffline = async () => {
+    console.log("triggered send offline data")
     const attendance = await getOffline()
     const token = await getToken()
     attendance.forEach(async (att:any) => {
