@@ -3,46 +3,46 @@ import "./style.scss";
 import CloseIcon from "assets/images/icon-close.svg";
 import Button from "components/button";
 import { changeConfig, getConfig, changeMode, getMode } from "store/db";
-import { useSignOut } from 'react-auth-kit'
+import { useSignOut } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
+import Switch from "components/Switch";
 
 const Settings = () => {
-  const navigate = useNavigate()
-  const signOut = useSignOut()
-  const [continuous, setContinuous] = useState<any>()
-  const [status, setStatus] = useState<any>()
+  const navigate = useNavigate();
+  const signOut = useSignOut();
+  const [continuous, setContinuous] = useState<any>();
+  const [status, setStatus] = useState<any>();
 
   useEffect(() => {
     const setMode = async () => {
-      const stat = await getMode()
-      setStatus(stat)
-    }
-    setMode()
-  }, [])
+      const stat = await getMode();
+      setStatus(stat);
+    };
+    setMode();
+  }, []);
 
   useEffect(() => {
     const setConf = async () => {
-      const cont = await getConfig()
-      setContinuous(cont)
-    }
-    setConf()
-  }, [])
-  
-  const handleChange = async (e:any) => {
-    setContinuous((check: any) => !check)
-    await changeConfig(e.target.checked)
-  }
+      const cont = await getConfig();
+      setContinuous(cont);
+    };
+    setConf();
+  }, []);
 
-  const handleChangeMode = async (e:any) => {
-    setStatus((check: any) => !check)
-    await changeMode(e.target.checked)
-  }
-  
+  const handleChange = async (e: any) => {
+    setContinuous((check: any) => !check);
+    await changeConfig(e.target.checked);
+  };
+
+  const handleChangeMode = async (e: any) => {
+    setStatus((check: any) => !check);
+    await changeMode(e.target.checked);
+  };
+
   const handleSignOut = () => {
-      signOut()
-      navigate('/')
-  }
-
+    signOut();
+    navigate("/");
+  };
 
   return (
     <div className="settings">
@@ -55,20 +55,54 @@ const Settings = () => {
         <div className="change-mode">
           <h3>Nepārtraukta reģistrācija</h3>
           <div className="checkboxWrapper">
-            <input type="checkbox" key={Math.random()} checked={continuous} id="checkboxThreeInput" onChange={handleChange} name="" />
-            <label htmlFor="checkboxThreeInput"></label>
+            <input
+              className="react-switch-checkbox"
+              type="checkbox"
+              key={Math.random()}
+              checked={continuous}
+              id="checkboxThreeInput"
+              onChange={handleChange}
+              name=""
+            />
+            <label
+              style={{ background: continuous ? "#7159BD" : "white" }}
+              className="react-switch-label"
+              htmlFor="checkboxThreeInput">
+              <span className={`react-switch-button`} />
+            </label>
           </div>
         </div>
         <div className="change-mode">
           <h3>Nepārtraukta SlowMode</h3>
           <div className="checkboxWrapper">
-            <input type="checkbox" key={Math.random()} checked={status} id="checkboxSecondInput" onChange={handleChangeMode} name="" />
-            <label htmlFor="checkboxSecondInput"></label>
+            <input
+              className="react-switch-checkbox"
+              type="checkbox"
+              key={Math.random()}
+              checked={status}
+              id="checkboxSecondInput"
+              onChange={handleChangeMode}
+              name=""
+            />
+            <label
+              style={{ background: status ? "#7159BD" : "white" }}
+              className="react-switch-label"
+              htmlFor="checkboxSecondInput">
+              <span className={`react-switch-button`} />
+            </label>
           </div>
         </div>
       </div>
       <div className="logout">
-         <Button disabled={false} title="Izlogoties" iconLogOut={true} type="redBordered" iconArrow={true} onClick={handleSignOut} iconPersonalQR={undefined} />
+        <Button
+          disabled={false}
+          title="Izlogoties"
+          iconLogOut={true}
+          type="redBordered"
+          iconArrow={true}
+          onClick={handleSignOut}
+          iconPersonalQR={undefined}
+        />
       </div>
     </div>
   );
