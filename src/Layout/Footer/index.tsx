@@ -9,7 +9,7 @@ import { getSelectedEvents } from "store/db";
 const Footer = () => {
 
   const [activeList, setActiveList] = useState<boolean>(false)
-  const [activeScan, setActiveScan] = useState<boolean>(true)
+  const [activeScan, setActiveScan] = useState<boolean>(false)
   const [events, setEvents] = useState<any>()
 
   useEffect(() => {
@@ -32,13 +32,10 @@ const Footer = () => {
   return (
     <div className="footer">
       <div className={activeScan ? "scanQRcode active" : "scanQRcode "}>
-        {events.length > 0 ? <Link to="/registration" onClick={selectQR}><img src={ScanIcon} alt="scanIcon" /><h3>QR skenēšana</h3></Link> : <><img src={ScanIcon} alt="scanIcon" /><h3>QR skenēšana</h3></> }
+        {events?.length > 0 ? <Link to="/registration" onClick={selectQR}><img src={ScanIcon} alt="scanIcon" /><h3>QR skenēšana</h3></Link> : <><img src={ScanIcon} alt="scanIcon" /><h3>QR skenēšana</h3></> }
       </div>
       <div className={activeList ? "list active" : "list"}>
-        <Link to="/attendanceList" onClick={selectList}>
-          <img src={ListIcon} alt="listIcon" />
-          <h3>Apmeklējumu saraksts</h3>
-        </Link>
+      {events?.length > 0 ? <Link to="/attendanceList" onClick={selectList}><img src={ListIcon} alt="listIcon" /><h3>Apmeklējumu saraksts</h3></Link> : <><img src={ListIcon} alt="listIcon" /><h3>Apmeklējumu saraksts</h3></> }
       </div>
     </div>
   );
