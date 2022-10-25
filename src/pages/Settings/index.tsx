@@ -2,41 +2,37 @@ import React, { useEffect, useState } from "react";
 import "./style.scss";
 import CloseIcon from "assets/images/icon-close.svg";
 import Button from "components/button";
-import { changeConfig, getConfig, getMode, changeMode} from "store/db";
+import { changeConfig, changeMode, getConfig, getMode} from "store/db";
 import { useSignOut } from 'react-auth-kit'
 import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
-  const navigate = useNavigate();
-  const signOut = useSignOut();
-  const [continuous, setContinuous] = useState<any>();
-  const [status, setStatus] = useState<any>();
-
-  useEffect(() => {
-    const setMode = async () => {
-      const stat = await getMode();
-      setStatus(stat);
-    };
-    setMode();
-  }, []);
+  const navigate = useNavigate()
+  const signOut = useSignOut()
+  const [continuous, setContinuous] = useState<any>()
+  const [fastMode, setFastMode] = useState<any>()
 
   useEffect(() => {
     const setConf = async () => {
-      const cont = await getConfig();
-      setContinuous(cont);
-    };
-    setConf();
-  }, []);
+      const mode = await getMode()
+      const cont = await getConfig()
+      setFastMode(mode)
+      setContinuous(cont)
+    }
+    setConf()
+  }, [])
+  
+  const handleChange = async (e:any) => {
+    console.log("continuous?", e.target.checked)
+    setContinuous((check: any) => !check)
+    await changeConfig(e.target.checked)
+  }
 
-  const handleChange = async (e: any) => {
-    setContinuous((check: any) => !check);
-    await changeConfig(e.target.checked);
-  };
-
-  const handleChangeMode = async (e: any) => {
-    setStatus((check: any) => !check);
-    await changeMode(e.target.checked);
-  };
+  const handleChangeMode = async (e:any) => {
+    console.log("mode?", e.target.checked)
+    setFastMode((check: any) => !check)
+    await changeMode(e.target.checked)
+  }
 
   const handleSignOut = () => {
     signOut();
@@ -72,23 +68,10 @@ const Settings = () => {
           </div>
         </div>
         <div className="change-mode">
-          <h3>Nepārtraukta SlowMode</h3>
+          <h3>Fast Mode</h3>
           <div className="checkboxWrapper">
-            <input
-              className="react-switch-checkbox"
-              type="checkbox"
-              key={Math.random()}
-              checked={status}
-              id="checkboxSecondInput"
-              onChange={handleChangeMode}
-              name=""
-            />
-            <label
-              style={{ background: status ? "#7159BD" : "white" }}
-              className="react-switch-label"
-              htmlFor="checkboxSecondInput">
-              <span className={`react-switch-button`} />
-            </label>
+            <input type="checkbox" key={Math.random()} checked={fastMode} id="checkBoxModeInput" onChange={handleChangeMode} name="" />
+            <label htmlFor="checkBoxModeInput"></label>
           </div>
         </div>
       </div>

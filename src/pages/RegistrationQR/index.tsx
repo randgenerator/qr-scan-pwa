@@ -1,17 +1,8 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./style.scss";
-import QrReader from "react-qr-reader-es6";
-import {
-  getToken,
-  getSelectedEvents,
-  getEvents,
-  getAttendance,
-  getConfig,
-  getMode,
-  verifyAttendance,
-  saveOffline,
-} from "store/db";
+import QrReader from 'react-qr-reader-es6';
+import { getToken, getSelectedEvents, getEvents, getAttendance, getConfig, getMode, verifyAttendance, saveOffline } from "store/db";
 
 import Modal from "components/modal";
 import axios from "axios";
@@ -19,29 +10,22 @@ import isReachable from "is-reachable";
 import SendOffline from "offline";
 
 const RegistrationQR = () => {
-  const [attendances, setAttendances] = useState<any>([]);
-  const [scannedAttendee, setScannedAttendee] = useState<any>({});
-  const [eventData, setEventData] = useState<any>({});
-  const [scannedAttendeeMultiple, setScannedAttendeeMultiple] = useState<any>([]);
-  const [selectedEvents, setSelectedEvents] = useState<any>([]);
-  const [showVerified, setShowVerified] = useState<boolean>(false);
-  const [showAlreadyVerified, setShowAlreadyVerified] = useState<boolean>(false);
-  const [showNotFound, setShowNotFound] = useState<boolean>(false);
-  const [showSeveral, setShowSeveral] = useState<boolean>(false);
-  const [showNotAttending, setShowNotAttending] = useState<boolean>(false);
-  const [multipleCancel, setMultipleCancel] = useState<boolean>(false);
-  const [scanAllowed, setScanAllowed] = useState<boolean>(true);
-  const [continious, setContinious] = useState<any>(true);
-  const [updateAtt, setUpdateAtt] = useState<number>();
-  const [statusMode, setStatusMode] = useState<any>();
+  const [attendances, setAttendances] = useState<any>([])
+  const [scannedAttendee, setScannedAttendee] = useState<any>({})
+  const [eventData, setEventData] = useState<any>({})
+  const [scannedAttendeeMultiple, setScannedAttendeeMultiple] = useState<any>([])
+  const [selectedEvents, setSelectedEvents] = useState<any>([])
+  const [showVerified, setShowVerified] = useState<boolean>(false)
+  const [showAlreadyVerified, setShowAlreadyVerified] = useState<boolean>(false)
+  const [showNotFound, setShowNotFound] = useState<boolean>(false)
+  const [showSeveral, setShowSeveral] = useState<boolean>(false)
+  const [showNotAttending, setShowNotAttending] = useState<boolean>(false)
+  const [multipleCancel, setMultipleCancel] = useState<boolean>(false)
+  const [scanAllowed, setScanAllowed] = useState<boolean>(true)
+  const [continious, setContinious] = useState<any>(true)
+  const [updateAtt, setUpdateAtt] = useState<number>()
+  const [fastMode, setFastMode] = useState<any>(true)
 
-  useEffect(() => {
-    const setMode = async () => {
-      const stat = await getMode();
-      setStatusMode(stat);
-    };
-    setMode();
-  }, []);
 
   const handleError = (err: any) => {
     console.log(err);
@@ -62,7 +46,7 @@ const RegistrationQR = () => {
           setScanAllowed(false);
           setShowNotAttending(true);
         } else {
-          if (statusMode) {
+          if (fastMode) {
             if (attendee[0].verified == 0) {
               await verifyAttendance(attendee[0].id);
               const offlineData = {
@@ -75,35 +59,27 @@ const RegistrationQR = () => {
             } else {
               setShowAlreadyVerified(true);
             }
-            setTimeout(() => {
-              SendOffline();
-            }, 5000);
+            setTimeout(() => SendOffline, 5000)
           } else if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-            await SendOffline();
-            await axios
-              .post(
-                `${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`,
-                {},
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                },
-              )
-              .then(async function (response) {
-                await verifyAttendance(attendee[0].id);
-                setUpdateAtt(attendee[0].id);
-                setShowVerified(true);
-              })
-              .catch(function (error) {
-                if (error.response.data.error) {
-                  if (error.response.data.error.includes("already")) {
-                    setShowAlreadyVerified(true);
-                  } else if (error.response.data.error.includes("No query results")) {
-                    setShowNotFound(true);
-                  }
+            await SendOffline()
+            await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`, {}, {
+              headers: {
+                  'Authorization': `Bearer ${token}`
                 }
-              });
+            })
+            .then(async function (response) {
+              await verifyAttendance(attendee[0].id)
+              setUpdateAtt(attendee[0].id)
+              setShowVerified(true)
+            })
+            .catch(function (error) {
+              if (error.response.data.error) {
+                if (error.response.data.error.includes("already")) {
+                  setShowAlreadyVerified(true)
+                } else if (error.response.data.error.includes("No query results")) {
+                  setShowNotFound(true)
+                }
+              }});
           } else {
             if (attendee[0].verified == 0) {
               await verifyAttendance(attendee[0].id);
@@ -193,7 +169,9 @@ const RegistrationQR = () => {
 
   useEffect(() => {
     const getEventsDB = async () => {
-      const cont = await getConfig();
+      const cont = await getConfig()
+      const stat = await getMode()
+      setFastMode(stat)
       const token = await getToken();
       const selected = await getSelectedEvents();
       const selectedInt = selected?.map((ev) => parseInt(ev));

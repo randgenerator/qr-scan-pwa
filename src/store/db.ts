@@ -33,6 +33,10 @@ interface PwaDB extends DBSchema {
       key: string;
       indexes: { 'by-id': number };
     };
+    mode: {
+      key: string;
+      value: boolean;
+    };
     config: {
       key: string;
       value: boolean;
@@ -79,6 +83,7 @@ export async function initDb() {
     await db.put("mode", true, "status")
     db.close()
     await db.put("config", true, "continuous")
+    await db.put("mode", true, "slow")
     db.close()
 }
 
@@ -88,6 +93,7 @@ export async function clearDb() {
       db.createObjectStore('token');
       db.createObjectStore('selected');
       db.createObjectStore('config');
+      db.createObjectStore('mode');
       const event = db.createObjectStore('events', {
         keyPath: 'id',
       });
@@ -215,6 +221,21 @@ export async function getConfig() {
     const data = await db.get("config", "continuous")
     db.close()
     return data
+}
+
+export async function changeMode(toggle: boolean) {
+  const db = await openDB<PwaDB>('pwa-db', 1);
+
+  await db.put("mode", toggle, "slow")
+  db.close()
+}
+
+export async function getMode() {
+  const db = await openDB<PwaDB>('pwa-db', 1);
+
+  const data = await db.get("mode", "slow")
+  db.close()
+  return data
 }
 
 export async function getOffline() {
