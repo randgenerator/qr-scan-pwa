@@ -17,14 +17,17 @@
     border-radius: 4px;
     padding: 24px 12px;
     margin: 0 auto;
-    img{
-        margin: 0 0 0 10px;
+    img {
+      margin: 0 0 0 10px;
     }
-    .iconRight{
-        width: 24px;
+    .iconRight {
+      width: 24px;
     }
-    .iconLog{
-        width: 16px;
+    .iconLog {
+      width: 16px;
+    }
+    .iconQRarrow {
+      width: 21px;
     }
   }
   .bg-green {
@@ -52,6 +55,16 @@
     background: white;
     color: #7159bd;
     border: 1px solid #7159bd;
+  }
+  .bg-not {
+    width: 100%;
+    color: #ffffff;
+    background: #ffffff;
+    color: #7159bd;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 140%;
   }
 
   button[type="button"][disabled] {

@@ -68,7 +68,7 @@ const Settings = () => {
         </div>
       </div>
       <div className="logout">
-         <Button disabled={false} title="Izlogoties" iconLogOut={true} type="redBordered" iconArrow={true} onClick={handleSignOut} />
+         <Button disabled={false} title="Izlogoties" iconLogOut={true} type="redBordered" iconArrow={true} onClick={handleSignOut} iconPersonalQR={undefined} />
       </div>
     </div>
   );

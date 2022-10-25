@@ -1,0 +1,71 @@
+.personalQR {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 25px 22px;
+  &__wrapper {
+    background: #ffffff;
+    border-radius: 8px;
+  }
+  &__header {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eeeeee;
+    h3 {
+      display: flex;
+      align-items: center;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 140%;
+      color: #7159bd;
+    }
+  }
+  &__ImageWrapper {
+    box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.16);
+    margin: 32px 0;
+  }
+  &__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px;
+    box-shadow: inset 0px -1px 0px #eeeeee;
+    .btn-E {
+      width: 100%;
+      background: #7159bd;
+      border-radius: 24px;
+      padding: 8px 0;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 140%;
+      color: #ffffff;
+    }
+    .btn-sms {
+      width: 100%;
+      background: #f5f5f5;
+      border-radius: 24px;
+      padding: 8px 0;
+      color: #333333;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 140%;
+    }
+  }
+  .btn-accept {
+    width: 100%;
+    color: #ffffff;
+    background: #7159bd;
+    opacity: 0.4;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 140%;
+    padding: 24px 0;
+    margin: 12px;
+  }
+  
+  
+}

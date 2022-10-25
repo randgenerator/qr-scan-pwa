@@ -26,7 +26,7 @@ const NotFound = ({button, buttonTitle, showModal, continious, scanAllowed}:{but
       <div className="modalSecond__wrapper">
       <img src={IconDanger} alt="iconChecked" />
         <h3>Apmeklētājs nav atrasts!</h3>
-        {button && <Button disabled={false} title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
+        {button && <Button disabled={false} title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} iconPersonalQR={undefined} />}
 
       </div>
     </div>

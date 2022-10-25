@@ -5,6 +5,7 @@ import NotFound from "./NotFound";
 import SeveralEvents from "./SeveralEvents";
 import NotAttending from "./NotAttending";
 import Cancelled from "./Cancelled"
+import PersonalQR from "./PersonalQR"
 
 const ModalComponent = {
 	Attendance,
@@ -13,7 +14,8 @@ const ModalComponent = {
 	NotFound,
 	SeveralEvents,
 	NotAttending,
-	Cancelled
+	Cancelled,
+	PersonalQR
 };
 
 export default ModalComponent;

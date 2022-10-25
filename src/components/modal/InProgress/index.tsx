@@ -26,7 +26,7 @@ const InProgress = ({button, buttonTitle, data, showModal, continious, scanAllow
         <img src={IconDanger} alt="iconChecked" />
         <h3>Apmeklētājs jau reģistrēts!</h3>
         <p>{data}</p>{/* data.full_name */}
-      {button && <Button disabled={false} title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
+      {button && <Button disabled={false} title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} iconPersonalQR={undefined} />}
       </div>
       <p></p>
     </div>
