@@ -33,7 +33,7 @@ const Verified = ({button, buttonTitle, data, showModal, continious, scanAllowed
         <img src={IconChecked} alt="iconChecked" />
         <h3>Apmeklējums reģistrēts!</h3>
         <p>{data != undefined ? data : ""}</p>
-        {button && <Button disabled={false} title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} />}
+        {button && <Button disabled={false} title={buttonTitle} iconArrow={true} type="fiolet" iconLogOut={undefined} onClick={closeModal} iconPersonalQR={true} />}
 
       </div>
     </div>

@@ -74,9 +74,10 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
             <h4 className="lunchTitle">{event.service_series_name}</h4>
             <span>Pieteikts kavējums</span>
           </div>
-          <Button disabled={loading} title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} />
+          <Button disabled={loading} title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} iconPersonalQR={undefined} />
         </div>
-        <Button disabled={false} title="Skenēt nākamo" type="fiolet" iconArrow={true} iconLogOut={undefined} onClick={handleClose} />
+        <Button disabled={false} title="Personīgais QR kods" type="fiolBordered" iconArrow={false} iconLogOut={undefined} onClick={handleClose} iconPersonalQR={true} />
+        <Button disabled={false} title="Atcelt" type="not" iconArrow={false} iconLogOut={undefined} onClick={handleClose} iconPersonalQR={false} />
       </div>
     </div>
   );

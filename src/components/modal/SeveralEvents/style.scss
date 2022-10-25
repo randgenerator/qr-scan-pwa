@@ -1,5 +1,5 @@
 .severalEvents {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   left: 0;
@@ -10,11 +10,15 @@
   align-items: center;
   justify-content: center;
   background: rgba(255, 143, 31, 0.45);
+
   &__wrapper {
     width: 100%;
     padding: 20px 12px 20px;
     background: #ffffff;
     border-radius: 8px;
+    overflow-y: scroll;
+    min-height: 300px;
+    z-index: 99999;
     margin: 40px 20px;
     img {
       display: block;

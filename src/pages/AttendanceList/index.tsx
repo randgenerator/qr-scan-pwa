@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import "./style.scss";
 import SearchIcon from "assets/images/icon-search.svg";
 import { getAttendance, getEvents, getSelectedEvents } from "store/db";
@@ -17,10 +18,13 @@ const AttendanceList = () => {
   const [showVerified, setShowVerified] = useState<boolean>(false)
   const [showCancelled, setShowCancelled] = useState<boolean>(false)
   const [updateAtt, setUpdateAtt] = useState<number>()
+  const [alphabetState, setAlphabetState] = useState<any>()
 
+ 
   useEffect(() => {
     const getEventsDB = async () => {
       const att = await getAttendance()
+      
       const selected = await getSelectedEvents()
       const events = await getEvents()
       const selectedInt = selected?.map(ev => parseInt(ev))
@@ -34,6 +38,8 @@ const AttendanceList = () => {
         return att;
       }, {})
       let sort = Object.values(grouped)
+      console.log("att", grouped);
+
       setSorted(sort.sort((a:any, b:any) => a.letter - b.letter))
       const sortedAtt = tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name))
       const groupedById = sortedAtt.filter((att,index,allAtt)=>allAtt.findIndex(v2=>(v2.qr_uuid===att.qr_uuid))===index)
@@ -52,6 +58,7 @@ const AttendanceList = () => {
     }
   }, [searchField])
 
+  
   useEffect(() => {
     if (updateAtt) {
       let newAtt = [...attendances]
@@ -118,7 +125,7 @@ const AttendanceList = () => {
               </div>
               {attendee.verified === 1 ? <span data-qr={attendee.qr_uuid} className="verified">Apmeklējums reģistrēts</span> : attendee.status.toLowerCase().includes("attending") ? <span data-qr={attendee.qr_uuid} className="attending">Plānots</span> : attendee.status.toLowerCase().includes("cancelled") ? <span data-qr={attendee.qr_uuid} className="notattending">Pieteikts kavējums</span> : <span data-qr={attendee.qr_uuid} className="attending">Plānots</span> }
             </div>
-          )
+          )     
       })}
 
       <ul className="list__letters">

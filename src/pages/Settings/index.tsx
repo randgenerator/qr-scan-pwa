@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./style.scss";
 import CloseIcon from "assets/images/icon-close.svg";
 import Button from "components/button";
-import { changeConfig, getConfig} from "store/db";
+import { changeConfig, getConfig, changeMode, getMode } from "store/db";
 import { useSignOut } from 'react-auth-kit'
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,15 @@ const Settings = () => {
   const navigate = useNavigate()
   const signOut = useSignOut()
   const [continuous, setContinuous] = useState<any>()
+  const [status, setStatus] = useState<any>()
+
+  useEffect(() => {
+    const setMode = async () => {
+      const stat = await getMode()
+      setStatus(stat)
+    }
+    setMode()
+  }, [])
 
   useEffect(() => {
     const setConf = async () => {
@@ -24,6 +33,11 @@ const Settings = () => {
     await changeConfig(e.target.checked)
   }
 
+  const handleChangeMode = async (e:any) => {
+    setStatus((check: any) => !check)
+    await changeMode(e.target.checked)
+  }
+  
   const handleSignOut = () => {
       signOut()
       navigate('/')
@@ -45,9 +59,16 @@ const Settings = () => {
             <label htmlFor="checkboxThreeInput"></label>
           </div>
         </div>
+        <div className="change-mode">
+          <h3>Nepārtraukta SlowMode</h3>
+          <div className="checkboxWrapper">
+            <input type="checkbox" key={Math.random()} checked={status} id="checkboxSecondInput" onChange={handleChangeMode} name="" />
+            <label htmlFor="checkboxSecondInput"></label>
+          </div>
+        </div>
       </div>
       <div className="logout">
-         <Button disabled={false} title="Izlogoties" iconLogOut={true} type="redBordered" iconArrow={true} onClick={handleSignOut} />
+         <Button disabled={false} title="Izlogoties" iconLogOut={true} type="redBordered" iconArrow={true} onClick={handleSignOut} iconPersonalQR={undefined} />
       </div>
     </div>
   );
