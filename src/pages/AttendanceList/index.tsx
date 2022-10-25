@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-
 import "./style.scss";
 import SearchIcon from "assets/images/icon-search.svg";
 import { getAttendance, getEvents, getSelectedEvents } from "store/db";
 import Modal from "components/modal";
+import SyncAttendance from "attendanceSync";
 
 const AttendanceList = () => {
   const [attendances, setAttendances] = useState<any>([])
@@ -22,9 +22,9 @@ const AttendanceList = () => {
 
  
   useEffect(() => {
+    SyncAttendance()
     const getEventsDB = async () => {
-      const att = await getAttendance()
-      
+      const att = await getAttendance()      
       const selected = await getSelectedEvents()
       const events = await getEvents()
       const selectedInt = selected?.map(ev => parseInt(ev))
