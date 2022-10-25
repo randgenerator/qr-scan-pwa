@@ -68,10 +68,23 @@ const Settings = () => {
           </div>
         </div>
         <div className="change-mode">
-          <h3>Fast Mode</h3>
+          <h3>Nepārtraukta SlowMode</h3>
           <div className="checkboxWrapper">
-            <input type="checkbox" key={Math.random()} checked={fastMode} id="checkBoxModeInput" onChange={handleChangeMode} name="" />
-            <label htmlFor="checkBoxModeInput"></label>
+            <input
+              className="react-switch-checkbox"
+              type="checkbox"
+              key={Math.random()}
+              checked={fastMode}
+              id="checkboxSecondInput"
+              onChange={handleChangeMode}
+              name=""
+            />
+            <label
+              style={{ background: fastMode ? "#7159BD" : "white" }}
+              className="react-switch-label"
+              htmlFor="checkboxSecondInput">
+              <span className={`react-switch-button`} />
+            </label>
           </div>
         </div>
       </div>
