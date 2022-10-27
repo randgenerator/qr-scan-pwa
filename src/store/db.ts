@@ -26,6 +26,7 @@ interface PwaDB extends DBSchema {
         //timestamp: string or Dsate
         //verified_time
         status: string;
+        sentStatus: string;
         class_name: string;
         qr_uuid: string;
         attendance_id: number;
