@@ -18,7 +18,6 @@ const AttendanceList = () => {
   const [showVerified, setShowVerified] = useState<boolean>(false);
   const [showCancelled, setShowCancelled] = useState<boolean>(false);
   const [updateAtt, setUpdateAtt] = useState<number>();
-  const [alphabetState, setAlphabetState] = useState<any>();
 
   useEffect(() => {
     SyncAttendance();
@@ -143,6 +142,7 @@ const AttendanceList = () => {
       </div>
 
       {search.map((attendee: any) => {
+        
         return (
           <div
             className="list__items"
@@ -174,12 +174,11 @@ const AttendanceList = () => {
         );
       })}
 
-      <ul className="list__letters">
-        {/* <li className="letter active">A</li> */}
+      {/* <ul className="list__letters">
         {sorted.map((att: any) => {
           return <li className="letter">{att.letter}</li>;
         })}
-      </ul>
+      </ul> */}
     </div>
   );
 };

@@ -1,11 +1,19 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
+import QrCode from "qrcode";
 import Button from "components/button";
 import "./style.scss";
 import checkedIcon from "assets/images/icon-checked.svg";
 import axios from "axios";
-import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
+import {
+  getToken,
+  saveOffline,
+  getAttendance,
+  unverifyAttendance,
+  verifyAttendance,
+} from "store/db";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
+import PersonalQR from "../PersonalQR";
 
 const Attendance = ({
   events,
@@ -24,10 +32,28 @@ const Attendance = ({
 }) => {
   const [confirm, setConfirm] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showPersonalQR, setShowPersonalQR] = useState<boolean>(false);
+  // const [url, setUrl] = useState<string>('')
+  const [qrcode, setQrcode] = useState<string>("");
 
+  useEffect(() => {
+    const url = `${process.env.REACT_APP_API_BASE_URL}/pupil/${attendee[0].qr_uuid}`;
+    QrCode.toDataURL(url, { margin: 2 }, (err, url) => {
+      if (err) return console.error(err);
+      setQrcode(url);
+    });
+  }, []);
+
+  const imgg = `${process.env.REACT_APP_API_BASE_URL}/pupil/${attendee[0].qr_uuid}`;
+  console.log("qrid", qrcode);
+
+  const handleShowPersonalQR = () => {
+    setShowPersonalQR(true);
+  };
   const closeModal = () => {
     showModal(false);
   };
+  // console.log("qrid", attendee[0].qr_uuid);
 
   const register = async (e: any) => {
     setLoading(true);
@@ -122,6 +148,7 @@ const Attendance = ({
 
   return (
     <div className="attendance">
+      {showPersonalQR ? <PersonalQR showModal={setShowPersonalQR} QRImage={qrcode} /> : null}
       <div className="attendance__wrapper">
         <div className="head">
           <h3>{attendee[0].full_name}</h3>
@@ -184,8 +211,17 @@ const Attendance = ({
         <div className="cancel">
           <Button
             disabled={false}
-            title="Atcelt"
+            title="Personīgais QR kods"
             type="fiolBordered"
+            iconArrow={undefined}
+            iconLogOut={undefined}
+            onClick={handleShowPersonalQR}
+            iconPersonalQR={true}
+          />
+          <Button
+            disabled={false}
+            title="Atcelt"
+            type="not"
             iconArrow={undefined}
             iconLogOut={undefined}
             onClick={closeModal}

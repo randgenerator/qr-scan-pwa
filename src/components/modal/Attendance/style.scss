@@ -17,7 +17,7 @@
     overflow: hidden;
     padding: 20px 12px 12px;
     background: #ffffff;
-    max-height: 440px;
+    min-height: 440px;
     overflow: scroll;
     border-radius: 8px;
     margin: 0 20px;
@@ -84,7 +84,7 @@
       }
     }
     .cancel {
-      margin-top: 60px;
+      margin-top: 32px;
     }
   }
 }

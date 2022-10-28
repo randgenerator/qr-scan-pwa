@@ -1,4 +1,7 @@
 .personalQR {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   left: 0px;
   right: 0px;
@@ -6,25 +9,41 @@
   bottom: 0px;
   background: rgba(0, 0, 0, 0.55);
   padding: 25px 22px;
+  box-sizing: border-box;
   &__wrapper {
+    width: 100%;
+    max-width: 418px;
+    margin: auto;
     background: #ffffff;
     border-radius: 8px;
   }
   &__header {
     padding: 10px 12px;
     border-bottom: 1px solid #eeeeee;
-    h3 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    .content{
       display: flex;
       align-items: center;
+    }
+    span {
       font-weight: 400;
       font-size: 15px;
       line-height: 140%;
       color: #7159bd;
+      margin-left: 4px;
     }
   }
   &__ImageWrapper {
     box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.16);
     margin: 32px 0;
+    img {
+      width: 100%;
+      max-width: 318px;
+      display: block;
+      margin: 0 auto;
+    }
   }
   &__buttons {
     display: flex;
@@ -38,6 +57,8 @@
       background: #7159bd;
       border-radius: 24px;
       padding: 8px 0;
+      border: none;
+      outline: none;
       font-weight: 400;
       font-size: 15px;
       line-height: 140%;
@@ -48,24 +69,27 @@
       background: #f5f5f5;
       border-radius: 24px;
       padding: 8px 0;
+      border: none;
+      outline: none;
       color: #333333;
       font-weight: 400;
       font-size: 15px;
       line-height: 140%;
     }
   }
+  .accept-wrapper {
+    padding: 12px;
+  }
   .btn-accept {
     width: 100%;
     color: #ffffff;
     background: #7159bd;
-    opacity: 0.4;
+    border: none;
+    outline: none;
     border-radius: 4px;
     font-weight: 500;
     font-size: 18px;
     line-height: 140%;
     padding: 24px 0;
-    margin: 12px;
   }
-  
-  
 }

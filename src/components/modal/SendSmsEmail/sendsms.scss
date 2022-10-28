@@ -1,0 +1,64 @@
+.sendSms {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 25px 22px;
+  box-sizing: border-box;
+  &__wrapper {
+    width: 100%;
+    max-width: 418px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 8px;
+  }
+  &__header {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eeeeee;
+    display: flex;
+    align-items: center;
+    h3 {
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 140%;
+      color: #7159bd;
+      margin-left: 4px;
+    }
+  }
+  &__section {
+    padding: 12px;
+    h3 {
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 140%;
+      color: #666666;
+    }
+    p {
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 140%;
+      color: #cccccc;
+      padding: 4px 0 12px;
+      border-bottom: 1px solid #eeeeee;
+      margin-bottom: 12px;
+    }
+    .btn {
+      width: 100%;
+      background: #7159bd;
+      border-radius: 4px;
+      padding: 4px 0;
+      color: #ffffff;
+      font-weight: 400;
+      border: none;
+      outline: none;
+      font-size: 17px;
+      line-height: 140%;
+      text-align: center;
+    }
+  }
+}

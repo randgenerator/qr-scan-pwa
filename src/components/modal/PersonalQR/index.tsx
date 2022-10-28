@@ -1,17 +1,23 @@
 import React from "react";
 import Button from "components/button";
 import "./personalQR.scss";
-import QRImage from "assets/images/QRImage.png";
+import QRImage from "assets/images/QR_Code_Model.jpg";
 import IconLeft from "assets/images/icon-left.svg";
+import { Link } from "react-router-dom";
 
-const PersonalQR = () => {
+const PersonalQR = ({ showModal, QRImage }: { showModal: any, QRImage: string }) => {
+  const closeModal = () => {
+    showModal(false);
+  };
   return (
     <div className="personalQR">
       <div className="personalQR__wrapper">
-        <h3 className="personalQR__header">
-          <img src={IconLeft} alt="QRimg" />
-          Maribel Marsh
-        </h3>
+        <div className="personalQR__header">
+          <div className="content" onClick={closeModal}>
+            <img src={IconLeft} alt="QRimg" />
+            <span>Maribel Marsh</span>
+          </div>
+        </div>
         <div className="personalQR__ImageWrapper">
           <img src={QRImage} alt="qrImage" />
         </div>
@@ -23,15 +29,17 @@ const PersonalQR = () => {
             SMS
           </button>
         </div>
-        <button type="button" className="btn-accept">
-          Nosūtīt
-        </button>
+        <div className="accept-wrapper">
+          <button type="button" className="btn-accept">
+            Nosūtīt
+          </button>
+        </div>
         <Button
           title="Atcelt"
           iconArrow={undefined}
           iconLogOut={undefined}
           iconPersonalQR={undefined}
-          onClick={undefined}
+          onClick={closeModal}
           type="not"
           disabled={undefined}
         />

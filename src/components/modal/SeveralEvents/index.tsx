@@ -184,15 +184,26 @@ const SeveralEvents = ({
                     />
                   )}
                   {multiple && (
-                    <Button
-                      disabled={false}
-                      title="Skenēt nākamo"
-                      iconArrow={true}
-                      type="fiolet"
-                      iconLogOut={undefined}
-                      onClick={closeModal}
-                      iconPersonalQR={undefined}
-                    />
+                    <>
+                      <Button
+                        disabled={false}
+                        title="Personīgais QR kods"
+                        type="fiolBordered"
+                        iconArrow={undefined}
+                        iconLogOut={undefined}
+                        onClick={closeModal}
+                        iconPersonalQR={true}
+                      />
+                      <Button
+                        disabled={false}
+                        title="Atcelt"
+                        iconArrow={true}
+                        type="fiolet"
+                        iconLogOut={undefined}
+                        onClick={closeModal}
+                        iconPersonalQR={undefined}
+                      />
+                    </>
                   )}
                 </>
               );

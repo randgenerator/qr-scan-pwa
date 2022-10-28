@@ -7,61 +7,81 @@ import { getToken, saveOffline, verifyAttendance } from "store/db";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
 
-const NotAttending = ({event, showModal, data, scanAllowed, showError, showSuccess, setUpdateAtt}:{event:any, showModal:any, data:any, setUpdateAtt:any, scanAllowed:any, showError:any, showSuccess:any}) => {
-  const [loading, setLoading] = useState<boolean>(false)
+const NotAttending = ({
+  event,
+  showModal,
+  data,
+  scanAllowed,
+  showError,
+  showSuccess,
+  setUpdateAtt,
+}: {
+  event: any;
+  showModal: any;
+  data: any;
+  setUpdateAtt: any;
+  scanAllowed: any;
+  showError: any;
+  showSuccess: any;
+}) => {
+  const [loading, setLoading] = useState<boolean>(false);
 
   const register = async () => {
-    setLoading(true)
+    setLoading(true);
     if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-      await SendOffline()
-      const token = await getToken()
-      await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${data.id}/verify`, {}, {
-        headers: {
-            'Authorization': `Bearer ${token}`
+      await SendOffline();
+      const token = await getToken();
+      await axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/pwa/attendance/${data.id}/verify`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then(async function (response) {
+          await verifyAttendance(data.id);
+          setUpdateAtt(data.id);
+          showSuccess(true);
+          setLoading(false);
+          showModal(false);
+        })
+        .catch(function (error) {
+          if (error.response.data.error) {
+            if (error.response.data.error.includes("already")) {
+              showError(true);
+              setLoading(false);
+              showModal(false);
+            }
           }
-      })
-      .then(async function (response) {
-        await verifyAttendance(data.id)
-        setUpdateAtt(data.id)
-        showSuccess(true)
-        setLoading(false)
-        showModal(false)
-      })
-      .catch(function (error) {
-        if (error.response.data.error) {
-          if (error.response.data.error.includes("already")) {
-            showError(true)
-            setLoading(false)
-            showModal(false)
-          }
-        }
-        setLoading(false)
-        showModal(false)
-      })
+          setLoading(false);
+          showModal(false);
+        });
     } else {
-      await verifyAttendance(data.id)
+      await verifyAttendance(data.id);
       const offlineData = {
         id: data.id,
-        status: "verify"
-      } 
-      await saveOffline(offlineData)
-      setUpdateAtt(data.id)
-      showSuccess(true)
-      setLoading(false)
-      showModal(false)
+        status: "verify",
+      };
+      await saveOffline(offlineData);
+      setUpdateAtt(data.id);
+      showSuccess(true);
+      setLoading(false);
+      showModal(false);
     }
-    
-  }
+  };
 
   const handleClose = () => {
-    scanAllowed(true)
-    showModal(false)
-  }
+    scanAllowed(true);
+    showModal(false);
+  };
 
   useLayoutEffect(() => {
-    let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3")
-    audio.play()
-  }, [])
+    let audio = new Audio("/ES_Multimedia Prompt 765 - SFX Producer.mp3");
+    audio.play();
+  }, []);
 
   return (
     <div className="notAttendingModal">
@@ -74,10 +94,34 @@ const NotAttending = ({event, showModal, data, scanAllowed, showError, showSucce
             <h4 className="lunchTitle">{event.service_series_name}</h4>
             <span>Pieteikts kavējums</span>
           </div>
-          <Button disabled={loading} title="Reģistrēt apmeklējumu" type="green" iconArrow={undefined} iconLogOut={undefined} onClick={register} iconPersonalQR={undefined} />
+          <Button
+            disabled={loading}
+            title="Reģistrēt apmeklējumu"
+            type="green"
+            iconArrow={undefined}
+            iconLogOut={undefined}
+            onClick={register}
+            iconPersonalQR={undefined}
+          />
         </div>
-        <Button disabled={false} title="Personīgais QR kods" type="fiolBordered" iconArrow={false} iconLogOut={undefined} onClick={handleClose} iconPersonalQR={true} />
-        <Button disabled={false} title="Atcelt" type="not" iconArrow={false} iconLogOut={undefined} onClick={handleClose} iconPersonalQR={false} />
+        <Button
+          disabled={false}
+          title="Personīgais QR kods"
+          type="fiolBordered"
+          iconArrow={false}
+          iconLogOut={undefined}
+          onClick={handleClose}
+          iconPersonalQR={true}
+        />
+        <Button
+          disabled={false}
+          title="Atcelt"
+          type="not"
+          iconArrow={false}
+          iconLogOut={undefined}
+          onClick={handleClose}
+          iconPersonalQR={false}
+        />
       </div>
     </div>
   );
