@@ -33,7 +33,6 @@ const Attendance = ({
   const [confirm, setConfirm] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [showPersonalQR, setShowPersonalQR] = useState<boolean>(false);
-  // const [url, setUrl] = useState<string>('')
   const [qrcode, setQrcode] = useState<string>("");
 
   useEffect(() => {
@@ -44,8 +43,6 @@ const Attendance = ({
     });
   }, []);
 
-  const imgg = `${process.env.REACT_APP_API_BASE_URL}/pupil/${attendee[0].qr_uuid}`;
-  console.log("qrid", qrcode);
 
   const handleShowPersonalQR = () => {
     setShowPersonalQR(true);
@@ -53,7 +50,6 @@ const Attendance = ({
   const closeModal = () => {
     showModal(false);
   };
-  // console.log("qrid", attendee[0].qr_uuid);
 
   const register = async (e: any) => {
     setLoading(true);
