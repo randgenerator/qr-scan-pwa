@@ -1,5 +1,5 @@
 import React from "react";
-import "./sendsms.scss"
+import "./sendsms.scss";
 import IconLeft from "assets/images/icon-left.svg";
 
 const SendSmsEmail = () => {
@@ -11,9 +11,11 @@ const SendSmsEmail = () => {
           Maribel Marsh
         </h3>
         <div className="sendSms__section">
-            <h3>E-pasts</h3>
-            <p>Ievadiet e-pasta adresi</p>
-            <button className="btn" type="button" >Nosūtīt</button>
+          <h3>E-pasts</h3>
+          <p>Ievadiet e-pasta adresi</p>
+          <button className="btn" type="button">
+            Nosūtīt
+          </button>
         </div>
       </div>
     </div>

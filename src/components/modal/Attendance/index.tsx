@@ -43,7 +43,6 @@ const Attendance = ({
     });
   }, []);
 
-
   const handleShowPersonalQR = () => {
     setShowPersonalQR(true);
   };

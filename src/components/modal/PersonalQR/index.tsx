@@ -5,7 +5,7 @@ import QRImage from "assets/images/QR_Code_Model.jpg";
 import IconLeft from "assets/images/icon-left.svg";
 import { Link } from "react-router-dom";
 
-const PersonalQR = ({ showModal, QRImage }: { showModal: any, QRImage: string }) => {
+const PersonalQR = ({ showModal, QRImage }: { showModal: any; QRImage: string }) => {
   const closeModal = () => {
     showModal(false);
   };
