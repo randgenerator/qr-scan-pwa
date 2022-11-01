@@ -30,6 +30,7 @@ const NotFound = ({
   }, []);
 
   const closeModal = () => {
+    scanAllowed(true)
     showModal(false);
   };
 

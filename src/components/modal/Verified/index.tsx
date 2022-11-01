@@ -22,7 +22,7 @@ const Verified = ({
   useEffect(() => {
     if (continious) {
       setTimeout(() => allowScan(), 1000);
-      setTimeout(() => closeModal(), 2000);
+      setTimeout(() => showModal(false), 2000);
     }
   }, []);
 
@@ -36,7 +36,7 @@ const Verified = ({
   };
 
   const closeModal = () => {
-    if (scanAllowed) scanAllowed(true);
+    allowScan();
     showModal(false);
   };
 
