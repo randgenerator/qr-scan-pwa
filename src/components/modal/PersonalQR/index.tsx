@@ -15,13 +15,13 @@ const PersonalQR = ({ showModal, QRImage }: { showModal: any; QRImage: string })
         <div className="personalQR__header">
           <div className="content" onClick={closeModal}>
             <img src={IconLeft} alt="QRimg" />
-            <span>Maribel Marsh</span>
+            <span>Atpakaļ pie saraksta</span>
           </div>
         </div>
         <div className="personalQR__ImageWrapper">
           <img src={QRImage} alt="qrImage" />
         </div>
-        <div className="personalQR__buttons">
+        {/* <div className="personalQR__buttons">
           <button type="button" className="btn-E">
             E-pasts
           </button>
@@ -42,7 +42,7 @@ const PersonalQR = ({ showModal, QRImage }: { showModal: any; QRImage: string })
           onClick={closeModal}
           type="not"
           disabled={undefined}
-        />
+        /> */}
       </div>
     </div>
   );

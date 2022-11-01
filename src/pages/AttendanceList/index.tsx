@@ -141,7 +141,6 @@ const AttendanceList = () => {
       </div>
 
       {search.map((attendee: any) => {
-        console.log("attendee", attendee);
 
         return (
           <div
