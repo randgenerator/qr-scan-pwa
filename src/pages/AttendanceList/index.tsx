@@ -161,7 +161,7 @@ const AttendanceList = () => {
                   <span className="status__title">Status: </span>{" "}
                   <p className="verifiedAt">
                     {" "}
-                    {attendee.verified_at}
+                    {attendee.sentStatus == "sent" ? attendee.verified_at : attendee.attemptedTimestamp}
                   </p>
                 </div>
               </div>

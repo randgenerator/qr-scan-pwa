@@ -91,7 +91,7 @@ const RegistrationQR = () => {
             await axios
               .post(
                 `${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`,
-                {},
+                {verified_at: new Date().toISOString()},
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,

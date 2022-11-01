@@ -1,4 +1,4 @@
-import { getOffline, getToken, removeOffline } from "store/db";
+import { changeSentStatus, getOffline, getToken, removeOffline } from "store/db";
 import axios from "axios";
 
 const SendOffline = async () => {
@@ -10,7 +10,7 @@ const SendOffline = async () => {
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${att.id}/verify`,
-          {},
+          {verified_at: new Date().toISOString()},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -18,14 +18,15 @@ const SendOffline = async () => {
           },
         )
         .then(async function (response) {
-          await removeOffline(att.id);
+            await changeSentStatus(parseInt(att.id), "sent")
+            await removeOffline(att.id);
         })
         .catch(async function (error) {
           if (error.response.data.error) {
             if (error.response.data.error.includes("already")) {
-              await removeOffline(att.id);
+                await removeOffline(att.id);
             } else if (error.response.data.error.includes("No query results")) {
-              await removeOffline(att.id);
+                await removeOffline(att.id);
             }
           }
         });
@@ -33,7 +34,7 @@ const SendOffline = async () => {
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${att.id}/unverify`,
-          {},
+          {verified_at: new Date().toISOString()},
           {
             headers: {
               Authorization: `Bearer ${token}`,

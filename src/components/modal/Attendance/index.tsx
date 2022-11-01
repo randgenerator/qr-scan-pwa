@@ -59,7 +59,7 @@ const Attendance = ({
       const resp = await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/verify`,
-          { verified_at: new Date() as any },
+          {verified_at: new Date().toISOString()},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -70,9 +70,9 @@ const Attendance = ({
           await changeSentStatus(parseInt(e.target.value), "sent")
           return true;
         })
-        .catch(function (error) {
+        .catch(async function (error) {
           console.log(error);
-           changeSentStatus(parseInt(e.target.value), "failed")
+          await changeSentStatus(parseInt(e.target.value), "failed")
 
           return false;
         });
@@ -86,6 +86,7 @@ const Attendance = ({
         showModal(false);
       }
     } else {
+      await changeSentStatus(parseInt(e.target.value), "failed")
       await verifyAttendance(parseInt(e.target.value));
       const offlineData = {
         id: e.target.value,
@@ -111,7 +112,7 @@ const Attendance = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/unverify`,
-          {verified_at: new Date() as any },
+          {verified_at: new Date().toISOString()},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -119,7 +120,6 @@ const Attendance = ({
           },
         )
         .then(async function (response) {
-          await changeSentStatus(parseInt(e.target.value), "sent")
           await unverifyAttendance(parseInt(e.target.value));
           setUpdateAtt(e.target.value);
           showCancelled(true);
@@ -127,8 +127,6 @@ const Attendance = ({
           showModal(false);
         })
         .catch(function (error) {
-          changeSentStatus(parseInt(e.target.value), "failed")
-
           console.log(error);
         });
     } else {

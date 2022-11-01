@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import "./style.scss";
 import IconDanger from "assets/images/icon-danger.svg";
 import axios from "axios";
-import { getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
+import { changeSentStatus, getToken, saveOffline, unverifyAttendance, verifyAttendance } from "store/db";
 import isReachable from "is-reachable";
 import Button from "components/button";
 import SendOffline from "offline";
@@ -38,7 +38,7 @@ const SeveralEvents = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/verify`,
-          {},
+          {verified_at: new Date().toISOString()},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -46,6 +46,7 @@ const SeveralEvents = ({
           },
         )
         .then(async function (response) {
+          await changeSentStatus(parseInt(id), "sent")
           await verifyAttendance(parseInt(id));
           setUpdateAtt(parseInt(id));
           showModal(false);
@@ -62,6 +63,7 @@ const SeveralEvents = ({
           }
         });
     } else {
+      await changeSentStatus(parseInt(id), "failed")
       await verifyAttendance(id);
       const offlineData = {
         id: id,
@@ -88,7 +90,7 @@ const SeveralEvents = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/unverify`,
-          {},
+          {verified_at: new Date().toISOString()},
           {
             headers: {
               Authorization: `Bearer ${token}`,

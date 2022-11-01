@@ -34,7 +34,7 @@ const NotAttending = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${data.id}/verify`,
-          {},
+          {verified_at: new Date().toISOString()},
           {
             headers: {
               Authorization: `Bearer ${token}`,

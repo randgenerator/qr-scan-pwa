@@ -24,8 +24,8 @@ interface PwaDB extends DBSchema {
       id: number;
       full_name: string;
       verified: number;
-      //timestamp: string or Dsate
-      //verified_time
+      verified_at: Date | null;
+      verified_by_admin_id: number | null;
       status: string;
       sentStatus: string;
       attemptedTimestamp: Date,
@@ -176,6 +176,11 @@ export async function changeSentStatus(id: any, status: any) {
   const value = await db.getFromIndex("attendance", "by-id", id);
   if (value) {
     value.sentStatus = status;
+    if (status == "failed") {
+      value.attemptedTimestamp = new Date()
+    } else {
+      value.verified_at = new Date()
+    }
     await db.put("attendance", value);
     db.close();
   }
