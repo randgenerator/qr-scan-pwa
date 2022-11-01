@@ -18,6 +18,8 @@ import axios from "axios";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
 
+const worker = new Worker('/thread.worker.ts');
+
 const RegistrationQR = () => {
   const [attendances, setAttendances] = useState<any>([]);
   const [scannedAttendee, setScannedAttendee] = useState<any>({});
@@ -34,6 +36,22 @@ const RegistrationQR = () => {
   const [continious, setContinious] = useState<any>(true);
   const [updateAtt, setUpdateAtt] = useState<number>();
   const [fastMode, setFastMode] = useState<any>(true);
+
+  useEffect(() => {
+
+    const listener = ({data}:{data:any}) => {
+
+      console.log(data.type, data.payload);
+
+      if (data.type === 'UPDATE_SUCCESS') console.log(data.payload);
+
+    };
+
+    worker.addEventListener('message', listener);
+
+    return () => worker.removeEventListener('message', listener);
+
+  }, []);
 
   const handleError = (err: any) => {
     console.log(err);
@@ -67,9 +85,7 @@ const RegistrationQR = () => {
             } else {
               setShowAlreadyVerified(true);
             }
-            return new Promise((resolve) => {
-              setTimeout(() => resolve(SendOffline), 5000);
-            });
+            worker.postMessage({ type: 'UPDATE', payload: 5000 });
           } else if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
             await SendOffline();
             await axios
