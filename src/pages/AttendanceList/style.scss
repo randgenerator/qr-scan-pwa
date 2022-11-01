@@ -53,6 +53,28 @@
         color: #999999;
       }
     }
+    .attendeeV {
+      .status {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 8px;
+        &__title {
+          font-weight: 600;
+          font-size: 6px;
+          line-height: 140%;
+          color: #000000;
+          margin-right: 2px;
+        }
+      }
+
+      .verifiedAt {
+        font-weight: 600;
+        font-size: 6px;
+        line-height: 140%;
+        color: #00be7e;
+      }
+    }
     .attending {
       font-weight: 600;
       font-size: 13px;

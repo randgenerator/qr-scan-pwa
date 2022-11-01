@@ -10,6 +10,7 @@ import {
   getAttendance,
   unverifyAttendance,
   verifyAttendance,
+  changeSentStatus,
 } from "store/db";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
@@ -58,7 +59,7 @@ const Attendance = ({
       const resp = await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/verify`,
-          {},
+          { verified_at: new Date() as any },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -66,12 +67,17 @@ const Attendance = ({
           },
         )
         .then(async function (response) {
+          await changeSentStatus(parseInt(e.target.value), "sent")
           return true;
         })
         .catch(function (error) {
           console.log(error);
+           changeSentStatus(parseInt(e.target.value), "failed")
+
           return false;
         });
+        console.log("resp", resp);
+        
       if (resp) {
         await verifyAttendance(parseInt(e.target.value));
         setUpdateAtt(e.target.value);
@@ -105,7 +111,7 @@ const Attendance = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/unverify`,
-          {},
+          {verified_at: new Date() as any },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -113,6 +119,7 @@ const Attendance = ({
           },
         )
         .then(async function (response) {
+          await changeSentStatus(parseInt(e.target.value), "sent")
           await unverifyAttendance(parseInt(e.target.value));
           setUpdateAtt(e.target.value);
           showCancelled(true);
@@ -120,6 +127,8 @@ const Attendance = ({
           showModal(false);
         })
         .catch(function (error) {
+          changeSentStatus(parseInt(e.target.value), "failed")
+
           console.log(error);
         });
     } else {
@@ -141,6 +150,8 @@ const Attendance = ({
     audio.play();
   }, []);
 
+  console.log("sss", );
+  
   return (
     <div className="attendance">
       {showPersonalQR ? <PersonalQR showModal={setShowPersonalQR} QRImage={qrcode} /> : null}
@@ -149,7 +160,7 @@ const Attendance = ({
           <h3>{attendee[0].full_name}</h3>
           <p>{attendee[0].class_name}</p>
         </div>
-
+    
         {events.map((event: any) => {
           const att = attendee.find((att: any) => att.attendance_id === event.id);
           if (att) {

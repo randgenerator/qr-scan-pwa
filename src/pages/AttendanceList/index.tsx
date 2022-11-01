@@ -36,7 +36,6 @@ const AttendanceList = () => {
         return att;
       }, {});
       let sort = Object.values(grouped);
-      console.log("att", grouped);
 
       setSorted(sort.sort((a: any, b: any) => a.letter - b.letter));
       const sortedAtt = tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name));
@@ -142,7 +141,8 @@ const AttendanceList = () => {
       </div>
 
       {search.map((attendee: any) => {
-        
+        console.log("attendee", attendee);
+
         return (
           <div
             className="list__items"
@@ -154,9 +154,18 @@ const AttendanceList = () => {
               <span data-qr={attendee.qr_uuid}>{attendee.class_name}</span>
             </div>
             {attendee.verified === 1 ? (
-              <span data-qr={attendee.qr_uuid} className="verified">
-                Apmeklējums reģistrēts
-              </span>
+              <div className="attendeeV">
+                <span data-qr={attendee.qr_uuid} className="verified">
+                  Apmeklējums reģistrēts
+                </span>
+                <div className="status">
+                  <span className="status__title">Status: </span>{" "}
+                  <p className="verifiedAt">
+                    {" "}
+                    {attendee.verified_at}
+                  </p>
+                </div>
+              </div>
             ) : attendee.status.toLowerCase().includes("attending") ? (
               <span data-qr={attendee.qr_uuid} className="attending">
                 Plānots
