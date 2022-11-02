@@ -18,6 +18,9 @@ const AttendanceList = () => {
   const [showVerified, setShowVerified] = useState<boolean>(false);
   const [showCancelled, setShowCancelled] = useState<boolean>(false);
   const [updateAtt, setUpdateAtt] = useState<number>();
+  const [countVerified, setCountVerified] = useState<number>()
+  const [countFailed, setCountFailed] = useState<number>()
+  const [countPlanned, setCountPlanned] = useState<number>()
 
   useEffect(() => {
     SyncAttendance();
@@ -42,6 +45,12 @@ const AttendanceList = () => {
       const groupedById = sortedAtt.filter(
         (att, index, allAtt) => allAtt.findIndex((v2) => v2.qr_uuid === att.qr_uuid) === index,
       );
+      const filterVerified = groupedById.filter((att:any) => att.verified === 1)
+      const filterFailed = groupedById.filter((att:any) => att.sentStatus == "failed")
+      const filterPlanned = groupedById.filter((att:any) => {att.verified === 0})
+      setCountVerified(filterVerified.length)
+      setCountFailed(filterFailed.length)
+      setCountPlanned(filterPlanned.length)
       setSearch(groupedById);
       setGroupedAttendances(groupedById);
     };
