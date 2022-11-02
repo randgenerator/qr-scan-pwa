@@ -1,4 +1,4 @@
-import { changeSentStatus, getOffline, getToken, removeOffline } from "store/db";
+import { changeSentStatus, changeLastSync, getOffline, getToken, removeOffline } from "store/db";
 import axios from "axios";
 
 const SendOffline = async () => {
@@ -20,6 +20,7 @@ const SendOffline = async () => {
         .then(async function (response) {
             await changeSentStatus(parseInt(att.id), "sent")
             await removeOffline(att.id);
+            await changeLastSync()
         })
         .catch(async function (error) {
           if (error.response.data.error) {

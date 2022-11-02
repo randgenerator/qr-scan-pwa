@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
 import SearchIcon from "assets/images/icon-search.svg";
-import { getAttendance, getEvents, getSelectedEvents } from "store/db";
+import { getAttendance, getEvents, getSelectedEvents, getLastSync } from "store/db";
 import Modal from "components/modal";
 import SyncAttendance from "attendanceSync";
 
@@ -18,13 +18,14 @@ const AttendanceList = () => {
   const [showVerified, setShowVerified] = useState<boolean>(false);
   const [showCancelled, setShowCancelled] = useState<boolean>(false);
   const [updateAtt, setUpdateAtt] = useState<number>();
-  const [countVerified, setCountVerified] = useState<number>()
-  const [countFailed, setCountFailed] = useState<number>()
-  const [countPlanned, setCountPlanned] = useState<number>()
+  const [countVerified, setCountVerified] = useState<number>();
+  const [countFailed, setCountFailed] = useState<number>();
+  const [countPlanned, setCountPlanned] = useState<number>();
 
   useEffect(() => {
     SyncAttendance();
     const getEventsDB = async () => {
+      const sync = await getLastSync()
       const att = await getAttendance();
       const selected = await getSelectedEvents();
       const events = await getEvents();
@@ -39,18 +40,21 @@ const AttendanceList = () => {
         return att;
       }, {});
       let sort = Object.values(grouped);
-
+      console.log("sync", sync);
+      
       setSorted(sort.sort((a: any, b: any) => a.letter - b.letter));
       const sortedAtt = tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name));
       const groupedById = sortedAtt.filter(
         (att, index, allAtt) => allAtt.findIndex((v2) => v2.qr_uuid === att.qr_uuid) === index,
       );
-      const filterVerified = groupedById.filter((att:any) => att.verified === 1)
-      const filterFailed = groupedById.filter((att:any) => att.sentStatus == "failed")
-      const filterPlanned = groupedById.filter((att:any) => {att.verified === 0})
-      setCountVerified(filterVerified.length)
-      setCountFailed(filterFailed.length)
-      setCountPlanned(filterPlanned.length)
+      const filterVerified = groupedById.filter((att: any) => att.verified === 1);
+      const filterFailed = groupedById.filter((att: any) => att.sentStatus == "failed");
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      const filterPlanned = groupedById.filter((att: any) => { att.verified === 0;
+      });
+      setCountVerified(filterVerified.length);
+      setCountFailed(filterFailed.length);
+      setCountPlanned(filterPlanned.length);
       setSearch(groupedById);
       setGroupedAttendances(groupedById);
     };
@@ -100,6 +104,8 @@ const AttendanceList = () => {
     setSearchField("");
   };
 
+  // console.log("add", sync);
+
   return (
     <div className="list">
       {showCancelled && (
@@ -148,10 +154,18 @@ const AttendanceList = () => {
           </button>
         )}
       </div>
+      <div className="list__counted">
+        <div className="left">
+          <p>Verifications: </p>
+          <span className="countVerified">{countVerified || 0}</span>/<span className="countFailed">{countFailed || 0}</span>
+          <span className="countPlanned">({countPlanned  || 0})</span>
+        </div>
 
+        <p className="right">Synced: 14.10.2022 15:22 </p>
+      </div>
       {search.map((attendee: any) => {
-        console.log("attendee", attendee);
-        
+        // console.log("attendee", attendee);
+
         return (
           <div
             className="list__items"
@@ -168,11 +182,7 @@ const AttendanceList = () => {
                   Apmeklējums reģistrēts
                 </span>
                 <div className="status">
-                  <span className="status__title">Status: </span>{" "}
-                  <p className="verifiedAt">
-                    {" "}
-                    {attendee.sentStatus == "sent" ? attendee.verified_at : attendee.attemptedTimestamp}
-                  </p>
+                  <span className="status__title">Status: </span> <p className="verifiedAt">{attendee.verified_at} </p>
                 </div>
               </div>
             ) : attendee.status.toLowerCase().includes("attending") ? (
