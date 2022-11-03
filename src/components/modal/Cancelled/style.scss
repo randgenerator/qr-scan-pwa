@@ -20,6 +20,30 @@
     .submitButton {
       margin-top: 30px;
     }
+    .attendeeInfo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      span {
+        color: #373737;
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 140%;
+      }
+    }
+    .statusV {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 140%;
+      color: #000000;
+      margin-top: 30px;
+      margin-bottom: 20px;
+      span{
+        color: #00BE7E;
+        margin-left: 2px;
+      }
+    }
     img {
       display: block;
       width: 42px;
@@ -40,4 +64,3 @@
     }
   }
 }
-

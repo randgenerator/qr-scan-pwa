@@ -55,6 +55,7 @@ const Events = () => {
 
           att.forEach(async (attendance: any) => {
             attendance.attendance_id = event.id;
+            if (attendance.verified === 1) attendance.sentStatus = "sent";
             await saveAttendance(attendance);
           });
         });

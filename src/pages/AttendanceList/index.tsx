@@ -21,11 +21,12 @@ const AttendanceList = () => {
   const [countVerified, setCountVerified] = useState<number>();
   const [countFailed, setCountFailed] = useState<number>();
   const [countPlanned, setCountPlanned] = useState<number>();
+  const [syncTime, setSyncTime] = useState<Date | any>();
 
   useEffect(() => {
     SyncAttendance();
     const getEventsDB = async () => {
-      const sync = await getLastSync()
+      const sync = await getLastSync();
       const att = await getAttendance();
       const selected = await getSelectedEvents();
       const events = await getEvents();
@@ -40,8 +41,7 @@ const AttendanceList = () => {
         return att;
       }, {});
       let sort = Object.values(grouped);
-      console.log("sync", sync);
-      
+
       setSorted(sort.sort((a: any, b: any) => a.letter - b.letter));
       const sortedAtt = tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name));
       const groupedById = sortedAtt.filter(
@@ -49,14 +49,16 @@ const AttendanceList = () => {
       );
       const filterVerified = groupedById.filter((att: any) => att.verified === 1);
       const filterFailed = groupedById.filter((att: any) => att.sentStatus == "failed");
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      const filterPlanned = groupedById.filter((att: any) => { att.verified === 0;
+      const filterPlanned = groupedById.filter((att: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        att.verified === 0;
       });
       setCountVerified(filterVerified.length);
       setCountFailed(filterFailed.length);
       setCountPlanned(filterPlanned.length);
       setSearch(groupedById);
       setGroupedAttendances(groupedById);
+      setSyncTime(sync?.toLocaleString());
     };
 
     getEventsDB();
@@ -104,8 +106,6 @@ const AttendanceList = () => {
     setSearchField("");
   };
 
-  // console.log("add", sync);
-
   return (
     <div className="list">
       {showCancelled && (
@@ -115,7 +115,7 @@ const AttendanceList = () => {
           button={false}
           buttonTitle="Verify next"
           continious={true}
-          data={`${selectedAttendee[0].full_name},  ${selectedAttendee[0].class_name}`}
+          data={selectedAttendee}
         />
       )}
       {showVerified && (
@@ -125,7 +125,9 @@ const AttendanceList = () => {
           button={false}
           buttonTitle="Verify next"
           continious={true}
-          data={`${selectedAttendee[0].full_name},  ${selectedAttendee[0].class_name}`}
+          data={selectedAttendee}
+          personalQR={true}
+
         />
       )}
       {showRegistration && (
@@ -136,6 +138,8 @@ const AttendanceList = () => {
           showVerified={setShowVerified}
           showCancelled={setShowCancelled}
           events={selectedEvents}
+          personalQR={true}
+
         />
       )}
       <div className="list__search">
@@ -157,14 +161,14 @@ const AttendanceList = () => {
       <div className="list__counted">
         <div className="left">
           <p>Verifications: </p>
-          <span className="countVerified">{countVerified || 0}</span>/<span className="countFailed">{countFailed || 0}</span>
-          <span className="countPlanned">({countPlanned  || 0})</span>
+          <span className="countVerified">{countVerified || 0}</span>/
+          <span className="countFailed">{countFailed || 0}</span>
+          <span className="countPlanned">({countPlanned || 0})</span>
         </div>
 
-        <p className="right">Synced: 14.10.2022 15:22 </p>
+        <p className="right">Synced: {syncTime} </p>
       </div>
       {search.map((attendee: any) => {
-        // console.log("attendee", attendee);
 
         return (
           <div
@@ -182,7 +186,14 @@ const AttendanceList = () => {
                   Apmeklējums reģistrēts
                 </span>
                 <div className="status">
-                  <span className="status__title">Status: </span> <p className="verifiedAt">{attendee.verified_at} </p>
+                  <span className="status__title">Status: </span>{" "}
+                  {attendee.sentStatus == "sent" ? (
+                    <p className="verifiedAt">Nosūtīts {attendee.verified_at} </p>
+                  ) : (
+                    <p className="failedAt">
+                      Gaida savienojumu (#5 {attendee.attemptedTimestamp}){" "}
+                    </p>
+                  )}
                 </div>
               </div>
             ) : attendee.status.toLowerCase().includes("attending") ? (

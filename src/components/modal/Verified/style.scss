@@ -38,6 +38,27 @@
       color: #333333;
       text-align: center;
     }
+    .statusF {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 140%;
+      color: #000000;
+      margin-top: 30px;
+      span{
+        color: #FF3141;
+        margin-left: 2px;
+      }
+    }
+    .statuss{
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 140%;
+      color: #000000;
+      margin-top: 30px;
+      span{
+        color: #00BE7E;
+        margin-left: 2px;
+      }
+    }
   }
 }
-

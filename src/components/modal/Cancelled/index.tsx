@@ -38,13 +38,18 @@ const Cacnelled = ({
   const closeModal = () => {
     showModal(false);
   };
+  console.log("data", data);
 
   return (
     <div className="modalOne">
       <div className="modalOne__wrapper">
         <img src={IconChecked} alt="iconChecked" />
         <h3>Apmeklējums atcelts!</h3>
-        <p>{data != undefined ? data : ""}</p>
+        <div className="attendeeInfo">
+          <span>{data[0]?.full_name},</span>
+          <span>{data[0]?.class_name.toUpperCase()}</span>
+        </div>
+        <p className="statusV">Statuss: <span>Nosūtīts [{data[0]?.verified_at}]</span></p>
         {button && (
           <Button
             disabled={false}
