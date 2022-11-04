@@ -33,13 +33,17 @@ const InProgress = ({
   const closeModal = () => {
     showModal(false);
   };
+  
+  let OnlyTime = new Date(data.verified_at).toLocaleTimeString();
+  console.log("data", data);
 
   return (
     <div className="modalThird">
       <div className="modalThird__wrapper">
         <img src={IconDanger} alt="iconChecked" />
         <h3>Apmeklētājs jau reģistrēts!</h3>
-        <p>{data}</p>
+        <p>{data?.full_name}{data?.class_name.toUpperCase()} <span>{OnlyTime}</span></p>
+        <p>{data?.verified_by_admin}</p>
         {button && (
           <Button
             disabled={false}

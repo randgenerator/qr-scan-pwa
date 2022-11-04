@@ -86,6 +86,7 @@ const Events = () => {
     }
   };
 
+  
   return (
     <form onSubmit={handleSubmit}>
       <div className="events">
@@ -112,7 +113,7 @@ const Events = () => {
                   <label className="fullWidth" htmlFor={event.id.toString()}>
                     <div className="text">
                       <h3 className="text__title ">{event.service_series_name}</h3>
-                      <span className="text__caption">{event.description}</span>
+                      <span className="text__caption">{event.scheduled_at.toString()}</span>
                     </div>
                   </label>
                 </li>

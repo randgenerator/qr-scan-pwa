@@ -274,7 +274,6 @@ const RegistrationQR = () => {
     }
   }, [scanAllowed]);
 
-  console.log("scannedAttendee", scannedAttendee);
   
   return (
     <div className="main">
@@ -319,7 +318,7 @@ const RegistrationQR = () => {
           continious={continious}
           button={continious ? false : true}
           buttonTitle="Skenēt nākamo"
-          data={`${scannedAttendee.full_name},  ${scannedAttendee.class_name.toUpperCase()}`}
+          data={scannedAttendee}
         />
       )}
       {showNotFound && (
