@@ -73,7 +73,7 @@ const Attendance = ({
           return true;
         })
         .catch(async function (error) {
-          console.log(error);
+          console.log("sentERROR",error);
           await changeSentStatus(parseInt(e.target.value), "failed");
 
           return false;

@@ -35,7 +35,6 @@ const InProgress = ({
   };
   
   let OnlyTime = new Date(data.verified_at).toLocaleTimeString();
-  console.log("data", data);
 
   return (
     <div className="modalThird">

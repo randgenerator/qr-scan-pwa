@@ -180,7 +180,8 @@ export async function saveAttendance(attendance: any) {
 export async function changeSentStatus(id: any, status: any) {
   const db = await openDB<PwaDB>("pwa-db", 3);
   const value = await db.getFromIndex("attendance", "by-id", id);
-  if (value) {
+  
+  if (value ) {
     value.sentStatus = status;
     if (status == "failed") {
       value.attemptedTimestamp = new Date()
