@@ -42,17 +42,18 @@ const Verified = ({
     showModal(false);
   };
  
-  console.log("data", data[0]);
+  console.log("status", data[0]?.sentStatus == "sent");
   
   return (
     <div className="modalOne">
       <div className="modalOne__wrapper">
         <img src={IconChecked} alt="iconChecked" />
         <h3>Apmeklējums reģistrēts!</h3>
-        <p>{data?.full_name}{data?.class_name}</p>
+        
+        <p>{data[0]?.full_name}{data[0]?.class_name}</p>
         {
-          data?.sentStatus == "sent" ? (
-            <p className="statuss">Statuss: <span> Nosūtīts {data?.verified_at}</span></p>
+          data[0]?.sentStatus == "sent" ? (
+            <p className="statuss">Statuss: <span> Nosūtīts[{data[0]?.verified_at}]</span></p>
             ): (
             <p className="statusF">Statuss: <span> Gaida savienojumu</span></p>
           )

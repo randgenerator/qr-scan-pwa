@@ -18,7 +18,7 @@ import axios from "axios";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
 
-const worker = new Worker('/thread.worker.ts');
+const worker = new Worker(new URL('../../workers/thread.worker.ts', import.meta.url));
 
 const RegistrationQR = () => {
   const [attendances, setAttendances] = useState<any>([]);

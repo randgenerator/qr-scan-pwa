@@ -7,6 +7,7 @@ import axios from "axios";
 import {
   getToken,
   saveOffline,
+  getMode,
   getAttendance,
   unverifyAttendance,
   verifyAttendance,
@@ -23,7 +24,7 @@ const Attendance = ({
   showVerified,
   showCancelled,
   setUpdateAtt,
-  personalQR
+  personalQR,
 }: {
   events: any;
   showCancelled: any;
@@ -37,13 +38,19 @@ const Attendance = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [showPersonalQR, setShowPersonalQR] = useState<boolean>(false);
   const [qrcode, setQrcode] = useState<string>("");
+  const [fastMode, setFastMode] = useState<any>(true);
 
   useEffect(() => {
+    const getModeDB = async () => {
+      const stat = await getMode();
+      setFastMode(stat);
+    };
     const url = `${process.env.REACT_APP_API_BASE_URL}/pupil/${attendee[0]?.qr_uuid}`;
     QrCode.toDataURL(url, { margin: 2 }, (err, url) => {
       if (err) return console.error(err);
       setQrcode(url);
     });
+    getModeDB();
   }, []);
 
   const handleShowPersonalQR = () => {
@@ -55,7 +62,19 @@ const Attendance = ({
 
   const register = async (e: any) => {
     setLoading(true);
-    if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+    if (fastMode) {
+      await changeSentStatus(parseInt(e.target.value), "failed");
+      await verifyAttendance(parseInt(e.target.value));
+      const offlineData = {
+        id: e.target.value,
+        status: "verify",
+      };
+      await saveOffline(offlineData);
+      setUpdateAtt(e.target.value);
+      showVerified(true);
+      setLoading(false);
+      showModal(false);
+    } else if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
       await SendOffline();
       const token = await getToken();
       const resp = await axios
@@ -73,7 +92,7 @@ const Attendance = ({
           return true;
         })
         .catch(async function (error) {
-          console.log("sentERROR",error);
+          console.log("sentERROR", error);
           await changeSentStatus(parseInt(e.target.value), "failed");
 
           return false;
@@ -86,19 +105,20 @@ const Attendance = ({
         setLoading(false);
         showModal(false);
       }
-    } else {
-      await changeSentStatus(parseInt(e.target.value), "failed");
-      await verifyAttendance(parseInt(e.target.value));
-      const offlineData = {
-        id: e.target.value,
-        status: "verify",
-      };
-      await saveOffline(offlineData);
-      setUpdateAtt(e.target.value);
-      showVerified(true);
-      setLoading(false);
-      showModal(false);
     }
+    // } else {
+    //   await changeSentStatus(parseInt(e.target.value), "failed");
+    //   await verifyAttendance(parseInt(e.target.value));
+    //   const offlineData = {
+    //     id: e.target.value,
+    //     status: "verify",
+    //   };
+    //   await saveOffline(offlineData);
+    //   setUpdateAtt(e.target.value);
+    //   showVerified(true);
+    //   setLoading(false);
+    //   showModal(false);
+    // }
   };
 
   const confirmDialog = () => {

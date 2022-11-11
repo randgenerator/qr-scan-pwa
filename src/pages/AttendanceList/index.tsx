@@ -23,11 +23,6 @@ const AttendanceList = () => {
   const [countPlanned, setCountPlanned] = useState<number>();
   const [syncTime, setSyncTime] = useState<Date | any>();
 
-
-  // console.log("countFailed",countFailed);
-  // console.log("countVerified",countVerified);
-  // console.log("countPlanned",countPlanned);
-  
   useEffect(() => {
     SyncAttendance();
     const getEventsDB = async () => {
@@ -53,10 +48,9 @@ const AttendanceList = () => {
         (att, index, allAtt) => allAtt.findIndex((v2) => v2.qr_uuid === att.qr_uuid) === index,
       );
       const filterVerified = groupedById.filter((att: any) => att.verified === 1);
-      const filterFailed = groupedById.filter((att: any) => att.sentStatus != undefined && att.sentStatus == "failed");
-      const filterPlanned = groupedById.filter((att: any) =>  att.verified == 0);
-      
-      
+      const filterFailed = groupedById.filter((att: any) => att.sentStatus == "failed");
+      const filterPlanned = groupedById.filter((att: any) => att.verified == 0);
+
       setCountVerified(filterVerified.length);
       setCountFailed(filterFailed.length);
       setCountPlanned(filterPlanned.length);
@@ -75,8 +69,26 @@ const AttendanceList = () => {
       setSearch(
         groupedAttendances.filter(
           (att: any) =>
-            att.full_name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(searchField.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) ||
-            att.class_name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(searchField.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')),
+            att.full_name
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .includes(
+                searchField
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, ""),
+              ) ||
+            att.class_name
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .includes(
+                searchField
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, ""),
+              ),
         ),
       );
     }
@@ -131,7 +143,6 @@ const AttendanceList = () => {
           continious={true}
           data={selectedAttendee}
           personalQR={true}
-
         />
       )}
       {showRegistration && (
@@ -143,7 +154,6 @@ const AttendanceList = () => {
           showCancelled={setShowCancelled}
           events={selectedEvents}
           personalQR={true}
-
         />
       )}
       <div className="list__search">
@@ -166,14 +176,13 @@ const AttendanceList = () => {
         <div className="left">
           <p>Verifications: </p>
           <span className="countVerified">{countVerified || 0}</span>/
-          <span className="countPlanned">{countPlanned }</span>
-          <span className="countFailed">({countFailed })</span>
+          <span className="countPlanned">{countPlanned}</span>
+          <span className="countFailed">({countFailed})</span>
         </div>
 
         <p className="right">Synced: {syncTime} </p>
       </div>
       {search.map((attendee: any) => {
-
         return (
           <div
             className="list__items"
@@ -193,14 +202,11 @@ const AttendanceList = () => {
                   <span className="status__title">Status: </span>{" "}
                   {attendee.sentStatus == "sent" ? (
                     <p className="verifiedAt">Nosūtīts {attendee.verified_at} </p>
+                  ) : attendee.sentStatus == "failed" ? (
+                    <p className="failedAt">
+                      Gaida savienojumu (#5 {attendee.attemptedTimestamp}){" "}
+                    </p>
                   ) : null}
-                  {
-                    attendee.sentStatus !== "sent" ? (
-                      <p className="failedAt">
-                        Gaida savienojumu (#5 {attendee.attemptedTimestamp}){" "}
-                      </p>
-                    ): null
-                  }
                 </div>
               </div>
             ) : attendee.status.toLowerCase().includes("attending") ? (
