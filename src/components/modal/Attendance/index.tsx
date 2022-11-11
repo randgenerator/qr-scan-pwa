@@ -80,7 +80,7 @@ const Attendance = ({
       const resp = await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/verify`,
-          { verified_at: new Date().toISOString() },
+          { verified_at: new Date().toLocaleDateString() },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -133,7 +133,7 @@ const Attendance = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/unverify`,
-          { verified_at: new Date().toISOString() },
+          { verified_at: new Date().toLocaleDateString() },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -169,6 +169,8 @@ const Attendance = ({
     audio.play();
   }, []);
 
+  // console.log("attendee", attendee);
+  
   return (
     <div className="attendance">
       {showPersonalQR ? <PersonalQR showModal={setShowPersonalQR} QRImage={qrcode} /> : null}
@@ -178,7 +180,7 @@ const Attendance = ({
           <p>{attendee ? attendee[0]?.class_name : null}</p>
         </div>
 
-        {events.map((event: any) => {
+        {events?.map((event: any) => {
           const att = attendee.find((att: any) => att.attendance_id === event.id);
           if (att) {
             return (

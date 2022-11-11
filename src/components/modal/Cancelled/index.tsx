@@ -45,11 +45,18 @@ const Cacnelled = ({
       <div className="modalOne__wrapper">
         <img src={IconChecked} alt="iconChecked" />
         <h3>Apmeklējums atcelts!</h3>
-        <div className="attendeeInfo">
-          <span>{data[0]?.full_name},</span>
-          <span>{data[0]?.class_name.toUpperCase()}</span>
-        </div>
-        <p className="statusV">Statuss: <span>Nosūtīts [{data[0]?.verified_at}]</span></p>
+        {data &&
+          data?.map((item: any) => (
+            <>
+              <div className="attendeeInfo">
+                <span>{item.full_name},</span>
+                <span>{item.class_name.toUpperCase()}</span>
+              </div>
+              <p className="statusV">
+                Statuss: <span>Nosūtītsv [{item.verified_at}]</span>
+              </p>
+            </>
+          ))}
         {button && (
           <Button
             disabled={false}

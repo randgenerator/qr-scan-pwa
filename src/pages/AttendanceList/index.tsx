@@ -122,6 +122,7 @@ const AttendanceList = () => {
     setSearchField("");
   };
 
+  
   return (
     <div className="list">
       {showCancelled && (
@@ -134,7 +135,7 @@ const AttendanceList = () => {
           data={selectedAttendee}
         />
       )}
-      {showVerified && (
+      {showVerified ? (
         <Modal.Verified
           showModal={setShowVerified}
           scanAllowed={undefined}
@@ -144,7 +145,7 @@ const AttendanceList = () => {
           data={selectedAttendee}
           personalQR={true}
         />
-      )}
+      ): null}
       {showRegistration && (
         <Modal.Attendance
           setUpdateAtt={setUpdateAtt}
@@ -182,7 +183,7 @@ const AttendanceList = () => {
 
         <p className="right">Synced: {syncTime} </p>
       </div>
-      {search.map((attendee: any) => {
+      {search?.map((attendee: any) => {
         return (
           <div
             className="list__items"
@@ -193,18 +194,18 @@ const AttendanceList = () => {
               <h3 data-qr={attendee.qr_uuid}>{attendee.full_name}</h3>
               <span data-qr={attendee.qr_uuid}>{attendee.class_name}</span>
             </div>
-            {attendee.verified === 1 ? (
+            {attendee?.verified === 1 ? (
               <div className="attendeeV">
                 <span data-qr={attendee.qr_uuid} className="verified">
                   Apmeklējums reģistrēts
                 </span>
                 <div className="status">
                   <span className="status__title">Status: </span>{" "}
-                  {attendee.sentStatus == "sent" ? (
+                  {attendee.sentStatus === "sent" ? (
                     <p className="verifiedAt">Nosūtīts {attendee.verified_at} </p>
-                  ) : attendee.sentStatus == "failed" ? (
+                  ) : attendee.sentStatus === "failed" ? (
                     <p className="failedAt">
-                      Gaida savienojumu (#5 {attendee.attemptedTimestamp}){" "}
+                      Gaida savienojumu (#5 {attendee?.attemptedTimestamp.toLocaleDateString()}){" "}
                     </p>
                   ) : null}
                 </div>
