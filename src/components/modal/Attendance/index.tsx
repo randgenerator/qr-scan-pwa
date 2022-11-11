@@ -169,7 +169,6 @@ const Attendance = ({
     audio.play();
   }, []);
 
-  // console.log("attendee", attendee);
   
   return (
     <div className="attendance">

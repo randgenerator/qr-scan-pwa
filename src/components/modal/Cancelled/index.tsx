@@ -38,7 +38,6 @@ const Cacnelled = ({
   const closeModal = () => {
     showModal(false);
   };
-  console.log("data", data);
 
   return (
     <div className="modalOne">

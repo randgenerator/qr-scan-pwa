@@ -42,10 +42,7 @@ const Verified = ({
   const closeModal = () => {
     allowScan();
     showModal(false);
-  };
-
-  console.log("verified", data);
-  
+  };  
 
   return (
     <div className="modalOne">

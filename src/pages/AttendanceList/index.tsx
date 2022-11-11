@@ -56,7 +56,7 @@ const AttendanceList = () => {
       setCountPlanned(filterPlanned.length);
       setSearch(groupedById);
       setGroupedAttendances(groupedById);
-      setSyncTime(sync?.toLocaleString());
+      setSyncTime(sync?.toLocaleDateString());
     };
 
     getEventsDB();
