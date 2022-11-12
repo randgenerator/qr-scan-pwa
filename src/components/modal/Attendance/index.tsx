@@ -172,11 +172,11 @@ const Attendance = ({
   
   return (
     <div className="attendance">
-      {showPersonalQR ? <PersonalQR showModal={setShowPersonalQR} QRImage={qrcode} /> : null}
+      {showPersonalQR && <PersonalQR showModal={setShowPersonalQR} QRImage={qrcode} /> }
       <div className="attendance__wrapper">
         <div className="head">
-          <h3>{attendee ? attendee[0]?.full_name : null}</h3>
-          <p>{attendee ? attendee[0]?.class_name : null}</p>
+          <h3>{attendee && attendee[0]?.full_name }</h3>
+          <p>{attendee && attendee[0]?.class_name }</p>
         </div>
 
         {events?.map((event: any) => {
@@ -186,19 +186,17 @@ const Attendance = ({
               <>
                 <div key={event.id} className="content">
                   <div className="items">
-                    {att.verified === 1 ? (
+                    {att.verified == 1 && (
                       <img
                         key={event.id}
                         className="checkedIcon"
                         src={checkedIcon}
                         alt="checkedIcon"
                       />
-                    ) : (
-                      ""
-                    )}
+                    ) }
                     <div>
                       <h4 key={event.id}>{event.service_series_name}</h4>
-                      {att.verified === 1 ? (
+                      {att.verified == 1 ? (
                         <span key={Math.random()} className="attendanceVerified">
                           Apmeklējums reģistrēts
                         </span>

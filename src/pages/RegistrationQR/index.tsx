@@ -78,6 +78,7 @@ const RegistrationQR = () => {
               const offlineData = {
                 id: attendee[0].id,
                 status: "verify",
+                attemptedTimestamp: new Date(),
               };
               await saveOffline(offlineData);
               setUpdateAtt(attendee[0].id);
@@ -91,7 +92,7 @@ const RegistrationQR = () => {
             await axios
               .post(
                 `${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`,
-                {verified_at: new Date().toLocaleDateString()},
+                {verified_at: new Date()?.toLocaleString('en-GB', { hour12: false }) },
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,

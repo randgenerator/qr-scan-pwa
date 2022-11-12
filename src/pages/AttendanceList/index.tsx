@@ -21,12 +21,15 @@ const AttendanceList = () => {
   const [countVerified, setCountVerified] = useState<number>();
   const [countFailed, setCountFailed] = useState<number>();
   const [countPlanned, setCountPlanned] = useState<number>();
+  const [countTotal, setCountTotal] = useState<number>();
   const [syncTime, setSyncTime] = useState<Date | any>();
+
 
   useEffect(() => {
     SyncAttendance();
     const getEventsDB = async () => {
       const sync = await getLastSync();
+      const currentSync = sync?.toLocaleString('en-GB', { hour12: false });
       const att = await getAttendance();
       const selected = await getSelectedEvents();
       const events = await getEvents();
@@ -51,14 +54,16 @@ const AttendanceList = () => {
       const filterFailed = groupedById.filter((att: any) => att.sentStatus == "failed");
       const filterPlanned = groupedById.filter((att: any) => att.verified == 0);
 
+      setCountTotal(groupedById.length)
       setCountVerified(filterVerified.length);
       setCountFailed(filterFailed.length);
       setCountPlanned(filterPlanned.length);
       setSearch(groupedById);
       setGroupedAttendances(groupedById);
-      setSyncTime(sync?.toLocaleDateString());
+      setSyncTime(currentSync);
     };
 
+    
     getEventsDB();
   }, [showVerified, showCancelled, showRegistration]);
 
@@ -135,7 +140,7 @@ const AttendanceList = () => {
           data={selectedAttendee}
         />
       )}
-      {showVerified ? (
+      {showVerified && (
         <Modal.Verified
           showModal={setShowVerified}
           scanAllowed={undefined}
@@ -145,7 +150,7 @@ const AttendanceList = () => {
           data={selectedAttendee}
           personalQR={true}
         />
-      ): null}
+      )}
       {showRegistration && (
         <Modal.Attendance
           setUpdateAtt={setUpdateAtt}
@@ -176,8 +181,9 @@ const AttendanceList = () => {
       <div className="list__counted">
         <div className="left">
           <p>Verifications: </p>
-          <span className="countVerified">{countVerified || 0}</span>/
-          <span className="countPlanned">{countPlanned}</span>
+          <span className="countVerified">{countVerified || 0} </span>/
+          <span className="countTotal"> {countTotal || 0} </span>/
+          <span className="countPlanned"> {countPlanned} </span>
           <span className="countFailed">({countFailed})</span>
         </div>
 
@@ -202,12 +208,12 @@ const AttendanceList = () => {
                 <div className="status">
                   <span className="status__title">Status: </span>{" "}
                   {attendee.sentStatus === "sent" ? (
-                    <p className="verifiedAt">Nosūtīts {attendee.verified_at} </p>
+                    <p className="verifiedAt">Nosūtīts {attendee.verified_at?.toLocaleString('en-GB', { hour12: false })} </p>
                   ) : attendee.sentStatus === "failed" ? (
                     <p className="failedAt">
-                      Gaida savienojumu (#5 {attendee?.attemptedTimestamp.toLocaleDateString()}){" "}
+                      Gaida savienojumu (#5 {attendee?.attemptedTimestamp?.toLocaleString('en-GB', { hour12: false})}){" "}
                     </p>
-                  ) : null}
+                  ) : ""}
                 </div>
               </div>
             ) : attendee.status.toLowerCase().includes("attending") ? (

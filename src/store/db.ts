@@ -56,6 +56,7 @@ interface PwaDB extends DBSchema {
     value: {
       id: number;
       status: string;
+      attemptedTimestamp: Date,
     };
     key: string;
     indexes: { "by-id": number };

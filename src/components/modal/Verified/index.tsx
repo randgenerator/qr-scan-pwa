@@ -53,10 +53,8 @@ const Verified = ({
         <p>{data[0]?.full_name}{data[0]?.class_name}</p>
         {
           data[0]?.sentStatus == "sent"? (
-            <p className="statuss">Statuss: <span> Nosūtīts[{data[0]?.verified_at }]</span></p>
-            ):  (
-            <p className="statusF">Statuss: <span> Gaida savienojumu</span></p>
-          )
+            <p className="statuss">Statuss: <span> Nosūtīts[{data[0]?.verified_at?.toLocaleString('en-GB', { hour12: false }) }]</span></p>
+            ): ""
         }
         {button && (
           <>
