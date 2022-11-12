@@ -64,7 +64,7 @@ interface PwaDB extends DBSchema {
 }
 
 export async function initDb() {
-  const db = await openDB<PwaDB>("pwa-db", 3, {
+  const db = await openDB<PwaDB>("pwa-db", 4, {
     upgrade(db) {
       db.createObjectStore("token");
       db.createObjectStore("selected");
@@ -92,7 +92,7 @@ export async function initDb() {
 }
 
 export async function clearDb() {
-  const db = await openDB<PwaDB>("pwa-db", 3, {
+  const db = await openDB<PwaDB>("pwa-db", 4, {
     upgrade(db) {
       db.createObjectStore("token");
       db.createObjectStore("selected");
@@ -119,14 +119,14 @@ export async function clearDb() {
 }
 
 export async function addToken(token: string) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.put("token", token, "token");
   db.close();
 }
 
 export async function getToken() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   const data = await db.get("token", "token");
   db.close();
@@ -134,7 +134,7 @@ export async function getToken() {
 }
 
 export async function getSelectedEvents() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   const data = await db.get("selected", "events");
   db.close();
@@ -142,14 +142,14 @@ export async function getSelectedEvents() {
 }
 
 export async function setSelectedEvents(events: any) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.put("selected", events, "events");
   db.close();
 }
 
 export async function getEvents() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   const data = await db.getAllFromIndex("events", "by-id");
   db.close();
@@ -157,14 +157,14 @@ export async function getEvents() {
 }
 
 export async function saveEvents(event: any) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.add("events", event);
   db.close();
 }
 
 export async function getAttendance() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   const data = await db.getAllFromIndex("attendance", "by-id");
   db.close();
@@ -172,14 +172,14 @@ export async function getAttendance() {
 }
 
 export async function saveAttendance(attendance: any) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.put("attendance", attendance);
   db.close();
 }
 
 export async function changeSentStatus(id: any, status: any) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
   const value = await db.getFromIndex("attendance", "by-id", id);
   
   if (value ) {
@@ -195,7 +195,7 @@ export async function changeSentStatus(id: any, status: any) {
 }
 
 export async function verifyAttendance(id: any) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
   const value = await db.getFromIndex("attendance", "by-id", id);
   if (value) {
     value.verified = 1;
@@ -205,7 +205,7 @@ export async function verifyAttendance(id: any) {
 }
 
 export async function unverifyAttendance(id: any) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
   const value = await db.getFromIndex("attendance", "by-id", id);
   if (value) {
     value.verified = 0;
@@ -215,14 +215,14 @@ export async function unverifyAttendance(id: any) {
 }
 
 export async function changeConfig(toggle: boolean) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.put("config", toggle, "continuous");
   db.close();
 }
 
 export async function getConfig() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   const data = await db.get("config", "continuous");
   db.close();
@@ -230,14 +230,14 @@ export async function getConfig() {
 }
 
 export async function changeMode(toggle: boolean) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.put("mode", toggle, "slow");
   db.close();
 }
 
 export async function getMode() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   const data = await db.get("mode", "slow");
   db.close();
@@ -245,21 +245,21 @@ export async function getMode() {
 }
 
 export async function changeLastSync() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.put("lastSync", new Date(), "time");
   db.close();
 }
 
 export async function getLastSync() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   const data = await db.get("lastSync", "time");
   db.close();
   return data;
 }
 export async function getOffline() {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   const data = await db.getAllFromIndex("offline", "by-id");
   db.close();
@@ -267,14 +267,14 @@ export async function getOffline() {
 }
 
 export async function saveOffline(offline: any) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.put("offline", offline);
   db.close();
 }
 
 export async function removeOffline(id: any) {
-  const db = await openDB<PwaDB>("pwa-db", 3);
+  const db = await openDB<PwaDB>("pwa-db", 4);
 
   await db.delete("offline", id);
   db.close();
