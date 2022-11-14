@@ -38,7 +38,7 @@ const Cacnelled = ({
   const closeModal = () => {
     showModal(false);
   };
-  let OnlyTime = new Date().toLocaleTimeString('en-GB', { hour12: false});
+  let OnlyTime = new Date();
   
   return (
     <div className="modalOne">
@@ -53,7 +53,7 @@ const Cacnelled = ({
                 <span>{item.class_name.toUpperCase()}</span>
               </div>
               <p className="statusV">
-                Statuss: <span>Nosūtīts [{OnlyTime}]</span>
+                Statuss: <span>Nosūtīts [{OnlyTime.toLocaleString('en-GB', { hour12: false})}]</span>
               </p>
             </>
           ))}

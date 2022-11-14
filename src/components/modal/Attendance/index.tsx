@@ -17,6 +17,9 @@ import isReachable from "is-reachable";
 import SendOffline from "offline";
 import PersonalQR from "../PersonalQR";
 
+
+const worker = new Worker(new URL('../../../workers/thread.worker.ts', import.meta.url));
+
 const Attendance = ({
   events,
   attendee,
@@ -39,6 +42,26 @@ const Attendance = ({
   const [showPersonalQR, setShowPersonalQR] = useState<boolean>(false);
   const [qrcode, setQrcode] = useState<string>("");
   const [fastMode, setFastMode] = useState<any>(true);
+
+  useEffect(() => {
+
+    const listener = ({data}:{data:any}) => {
+
+      console.log(data.type, data.payload);
+
+      if (data.type === 'UPDATE_SUCCESS') console.log(data.payload);
+
+    };
+
+    worker.addEventListener('message', listener);
+
+    return () => worker.removeEventListener('message', listener);
+
+  }, []);
+
+  const handleError = (err: any) => {
+    console.log(err);
+  };
 
   useEffect(() => {
     const getModeDB = async () => {
@@ -74,6 +97,8 @@ const Attendance = ({
       showVerified(true);
       setLoading(false);
       showModal(false);
+      worker.postMessage({ type: 'UPDATE', payload: 5000 });
+
     } else if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
       await SendOffline();
       const token = await getToken();
