@@ -17,8 +17,7 @@ import isReachable from "is-reachable";
 import SendOffline from "offline";
 import PersonalQR from "../PersonalQR";
 
-
-const worker = new Worker(new URL('../../../workers/thread.worker.ts', import.meta.url));
+const worker = new Worker(new URL("../../../workers/thread.worker.ts", import.meta.url));
 
 const Attendance = ({
   events,
@@ -44,19 +43,15 @@ const Attendance = ({
   const [fastMode, setFastMode] = useState<any>(true);
 
   useEffect(() => {
-
-    const listener = ({data}:{data:any}) => {
-
+    const listener = ({ data }: { data: any }) => {
       console.log(data.type, data.payload);
 
-      if (data.type === 'UPDATE_SUCCESS') console.log(data.payload);
-
+      if (data.type === "UPDATE_SUCCESS") console.log(data.payload);
     };
 
-    worker.addEventListener('message', listener);
+    worker.addEventListener("message", listener);
 
-    return () => worker.removeEventListener('message', listener);
-
+    return () => worker.removeEventListener("message", listener);
   }, []);
 
   const handleError = (err: any) => {
@@ -85,7 +80,7 @@ const Attendance = ({
 
   const register = async (e: any) => {
     setLoading(true);
-    if (fastMode) {
+    if (fastMode || !(await isReachable(process.env.REACT_APP_API_BASE_URL!))) {
       await changeSentStatus(parseInt(e.target.value), "failed");
       await verifyAttendance(parseInt(e.target.value));
       const offlineData = {
@@ -97,8 +92,7 @@ const Attendance = ({
       showVerified(true);
       setLoading(false);
       showModal(false);
-      worker.postMessage({ type: 'UPDATE', payload: 5000 });
-
+      worker.postMessage({ type: "UPDATE", payload: 5000 });
     } else if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
       await SendOffline();
       const token = await getToken();
@@ -130,8 +124,8 @@ const Attendance = ({
         setLoading(false);
         showModal(false);
       }
-    }
-    // } else {
+    } 
+    // else {
     //   await changeSentStatus(parseInt(e.target.value), "failed");
     //   await verifyAttendance(parseInt(e.target.value));
     //   const offlineData = {
@@ -194,14 +188,13 @@ const Attendance = ({
     audio.play();
   }, []);
 
-  
   return (
     <div className="attendance">
-      {showPersonalQR && <PersonalQR showModal={setShowPersonalQR} QRImage={qrcode} /> }
+      {showPersonalQR && <PersonalQR showModal={setShowPersonalQR} QRImage={qrcode} />}
       <div className="attendance__wrapper">
         <div className="head">
-          <h3>{attendee && attendee[0]?.full_name }</h3>
-          <p>{attendee && attendee[0]?.class_name }</p>
+          <h3>{attendee && attendee[0]?.full_name}</h3>
+          <p>{attendee && attendee[0]?.class_name}</p>
         </div>
 
         {events?.map((event: any) => {
@@ -218,7 +211,7 @@ const Attendance = ({
                         src={checkedIcon}
                         alt="checkedIcon"
                       />
-                    ) }
+                    )}
                     <div>
                       <h4 key={event.id}>{event.service_series_name}</h4>
                       {att.verified == 1 ? (
