@@ -31,6 +31,7 @@ const InProgress = ({
   }, []);
 
   const closeModal = () => {
+    scanAllowed(true)
     showModal(false);
   };
 

@@ -113,7 +113,7 @@ const Events = () => {
                   <label className="fullWidth" htmlFor={event.id.toString()}>
                     <div className="text">
                       <h3 className="text__title ">{event.service_series_name}</h3>
-                      <span className="text__caption">{event.scheduled_at.toString()}</span>
+                      <span className="text__caption">{event.scheduled_at.toLocaleString()}</span>
                     </div>
                   </label>
                 </li>
