@@ -43,7 +43,7 @@ const Verified = ({
     allowScan();
     showModal(false);
   };  
-
+   
   return (
     <div className="modalOne">
       <div className="modalOne__wrapper">

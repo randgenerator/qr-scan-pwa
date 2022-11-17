@@ -34,6 +34,7 @@
     }
   }
   &__items {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -54,10 +55,11 @@
       }
     }
     .attendeeV {
-      .status {
+      .statusV {
         display: flex;
         align-items: center;
         justify-content: flex-end;
+        text-align: right;
         margin-top: 8px;
         &__title {
           font-weight: 600;
@@ -74,11 +76,13 @@
         line-height: 140%;
         color: #00be7e;
       }
-      .failedAt{
+      .failedAt {
+        width: 100%;
+        text-align: right;
         font-weight: 600;
         font-size: 6px;
         line-height: 140%;
-        color: #FF3141;
+        color: #ff3141;
       }
     }
     .attending {
@@ -116,12 +120,11 @@
         color: #00be7e;
         margin: 0 2px;
       }
-      .countTotal{
+      .countTotal {
         color: blue;
       }
       .countFailed {
         color: #ff3141;
-
       }
       .countPlanned {
         color: #333333;
