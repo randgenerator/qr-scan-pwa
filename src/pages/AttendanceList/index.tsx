@@ -25,8 +25,8 @@ const AttendanceList = () => {
   const [syncTime, setSyncTime] = useState<Date | any>();
 
   useEffect(() => {
-    SyncAttendance();
     const getEventsDB = async () => {
+      await SyncAttendance();
       const sync = await getLastSync();
       const currentSync = sync?.toLocaleString("en-GB", { hour12: false });
       const att = await getAttendance();
@@ -180,8 +180,8 @@ const AttendanceList = () => {
           <p>Verifications: </p>
           <span className="countVerified">{countVerified || 0} </span>/
           <span className="countTotal"> {countTotal || 0} </span>/
-          <span className="countPlanned"> {countPlanned} </span>
-          <span className="countFailed">({countFailed})</span>
+          <span className="countPlanned"> {countPlanned || 0} </span>
+          <span className="countFailed">({countFailed || 0})</span>
         </div>
 
         <p className="right">Synced: {syncTime} </p>

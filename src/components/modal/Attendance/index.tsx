@@ -86,17 +86,18 @@ const Attendance = ({
       const offlineData = {
         id: e.target.value,
         status: "verify",
+        attemptedTimestamp: new Date(),
       };
       await saveOffline(offlineData);
       setUpdateAtt(e.target.value);
       showVerified(true);
       setLoading(false);
       showModal(false);
-      worker.postMessage({ type: "UPDATE", payload: 5000 });
-    } else if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+      worker.postMessage({ type: "UPDATE" });
+    } else {
       await SendOffline();
       const token = await getToken();
-      const resp = await axios
+      await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/verify`,
           { verified_at: new Date().toLocaleDateString() },
@@ -108,36 +109,17 @@ const Attendance = ({
         )
         .then(async function (response) {
           await changeSentStatus(parseInt(e.target.value), "sent");
-          return true;
+          await verifyAttendance(parseInt(e.target.value));
+          setUpdateAtt(e.target.value);
+          showVerified(true);
+          setLoading(false);
+          showModal(false);
         })
         .catch(async function (error) {
           console.log("sentERROR", error);
           await changeSentStatus(parseInt(e.target.value), "failed");
-
-          return false;
         });
-
-      if (resp) {
-        await verifyAttendance(parseInt(e.target.value));
-        setUpdateAtt(e.target.value);
-        showVerified(true);
-        setLoading(false);
-        showModal(false);
-      }
-    } 
-    // else {
-    //   await changeSentStatus(parseInt(e.target.value), "failed");
-    //   await verifyAttendance(parseInt(e.target.value));
-    //   const offlineData = {
-    //     id: e.target.value,
-    //     status: "verify",
-    //   };
-    //   await saveOffline(offlineData);
-    //   setUpdateAtt(e.target.value);
-    //   showVerified(true);
-    //   setLoading(false);
-    //   showModal(false);
-    // }
+    }
   };
 
   const confirmDialog = () => {

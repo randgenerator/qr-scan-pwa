@@ -18,7 +18,7 @@ import axios from "axios";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
 
-const worker = new Worker(new URL('../../workers/thread.worker.ts', import.meta.url));
+const worker = new Worker(new URL("../../workers/thread.worker.ts", import.meta.url));
 
 const RegistrationQR = () => {
   const [attendances, setAttendances] = useState<any>([]);
@@ -38,19 +38,15 @@ const RegistrationQR = () => {
   const [fastMode, setFastMode] = useState<any>(true);
 
   useEffect(() => {
-
-    const listener = ({data}:{data:any}) => {
-
+    const listener = ({ data }: { data: any }) => {
       console.log(data.type, data.payload);
 
-      if (data.type === 'UPDATE_SUCCESS') console.log(data.payload);
-
+      if (data.type === "UPDATE_SUCCESS") console.log(data.payload);
     };
 
-    worker.addEventListener('message', listener);
+    worker.addEventListener("message", listener);
 
-    return () => worker.removeEventListener('message', listener);
-
+    return () => worker.removeEventListener("message", listener);
   }, []);
 
   const handleError = (err: any) => {
@@ -86,13 +82,13 @@ const RegistrationQR = () => {
             } else {
               setShowAlreadyVerified(true);
             }
-            worker.postMessage({ type: 'UPDATE', payload: 5000 });
+            worker.postMessage({ type: "UPDATE" });
           } else if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
             await SendOffline();
             await axios
               .post(
                 `${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`,
-                {verified_at: new Date()?.toLocaleString('en-GB', { hour12: false }) },
+                { verified_at: new Date()?.toLocaleString("en-GB", { hour12: false }) },
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -275,7 +271,6 @@ const RegistrationQR = () => {
     }
   }, [scanAllowed]);
 
-  
   return (
     <div className="main">
       {showNotAttending && (
