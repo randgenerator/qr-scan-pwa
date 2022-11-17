@@ -35,7 +35,7 @@ export const SendOffline = async () => {
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${att.id}/unverify`,
-          {verified_at: att.attemptedTimestamp.toISOString()},
+          {verified_at: att.attemptedTimestamp?.toLocaleString('en-GB', { hour12: false })},
           {
             headers: {
               Authorization: `Bearer ${token}`,

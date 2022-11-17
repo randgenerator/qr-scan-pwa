@@ -139,6 +139,8 @@ const Attendance = ({
       showCancelled(true);
       setLoading(false);
       showModal(false);
+      worker.postMessage({ type: "UPDATE" });
+
     } else {
       await SendOffline();
       const token = await getToken();
