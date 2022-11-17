@@ -128,7 +128,18 @@ const Attendance = ({
 
   const cancelAttendance = async (e: any) => {
     setLoading(true);
-    if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+    if (fastMode || !(await isReachable(process.env.REACT_APP_API_BASE_URL!))) {
+      await unverifyAttendance(parseInt(e.target.value));
+      const offlineData = {
+        id: e.target.value,
+        status: "cancel",
+      };
+      setUpdateAtt(e.target.value);
+      await saveOffline(offlineData);
+      showCancelled(true);
+      setLoading(false);
+      showModal(false);
+    } else {
       await SendOffline();
       const token = await getToken();
       await axios
@@ -151,17 +162,6 @@ const Attendance = ({
         .catch(function (error) {
           console.log(error);
         });
-    } else {
-      await unverifyAttendance(parseInt(e.target.value));
-      const offlineData = {
-        id: e.target.value,
-        status: "cancel",
-      };
-      setUpdateAtt(e.target.value);
-      await saveOffline(offlineData);
-      showCancelled(true);
-      setLoading(false);
-      showModal(false);
     }
   };
 
