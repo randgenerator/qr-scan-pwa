@@ -68,7 +68,7 @@ const Settings = () => {
           </div>
         </div>
         <div className="change-mode">
-          <h3>Nepārtraukta SlowMode</h3>
+          <h3>Asinhronais režīms:</h3>
           <div className="checkboxWrapper">
             <input
               className="react-switch-checkbox"

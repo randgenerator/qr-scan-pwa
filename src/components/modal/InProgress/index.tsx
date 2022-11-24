@@ -37,6 +37,8 @@ const InProgress = ({
 
   let OnlyTime = new Date(data.verified_at).toLocaleTimeString('en-GB', { hour12: false });
 
+  console.log("data", data);
+  
   return (
     <div className="modalThird">
       <div className="modalThird__wrapper">
@@ -46,7 +48,7 @@ const InProgress = ({
           {data?.full_name},
           <span> {data?.class_name.toUpperCase()}</span>, <span>{OnlyTime}</span>
         </p>
-        <p className="verifiedBy">Verified by: {data?.verified_by_admin_email}</p>
+        <p className="verifiedBy">Verificēja: {data?.verified_by_admin_email}</p>
         {button && (
           <Button
             disabled={false}

@@ -178,7 +178,7 @@ const Attendance = ({
       <div className="attendance__wrapper">
         <div className="head">
           <h3>{attendee && attendee[0]?.full_name}</h3>
-          <p>{attendee && attendee[0]?.class_name}</p>
+          <p>{attendee && attendee[0]?.class_name.toUpperCase()}</p>
         </div>
 
         {events?.map((event: any) => {

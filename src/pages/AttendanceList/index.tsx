@@ -177,14 +177,14 @@ const AttendanceList = () => {
       </div>
       <div className="list__counted">
         <div className="left">
-          <p>Verifications: </p>
+          <p>Verifikācijas: </p>
           <span className="countVerified">{countVerified || 0} </span>/
           <span className="countTotal"> {countTotal || 0} </span>/
           <span className="countPlanned"> {countPlanned || 0} </span>
           <span className="countFailed">({countFailed || 0})</span>
         </div>
 
-        <p className="right">Synced: {syncTime} </p>
+        <p className="right">Saraksts sinhr: {syncTime} </p>
       </div>
       {search?.map((attendee: any) => {
         return (
@@ -195,10 +195,10 @@ const AttendanceList = () => {
             onClick={handleRegistration}>
             <div className="item" data-qr={attendee.qr_uuid}>
               <h3 data-qr={attendee.qr_uuid}>{attendee.full_name}</h3>
-              <span data-qr={attendee.qr_uuid}>{attendee.class_name}</span>
+              <span data-qr={attendee.qr_uuid}>{attendee.class_name.toUpperCase()}</span>
             </div>
             {attendee?.verified === 1 ? (
-              <div className="attendeeV">
+              <div data-qr={attendee.qr_uuid} className="attendeeV">
                 <h3 data-qr={attendee.qr_uuid} className="verified">
                   Apmeklējums reģistrēts
                 </h3>
