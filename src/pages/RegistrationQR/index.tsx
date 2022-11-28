@@ -9,6 +9,7 @@ import {
   getAttendance,
   getConfig,
   getMode,
+  changeSentStatus,
   verifyAttendance,
   saveOffline,
 } from "store/db";
@@ -17,6 +18,7 @@ import Modal from "components/modal";
 import axios from "axios";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
+import SyncAttendance from "attendanceSync";
 
 const worker = new Worker(new URL("../../workers/thread.worker.ts", import.meta.url));
 
@@ -77,6 +79,7 @@ const RegistrationQR = () => {
                 attemptedTimestamp: new Date(),
               };
               await saveOffline(offlineData);
+              await changeSentStatus(attendee[0].id, "failed");
               setUpdateAtt(attendee[0].id);
               setShowVerified(true);
             } else {
@@ -97,11 +100,13 @@ const RegistrationQR = () => {
               )
               .then(async function (response) {
                 await verifyAttendance(attendee[0].id);
+                await changeSentStatus(attendee[0].id, "sent");
                 setUpdateAtt(attendee[0].id);
                 setShowVerified(true);
               })
-              .catch(function (error) {
+              .catch(async function (error) {
                 if (error.response.data.error) {
+                  await changeSentStatus(attendee[0].id, "failed");
                   if (error.response.data.error.includes("already")) {
                     setShowAlreadyVerified(true);
                   } else if (error.response.data.error.includes("No query results")) {
@@ -116,6 +121,7 @@ const RegistrationQR = () => {
                 id: attendee[0].id,
                 status: "verify",
               };
+              await changeSentStatus(attendee[0].id, "failed");
               await saveOffline(offlineData);
               setUpdateAtt(attendee[0].id);
               setShowVerified(true);
@@ -197,6 +203,7 @@ const RegistrationQR = () => {
 
   useEffect(() => {
     const getEventsDB = async () => {
+      await SyncAttendance();
       const cont = await getConfig();
       const stat = await getMode();
       setFastMode(stat);
@@ -254,7 +261,7 @@ const RegistrationQR = () => {
     };
 
     getEventsDB();
-  }, []);
+  }, [showVerified, showAlreadyVerified, showNotAttending, showNotFound, showSeveral, showNotAttending]);
 
   const previewStyle = {
     height: 240,

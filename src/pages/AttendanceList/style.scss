@@ -69,7 +69,12 @@
           margin-right: 2px;
         }
       }
-
+      .attending {
+        font-weight: 600;
+        font-size: 13px;
+        color: #ff8f1f;
+        text-align: right;
+      }
       .verifiedAt {
         font-weight: 600;
         font-size: 6px;
@@ -89,6 +94,7 @@
       font-weight: 600;
       font-size: 13px;
       color: #ff8f1f;
+      text-align: right;
     }
     .verified {
       font-weight: 600;

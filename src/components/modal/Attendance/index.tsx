@@ -129,6 +129,7 @@ const Attendance = ({
   const cancelAttendance = async (e: any) => {
     setLoading(true);
     if (fastMode || !(await isReachable(process.env.REACT_APP_API_BASE_URL!))) {
+      await changeSentStatus(parseInt(e.target.value), "failed");
       await unverifyAttendance(parseInt(e.target.value));
       const offlineData = {
         id: e.target.value,
@@ -140,7 +141,6 @@ const Attendance = ({
       setLoading(false);
       showModal(false);
       worker.postMessage({ type: "UPDATE" });
-
     } else {
       await SendOffline();
       const token = await getToken();
@@ -156,12 +156,15 @@ const Attendance = ({
         )
         .then(async function (response) {
           await unverifyAttendance(parseInt(e.target.value));
+          await changeSentStatus(parseInt(e.target.value), "failed");
+
           setUpdateAtt(e.target.value);
           showCancelled(true);
           setLoading(false);
           showModal(false);
         })
-        .catch(function (error) {
+        .catch(async function (error) {
+          await changeSentStatus(parseInt(e.target.value), "failed");
           console.log(error);
         });
     }

@@ -37,8 +37,8 @@ const InProgress = ({
 
   let OnlyTime = new Date(data.verified_at).toLocaleTimeString('en-GB', { hour12: false });
 
-  console.log("data", data);
-  
+   console.log("data", data);
+   
   return (
     <div className="modalThird">
       <div className="modalThird__wrapper">

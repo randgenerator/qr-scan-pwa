@@ -203,7 +203,9 @@ const AttendanceList = () => {
                   Apmeklējums reģistrēts
                 </h3>
                 <div data-qr={attendee.qr_uuid} className="statusV">
-                  <h4 data-qr={attendee.qr_uuid} className="statusV__title">Status: </h4>{" "}
+                  <h4 data-qr={attendee.qr_uuid} className="statusV__title">
+                    Status:{" "}
+                  </h4>{" "}
                   {attendee?.sentStatus === "sent" && (
                     <p data-qr={attendee.qr_uuid} className="verifiedAt">
                       Nosūtīts {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}{" "}
@@ -218,9 +220,27 @@ const AttendanceList = () => {
                 </div>
               </div>
             ) : attendee.status.toLowerCase().includes("attending") ? (
-              <span data-qr={attendee.qr_uuid} className="attending">
-                Plānots
-              </span>
+              <div data-qr={attendee.qr_uuid} className="attendeeV">
+                <h3 data-qr={attendee.qr_uuid} className="attending">
+                  Plānots
+                </h3>
+                <div data-qr={attendee.qr_uuid} className="statusV">
+                  <h4 data-qr={attendee.qr_uuid} className="statusV__title">
+                    Status:{" "}
+                  </h4>{" "}
+                  {attendee?.sentStatus === "sent" && (
+                    <p data-qr={attendee.qr_uuid} className="verifiedAt">
+                      Nosūtīts {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}{" "}
+                    </p>
+                  )}
+                  {attendee?.sentStatus === "failed" && (
+                    <p data-qr={attendee.qr_uuid} className="failedAt">
+                      Gaida savienojumu (#5{" "}
+                      {attendee.attemptedTimestamp.toLocaleString("en-GB", { hour12: false })}){" "}
+                    </p>
+                  )}
+                </div>
+              </div>
             ) : attendee.status.toLowerCase().includes("cancelled") ? (
               <span data-qr={attendee.qr_uuid} className="notattending">
                 Pieteikts kavējums
