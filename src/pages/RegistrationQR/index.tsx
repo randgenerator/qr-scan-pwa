@@ -64,7 +64,7 @@ const RegistrationQR = () => {
       if (attendee.length === 1) {
         setScanAllowed(false);
         const token = await getToken();
-        setScannedAttendee(attendee[0]);
+        setScannedAttendee(attendee);
         if (attendee[0].status.toLowerCase().includes("cancelled")) {
           setEventData(selectedEvents.find((event: any) => event.id === attendee[0].attendance_id));
           setScanAllowed(false);
@@ -106,11 +106,12 @@ const RegistrationQR = () => {
               })
               .catch(async function (error) {
                 if (error.response.data.error) {
-                  await changeSentStatus(attendee[0].id, "failed");
                   if (error.response.data.error.includes("already")) {
                     setShowAlreadyVerified(true);
                   } else if (error.response.data.error.includes("No query results")) {
                     setShowNotFound(true);
+                  } else {
+                    await changeSentStatus(attendee[0].id, "failed");
                   }
                 }
               });
@@ -129,43 +130,6 @@ const RegistrationQR = () => {
               setShowAlreadyVerified(true);
             }
           }
-
-          // if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-          //   await SendOffline()
-          //   await axios.post(`${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`, {}, {
-          //     headers: {
-          //         'Authorization': `Bearer ${token}`
-          //       }
-          //   })
-          //   .then(async function (response) {
-          //     await verifyAttendance(attendee[0].id)
-          //     setUpdateAtt(attendee[0].id)
-          //     setShowVerified(true)
-          //   })
-          //   .catch(function (error) {
-          //     if (error.response.data.error) {
-          //       if (error.response.data.error.includes("already")) {
-          //         setShowAlreadyVerified(true)
-          //       } else if (error.response.data.error.includes("No query results")) {
-          //         setShowNotFound(true)
-          //       }
-          //     }
-          //   })
-          // } else {
-          //   if (attendee[0].verified == 0) {
-          //     await verifyAttendance(attendee[0].id)
-          //     const offlineData = {
-          //       id: attendee[0].id,
-          //       status: "verify"
-          //     }
-          //     await saveOffline(offlineData)
-          //     setUpdateAtt(attendee[0].id)
-          //     setShowVerified(true)
-          //   } else {
-          //     setShowAlreadyVerified(true)
-          //   }
-
-          // }
         }
       } else if (attendee.length > 1) {
         let countCancelled = 0;
@@ -179,7 +143,7 @@ const RegistrationQR = () => {
         }
         setScanAllowed(false);
         setScannedAttendeeMultiple(attendee);
-        setScannedAttendee(attendee[0]);
+        setScannedAttendee(attendee);
         setShowSeveral(true);
       } else {
         setScanAllowed(false);

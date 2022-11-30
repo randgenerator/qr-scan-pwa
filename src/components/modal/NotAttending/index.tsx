@@ -33,7 +33,7 @@ const NotAttending = ({
       const token = await getToken();
       await axios
         .post(
-          `${process.env.REACT_APP_API_URL}/pwa/attendance/${data.id}/verify`,
+          `${process.env.REACT_APP_API_URL}/pwa/attendance/${data[0].id}/verify`,
           {verified_at: new Date().toISOString()},
           {
             headers: {
@@ -42,8 +42,8 @@ const NotAttending = ({
           },
         )
         .then(async function (response) {
-          await verifyAttendance(data.id);
-          setUpdateAtt(data.id);
+          await verifyAttendance(data[0].id);
+          setUpdateAtt(data[0].id);
           showSuccess(true);
           setLoading(false);
           showModal(false);
@@ -60,13 +60,13 @@ const NotAttending = ({
           showModal(false);
         });
     } else {
-      await verifyAttendance(data.id);
+      await verifyAttendance(data[0].id);
       const offlineData = {
-        id: data.id,
+        id: data[0].id,
         status: "verify",
       };
       await saveOffline(offlineData);
-      setUpdateAtt(data.id);
+      setUpdateAtt(data[0].id);
       showSuccess(true);
       setLoading(false);
       showModal(false);
@@ -88,7 +88,7 @@ const NotAttending = ({
       <div className="notAttendingModal__wrapper">
         <img src={IconDanger} alt="iconChecked" />
         <h3>Dalībniekam pieteikts kavējums!</h3>
-        <p>{data != undefined ? `${data.full_name}, ${data.class_name}` : ""}</p>
+        <p>{data != undefined ? `${data[0].full_name}, ${data[0].class_name}` : ""}</p>
         <div className="events">
           <div className="lunchSeries">
             <h4 className="lunchTitle">{event.service_series_name}</h4>

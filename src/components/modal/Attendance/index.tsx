@@ -155,9 +155,8 @@ const Attendance = ({
           },
         )
         .then(async function (response) {
+          await changeSentStatus(parseInt(e.target.value), "sent");
           await unverifyAttendance(parseInt(e.target.value));
-          await changeSentStatus(parseInt(e.target.value), "failed");
-
           setUpdateAtt(e.target.value);
           showCancelled(true);
           setLoading(false);

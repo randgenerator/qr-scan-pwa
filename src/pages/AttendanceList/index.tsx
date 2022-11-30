@@ -219,7 +219,7 @@ const AttendanceList = () => {
                   )}
                 </div>
               </div>
-            ) : attendee.status.toLowerCase().includes("attending") ? (
+            ) : attendee.status.toLowerCase().includes("attended") ? (
               <div data-qr={attendee.qr_uuid} className="attendeeV">
                 <h3 data-qr={attendee.qr_uuid} className="attending">
                   Plānots
@@ -228,7 +228,7 @@ const AttendanceList = () => {
                   <h4 data-qr={attendee.qr_uuid} className="statusV__title">
                     Status:{" "}
                   </h4>{" "}
-                  {attendee?.sentStatus === "sent" && (
+                  {(attendee?.sentStatus === "sent" || (attendee?.sentStatus != "failed" && attendee?.verified_at)) && (
                     <p data-qr={attendee.qr_uuid} className="verifiedAt">
                       Nosūtīts {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}{" "}
                     </p>
@@ -236,7 +236,7 @@ const AttendanceList = () => {
                   {attendee?.sentStatus === "failed" && (
                     <p data-qr={attendee.qr_uuid} className="failedAt">
                       Gaida savienojumu (#5{" "}
-                      {attendee.attemptedTimestamp.toLocaleString("en-GB", { hour12: false })}){" "}
+                      {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}){" "}
                     </p>
                   )}
                 </div>

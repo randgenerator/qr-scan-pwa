@@ -35,9 +35,8 @@ const InProgress = ({
     showModal(false);
   };
 
-  let OnlyTime = new Date(data.verified_at).toLocaleTimeString('en-GB', { hour12: false });
+  let OnlyTime = new Date(data[0].verified_at).toLocaleTimeString('en-GB', { hour12: false });
 
-   console.log("data", data);
    
   return (
     <div className="modalThird">
@@ -45,10 +44,10 @@ const InProgress = ({
         <img src={IconDanger} alt="iconChecked" />
         <h3>Apmeklētājs jau reģistrēts!</h3>
         <p>
-          {data?.full_name},
-          <span> {data?.class_name.toUpperCase()}</span>, <span>{OnlyTime}</span>
+          {data[0]?.full_name},
+          <span> {data[0]?.class_name.toUpperCase()}</span>, <span>{OnlyTime}</span>
         </p>
-        <p className="verifiedBy">Verificēja: {data?.verified_by_admin_email}</p>
+        <p className="verifiedBy">Verificēja: {data[0]?.verified_by_admin_email}</p>
         {button && (
           <Button
             disabled={false}
