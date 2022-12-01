@@ -225,19 +225,27 @@ const AttendanceList = () => {
                   Plānots
                 </h3>
                 <div data-qr={attendee.qr_uuid} className="statusV">
-                  <h4 data-qr={attendee.qr_uuid} className="statusV__title">
-                    Status:{" "}
-                  </h4>{" "}
-                  {(attendee?.sentStatus === "sent" || (attendee?.sentStatus != "failed" && attendee?.verified_at)) && (
-                    <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                      Nosūtīts {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}{" "}
-                    </p>
+                  {(attendee?.sentStatus === "sent" ||
+                    (attendee?.sentStatus != "failed" && attendee?.verified_at)) && (
+                    <>
+                      <h4 data-qr={attendee.qr_uuid} className="statusV__title">
+                        Status:
+                      </h4>
+                      <p data-qr={attendee.qr_uuid} className="verifiedAt">
+                        Nosūtīts {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}{" "}
+                      </p>
+                    </>
                   )}
                   {attendee?.sentStatus === "failed" && (
-                    <p data-qr={attendee.qr_uuid} className="failedAt">
-                      Gaida savienojumu (#5{" "}
-                      {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}){" "}
-                    </p>
+                    <>
+                      <h4 data-qr={attendee.qr_uuid} className="statusV__title">
+                        Status:
+                      </h4>
+                      <p data-qr={attendee.qr_uuid} className="failedAt">
+                        Gaida savienojumu (#5{" "}
+                        {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}){" "}
+                      </p>
+                    </>
                   )}
                 </div>
               </div>
