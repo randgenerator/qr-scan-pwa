@@ -50,7 +50,7 @@ const Verified = ({
         <img src={IconChecked} alt="iconChecked" />
         <h3>Apmeklējums reģistrēts!</h3>
 
-        <p>{data[0]?.full_name}{data[0]?.class_name}</p>
+        <p><span className="names">{data[0]?.full_name}</span>{data[0]?.class_name.toUpperCase()}</p>
         {
           data[0]?.sentStatus == "sent"? (
             <p className="statuss">Statuss: <span> Nosūtīts[{data[0]?.verified_at?.toLocaleString('en-GB', { hour12: false }) }]</span></p>

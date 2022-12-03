@@ -187,6 +187,7 @@ const AttendanceList = () => {
         <p className="right">Saraksts sinhr: {syncTime} </p>
       </div>
       {search?.map((attendee: any) => {
+        // const verifiedLocalTime = attendee?.verified_at?.getgetTimezoneOffset();
         return (
           <div
             className="list__items"
@@ -208,13 +209,13 @@ const AttendanceList = () => {
                   </h4>{" "}
                   {attendee?.sentStatus === "sent" && (
                     <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                      Nosūtīts {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}{" "}
+                      Nosūtīts {attendee.verified_at.toLocaleString("en-US", { hour12: false })}{" "}
                     </p>
                   )}
                   {attendee?.sentStatus === "failed" && (
                     <p data-qr={attendee.qr_uuid} className="failedAt">
                       Gaida savienojumu (#5{" "}
-                      {attendee.attemptedTimestamp.toLocaleString("en-GB", { hour12: false })}){" "}
+                      {attendee.attemptedTimestamp.toLocaleString("en-US", { hour12: false })}){" "}
                     </p>
                   )}
                 </div>
@@ -232,7 +233,7 @@ const AttendanceList = () => {
                         Status:
                       </h4>
                       <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                        Nosūtīts {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}{" "}
+                        Nosūtīts {attendee.verified_at.toLocaleString("en-US", { hour12: false })}{" "}
                       </p>
                     </>
                   )}
@@ -243,7 +244,7 @@ const AttendanceList = () => {
                       </h4>
                       <p data-qr={attendee.qr_uuid} className="failedAt">
                         Gaida savienojumu (#5{" "}
-                        {attendee.verified_at.toLocaleString("en-GB", { hour12: false })}){" "}
+                        {attendee.verified_at.toLocaleString("en-US", { hour12: false })}){" "}
                       </p>
                     </>
                   )}
