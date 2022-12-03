@@ -187,7 +187,10 @@ const AttendanceList = () => {
         <p className="right">Saraksts sinhr: {syncTime} </p>
       </div>
       {search?.map((attendee: any) => {
-        // const verifiedLocalTime = attendee?.verified_at?.getgetTimezoneOffset();
+        const UTCLocalTime = attendee.verified_at?.replace(" ", "T").concat("Z");
+
+        const convertedUTC = new Date(UTCLocalTime);
+
         return (
           <div
             className="list__items"
@@ -209,13 +212,13 @@ const AttendanceList = () => {
                   </h4>{" "}
                   {attendee?.sentStatus === "sent" && (
                     <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                      Nosūtīts {attendee.verified_at.toLocaleString("en-US", { hour12: false })}{" "}
+                      Nosūtīts {convertedUTC.toLocaleString()}
                     </p>
                   )}
                   {attendee?.sentStatus === "failed" && (
                     <p data-qr={attendee.qr_uuid} className="failedAt">
                       Gaida savienojumu (#5{" "}
-                      {attendee.attemptedTimestamp.toLocaleString("en-US", { hour12: false })}){" "}
+                      {attendee.attemptedTimestamp.toLocaleString({ hour12: false })}){" "}
                     </p>
                   )}
                 </div>
@@ -233,7 +236,7 @@ const AttendanceList = () => {
                         Status:
                       </h4>
                       <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                        Nosūtīts {attendee.verified_at.toLocaleString("en-US", { hour12: false })}{" "}
+                        Nosūtīts {convertedUTC.toLocaleString()}
                       </p>
                     </>
                   )}
@@ -243,8 +246,7 @@ const AttendanceList = () => {
                         Status:
                       </h4>
                       <p data-qr={attendee.qr_uuid} className="failedAt">
-                        Gaida savienojumu (#5{" "}
-                        {attendee.verified_at.toLocaleString("en-US", { hour12: false })}){" "}
+                        Gaida savienojumu (#5 {convertedUTC.toLocaleString()})
                       </p>
                     </>
                   )}
