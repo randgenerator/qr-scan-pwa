@@ -187,8 +187,11 @@ const AttendanceList = () => {
         <p className="right">Saraksts sinhr: {syncTime} </p>
       </div>
       {search?.map((attendee: any) => {
-        const UTCLocalTime = attendee.verified_at?.replace(" ", "T").concat("Z");
+        let UTCLocalTime = "";
 
+        if (attendee.verified_at) {
+          UTCLocalTime = attendee.verified_at?.replace(" ", "T").concat("Z");
+        }
         const convertedUTC = new Date(UTCLocalTime);
 
         return (
