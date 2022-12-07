@@ -187,12 +187,11 @@ const AttendanceList = () => {
         <p className="right">Saraksts sinhr: {syncTime} </p>
       </div>
       {search?.map((attendee: any) => {
-        let UTCLocalTime = "";
+        let convertedUTC;
 
         if (attendee.verified_at) {
-          UTCLocalTime = attendee.verified_at?.replace(" ", "T").concat("Z");
+          convertedUTC = new Date(attendee.verified_at);
         }
-        const convertedUTC = new Date(UTCLocalTime);
 
         return (
           <div
@@ -215,7 +214,7 @@ const AttendanceList = () => {
                   </h4>{" "}
                   {attendee?.sentStatus === "sent" && (
                     <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                      Nosūtīts {convertedUTC.toLocaleString()}
+                      Nosūtīts {convertedUTC?.toLocaleString()}
                     </p>
                   )}
                   {attendee?.sentStatus === "failed" && (
@@ -239,7 +238,7 @@ const AttendanceList = () => {
                         Status:
                       </h4>
                       <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                        Nosūtīts {convertedUTC.toLocaleString()}
+                        Nosūtīts {convertedUTC?.toLocaleString()}
                       </p>
                     </>
                   )}
@@ -249,7 +248,7 @@ const AttendanceList = () => {
                         Status:
                       </h4>
                       <p data-qr={attendee.qr_uuid} className="failedAt">
-                        Gaida savienojumu (#5 {convertedUTC.toLocaleString()})
+                        Gaida savienojumu (#5 {convertedUTC?.toLocaleString()})
                       </p>
                     </>
                   )}

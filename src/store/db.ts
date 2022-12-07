@@ -174,7 +174,7 @@ export async function getAttendance() {
 
 export async function saveAttendance(attendance: any) {
   const db = await openDB<PwaDB>("pwa-db", 5);
-
+  if (attendance.verified_at) attendance.verified_at = attendance.verified_at.replace(" ", "T").concat("Z")
   await db.put("attendance", attendance);
   db.close();
 }
