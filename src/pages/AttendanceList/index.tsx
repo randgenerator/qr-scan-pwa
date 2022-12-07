@@ -189,11 +189,13 @@ const AttendanceList = () => {
       {search?.map((attendee: any) => {
         let UTCLocalTime = "";
 
-        if (attendee.verified_at) {
+        if (attendee?.verified_at) {
           UTCLocalTime = attendee.verified_at?.replace(" ", "T").concat("Z");
+          console.log("UTC", UTCLocalTime);
+          
         }
         const convertedUTC = new Date(UTCLocalTime);
-
+        
         return (
           <div
             className="list__items"
