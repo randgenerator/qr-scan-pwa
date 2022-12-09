@@ -25,8 +25,8 @@ const Verified = ({
 
   useEffect(() => {
     if (continious) {
-      setTimeout(() => allowScan(), 3000);
-      setTimeout(() => showModal(false), 3500);
+      setTimeout(() => allowScan(), 2300);
+      setTimeout(() => showModal(false), 3300);
     }
   }, []);
 
