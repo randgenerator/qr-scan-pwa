@@ -134,6 +134,7 @@ const Attendance = ({
       const offlineData = {
         id: e.target.value,
         status: "cancel",
+        attemptedTimestamp: new Date(),
       };
       setUpdateAtt(e.target.value);
       await saveOffline(offlineData);

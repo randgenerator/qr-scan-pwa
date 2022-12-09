@@ -190,7 +190,7 @@ const AttendanceList = () => {
         let convertedUTC;
 
         if (attendee.verified_at) {
-          convertedUTC = new Date(attendee.verified_at?.toLocaleString({ hour12: false }));
+          convertedUTC = new Date(attendee.verified_at);
         }
         
         return (
