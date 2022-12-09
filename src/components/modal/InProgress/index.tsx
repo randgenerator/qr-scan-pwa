@@ -20,8 +20,8 @@ const InProgress = ({
 }) => {
   useEffect(() => {
     if (continious) {
-      setTimeout(() => scanAllowed(true), 1000);
-      setTimeout(() => closeModal(), 2000);
+      setTimeout(() => scanAllowed(true), 3000);
+      setTimeout(() => closeModal(), 3500);
     }
   }, []);
 
