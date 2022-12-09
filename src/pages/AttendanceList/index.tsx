@@ -74,23 +74,23 @@ const AttendanceList = () => {
           (att: any) =>
             att.full_name
               .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+              // .normalize("NFD")
+              // .replace(/[\u0300-\u036f]/g, "")
               .includes(
                 searchField
                   .toLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, ""),
+                  // .normalize("NFD")
+                  // .replace(/[\u0300-\u036f]/g, ""),
               ) ||
             att.class_name
               .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+              // .normalize("NFD")
+              // .replace(/[\u0300-\u036f]/g, "")
               .includes(
                 searchField
                   .toLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, ""),
+                  // .normalize("NFD")
+                  // .replace(/[\u0300-\u036f]/g, ""),
               ),
         ),
       );
