@@ -26,7 +26,7 @@ const AttendanceList = () => {
 
   useEffect(() => {
     const getEventsDB = async () => {
-      await SyncAttendance();
+      // await SyncAttendance();
       const sync = await getLastSync();
       const currentSync = sync?.toLocaleString("en-GB", { hour12: false });
       const att = await getAttendance();

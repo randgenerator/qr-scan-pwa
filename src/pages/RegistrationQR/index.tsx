@@ -121,6 +121,7 @@ const RegistrationQR = () => {
               const offlineData = {
                 id: attendee[0].id,
                 status: "verify",
+                attemptedTimestamp: new Date(),
               };
               await changeSentStatus(attendee[0].id, "failed");
               await saveOffline(offlineData);
@@ -167,7 +168,7 @@ const RegistrationQR = () => {
 
   useEffect(() => {
     const getEventsDB = async () => {
-      await SyncAttendance();
+      // await SyncAttendance();
       const cont = await getConfig();
       const stat = await getMode();
       setFastMode(stat);
@@ -225,7 +226,7 @@ const RegistrationQR = () => {
     };
 
     getEventsDB();
-  }, [showVerified, showAlreadyVerified, showNotAttending, showNotFound, showSeveral, showNotAttending]);
+  }, [showVerified]);
 
   const previewStyle = {
     height: 240,

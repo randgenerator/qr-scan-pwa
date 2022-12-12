@@ -1,4 +1,3 @@
-import { SendOffline } from 'offline';
 import {
   getEvents,
   getOffline,
@@ -13,7 +12,6 @@ import isReachable from "is-reachable";
 
 const SyncAttendance = async () => {
   if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-    await SendOffline();
     const token = await getToken();
     const selected = await getSelectedEvents();
     const selectedInt = selected?.map((ev) => parseInt(ev));

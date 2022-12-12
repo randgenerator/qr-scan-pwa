@@ -1,5 +1,6 @@
 import { changeSentStatus, changeLastSync, getOffline, getToken, removeOffline } from "store/db";
 import axios from "axios";
+import SyncAttendance from "attendanceSync";
 
 export const SendOffline = async () => {
   console.log("triggered send offline data");
@@ -50,6 +51,7 @@ export const SendOffline = async () => {
         });
     }
   });
+  await SyncAttendance()
 };
 
 export default SendOffline;
