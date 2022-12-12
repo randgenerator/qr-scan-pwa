@@ -44,10 +44,18 @@ export const SendOffline = async () => {
           },
         )
         .then(async function (response) {
+          await changeSentStatus(parseInt(att.id), "sent")
           await removeOffline(att.id);
+          await changeLastSync()
         })
-        .catch(function (error) {
-          console.log(error);
+        .catch(async function (error) {
+          if (error.response.data.error) {
+            if (error.response.data.error.includes("already")) {
+                await removeOffline(att.id);
+            } else if (error.response.data.error.includes("No query results")) {
+                await removeOffline(att.id);
+            }
+          }
         });
     }
   });

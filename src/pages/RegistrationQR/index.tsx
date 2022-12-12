@@ -154,10 +154,13 @@ const RegistrationQR = () => {
   };
 
   useEffect(() => {
+    debugger;
     if (updateAtt) {
       let newAtt = [...attendances];
+      debugger;
       const index = attendances.findIndex((att: any) => att.id == updateAtt);
-      if (newAtt[index].verified == 0) {
+      debugger;
+      if (newAtt[index].verified === 0) {
         newAtt[index].verified = 1;
       } else {
         newAtt[index].verified = 0;
