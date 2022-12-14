@@ -65,13 +65,12 @@ const AttendanceList = () => {
     };
 
     getEventsDB();
-  }, []);
+  }, [showVerified, showCancelled]);
 
  useEffect(() => {
     const listener = async ({ data }: { data: any }) => {
       
       if (data.type === "UPDATE_SUCCESS") {
-          console.log(data.type)
           const sync = await getLastSync();
           const currentSync = sync?.toLocaleString("en-GB", { hour12: false });
           const att = await getAttendance();
