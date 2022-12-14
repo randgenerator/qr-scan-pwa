@@ -17,11 +17,12 @@ import isReachable from "is-reachable";
 import SendOffline from "offline";
 import PersonalQR from "../PersonalQR";
 
-const worker = new Worker(new URL("../../../workers/thread.worker.ts", import.meta.url));
+// const worker = new Worker(new URL("../../../workers/thread.worker.ts", import.meta.url));
 
 const Attendance = ({
   events,
   attendee,
+  worker,
   showModal,
   showVerified,
   showCancelled,
@@ -31,6 +32,7 @@ const Attendance = ({
   events: any;
   showCancelled: any;
   attendee: any;
+  worker: any;
   showModal: any;
   showVerified: any;
   setUpdateAtt: any;
@@ -41,18 +43,6 @@ const Attendance = ({
   const [showPersonalQR, setShowPersonalQR] = useState<boolean>(false);
   const [qrcode, setQrcode] = useState<string>("");
   const [fastMode, setFastMode] = useState<any>(true);
-
-  useEffect(() => {
-    const listener = ({ data }: { data: any }) => {
-      console.log(data.type, data.payload);
-
-      if (data.type === "UPDATE_SUCCESS") console.log(data.payload);
-    };
-
-    worker.addEventListener("message", listener);
-
-    return () => worker.removeEventListener("message", listener);
-  }, []);
 
   const handleError = (err: any) => {
     console.log(err);
@@ -93,14 +83,14 @@ const Attendance = ({
       showVerified(true);
       setLoading(false);
       showModal(false);
-      worker.postMessage({ type: "UPDATE" });
+      if (fastMode && await isReachable(process.env.REACT_APP_API_BASE_URL!)) worker.postMessage({ type: "UPDATE" });
     } else {
       await SendOffline();
       const token = await getToken();
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/verify`,
-          { verified_at: new Date().toLocaleDateString() },
+          { verified_at: new Date() },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -116,8 +106,24 @@ const Attendance = ({
           showModal(false);
         })
         .catch(async function (error) {
-          console.log("sentERROR", error);
-          await changeSentStatus(parseInt(e.target.value), "failed");
+          if (error.response.data.error) {
+            if (error.response.data.error.includes("already")) {
+              await changeSentStatus(parseInt(e.target.value), "sent");
+              await verifyAttendance(parseInt(e.target.value));
+              setUpdateAtt(e.target.value);
+              showVerified(true);
+              setLoading(false);
+              showModal(false);
+            } else if (error.response.data.error.includes("No query results")) {
+              setLoading(false);
+              showModal(false);
+            } else {
+              await changeSentStatus(parseInt(e.target.value), "failed");
+              setLoading(false);
+              showModal(false);
+            }
+          }
+          
         });
     }
   };
@@ -148,7 +154,7 @@ const Attendance = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${e.target.value}/unverify`,
-          { verified_at: new Date().toLocaleDateString() },
+          { verified_at: new Date() },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -164,8 +170,23 @@ const Attendance = ({
           showModal(false);
         })
         .catch(async function (error) {
-          await changeSentStatus(parseInt(e.target.value), "failed");
-          console.log(error);
+          if (error.response.data.error) {
+            if (error.response.data.error.includes("already")) {
+              await changeSentStatus(parseInt(e.target.value), "sent");
+              await verifyAttendance(parseInt(e.target.value));
+              setUpdateAtt(e.target.value);
+              showVerified(true);
+              setLoading(false);
+              showModal(false);
+            } else if (error.response.data.error.includes("No query results")) {
+              setLoading(false);
+              showModal(false);
+            } else {
+              await changeSentStatus(parseInt(e.target.value), "failed");
+              setLoading(false);
+              showModal(false);
+            }
+          }
         });
     }
   };

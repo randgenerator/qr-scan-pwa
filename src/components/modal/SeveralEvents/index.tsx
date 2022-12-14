@@ -38,7 +38,7 @@ const SeveralEvents = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/verify`,
-          {verified_at: new Date().toISOString()},
+          {verified_at: new Date()},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ const SeveralEvents = ({
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/pwa/attendance/${id}/unverify`,
-          {verified_at: new Date().toISOString()},
+          {verified_at: new Date()},
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -34,22 +34,23 @@ const RegistrationQR = () => {
   const [showSeveral, setShowSeveral] = useState<boolean>(false);
   const [showNotAttending, setShowNotAttending] = useState<boolean>(false);
   const [multipleCancel, setMultipleCancel] = useState<boolean>(false);
-  const [scanAllowed, setScanAllowed] = useState<boolean>(true);
+  const [scanAllowed, setScanAllowed] = useState<boolean>(false);
+  const [attInitiated, setAttInitiated] = useState<boolean>(false);
   const [continious, setContinious] = useState<any>(true);
   const [updateAtt, setUpdateAtt] = useState<number>();
   const [fastMode, setFastMode] = useState<any>(true);
 
-  useEffect(() => {
-    const listener = ({ data }: { data: any }) => {
-      console.log(data.type, data.payload);
+  // useEffect(() => {
+  //   const listener = ({ data }: { data: any }) => {
+  //     console.log(data.type, data.payload);
 
-      if (data.type === "UPDATE_SUCCESS") console.log(data.payload);
-    };
+  //     if (data.type === "UPDATE_SUCCESS") console.log(data.payload);
+  //   };
 
-    worker.addEventListener("message", listener);
+  //   worker.addEventListener("message", listener);
 
-    return () => worker.removeEventListener("message", listener);
-  }, []);
+  //   return () => worker.removeEventListener("message", listener);
+  // }, []);
 
   const handleError = (err: any) => {
     console.log(err);
@@ -80,8 +81,8 @@ const RegistrationQR = () => {
               };
               await saveOffline(offlineData);
               await changeSentStatus(attendee[0].id, "failed");
-              setUpdateAtt(attendee[0].id);
-              setShowVerified(true);
+              setUpdateAtt(attendee[0].id); 
+              setShowVerified(true);             
             } else {
               setShowAlreadyVerified(true);
             }
@@ -91,7 +92,7 @@ const RegistrationQR = () => {
             await axios
               .post(
                 `${process.env.REACT_APP_API_URL}/pwa/attendance/${attendee[0].id}/verify`,
-                { verified_at: new Date()?.toLocaleString("en-GB", { hour12: false }) },
+                { verified_at: new Date() },
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -154,12 +155,9 @@ const RegistrationQR = () => {
   };
 
   useEffect(() => {
-    debugger;
     if (updateAtt) {
       let newAtt = [...attendances];
-      debugger;
       const index = attendances.findIndex((att: any) => att.id == updateAtt);
-      debugger;
       if (newAtt[index].verified === 0) {
         newAtt[index].verified = 1;
       } else {
@@ -171,7 +169,6 @@ const RegistrationQR = () => {
 
   useEffect(() => {
     const getEventsDB = async () => {
-      // await SyncAttendance();
       const cont = await getConfig();
       const stat = await getMode();
       setFastMode(stat);
@@ -181,55 +178,69 @@ const RegistrationQR = () => {
       let att: any[] = [];
       let events = [];
       setContinious(cont);
-      if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-        await SendOffline();
-        const evts = await axios
-          .get(`${process.env.REACT_APP_API_URL}/pwa/events/initiated`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(function (response) {
-            return response.data.events;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+      // if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
+        // await SendOffline();
+      //   const evts = await axios
+      //     .get(`${process.env.REACT_APP_API_URL}/pwa/events/initiated`, {
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //       },
+      //     })
+      //     .then(function (response) {
+      //       return response.data.events;
+      //     })
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     });
 
-        events = evts.filter((evt: any) => selectedInt?.includes(evt.id));
-        events.forEach(async (event: any) => {
-          const newAtt = await axios
-            .get(`${process.env.REACT_APP_API_URL}/pwa/events/${event.id.toString()}/attendance`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
-            .then(function (response) {
-              return response.data.attendances;
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+      //   events = evts.filter((evt: any) => selectedInt?.includes(evt.id));
+      //   events.forEach(async (event: any) => {
+      //     const newAtt = await axios
+      //       .get(`${process.env.REACT_APP_API_URL}/pwa/events/${event.id.toString()}/attendance`, {
+      //         headers: {
+      //           Authorization: `Bearer ${token}`,
+      //         },
+      //       })
+      //       .then(function (response) {
+      //         return response.data.attendances;
+      //       })
+      //       .catch(function (error) {
+      //         console.log(error);
+      //       });
 
-          newAtt.forEach((attendance: any) => {
-            attendance.attendance_id = event.id;
-            att.push(attendance);
-          });
-        });
-      } else {
+      //     newAtt.forEach((attendance: any) => {
+      //       attendance.attendance_id = event.id;
+      //       att.push(attendance);
+      //     });
+      //   });
+      // } else {
         const storedAttendances = await getAttendance();
         const storedEvents = await getEvents();
         events = storedEvents.filter((evt: any) => selectedInt?.includes(evt.id));
         att = storedAttendances.filter((attendance) =>
           selectedInt?.includes(attendance.attendance_id),
         );
-      }
+      // }
       setSelectedEvents(events);
       setAttendances(att);
     };
 
     getEventsDB();
-  }, [showVerified]);
+  }, []);
+
+  useEffect(() => {
+    console.log("attendances", attendances)
+    if (!attInitiated) {
+      console.log("att isnt initiated")
+      if (attendances.length > 0) {
+        console.log("attendances length > 0", attendances.length)
+        setScanAllowed(true)
+        setAttInitiated(true)
+      } else {
+        console.log("attendances length = 0",attendances.length)
+      }
+    }
+  }, [attendances])
 
   const previewStyle = {
     height: 240,
@@ -239,6 +250,7 @@ const RegistrationQR = () => {
   const handlePause = () => {
     setScanAllowed(!scanAllowed);
   };
+
   useLayoutEffect(() => {
     if (scanAllowed) {
       let audio = new Audio("/ES_Multimedia 808 - SFX Producer.mp3");
@@ -308,8 +320,8 @@ const RegistrationQR = () => {
         </p>
       </div>
       <div className="scanArea">
-        {scanAllowed && (
-          <QrReader delay={100} style={previewStyle} onError={handleError} onScan={handleScan} />
+        {(selectedEvents.length > 0 && scanAllowed) && (
+          <QrReader delay={500} style={previewStyle} onError={handleError} onScan={handleScan} />
         )}
         {!scanAllowed && "Reģistrācija apturēta"}
       </div>

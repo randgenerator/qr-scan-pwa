@@ -5,6 +5,8 @@ import { getAttendance, getEvents, getSelectedEvents, getLastSync } from "store/
 import Modal from "components/modal";
 import SyncAttendance from "attendanceSync";
 
+const worker = new Worker(new URL("../../workers/thread.worker.ts", import.meta.url));
+
 const AttendanceList = () => {
   const [attendances, setAttendances] = useState<any>([]);
   const [groupedAttendances, setGroupedAttendances] = useState<any>([]);
@@ -63,7 +65,53 @@ const AttendanceList = () => {
     };
 
     getEventsDB();
-  }, [showVerified, showCancelled, showRegistration]);
+  }, []);
+
+ useEffect(() => {
+    const listener = async ({ data }: { data: any }) => {
+      
+      if (data.type === "UPDATE_SUCCESS") {
+          console.log(data.type)
+          const sync = await getLastSync();
+          const currentSync = sync?.toLocaleString("en-GB", { hour12: false });
+          const att = await getAttendance();
+          const selected = await getSelectedEvents();
+          const events = await getEvents();
+          const selectedInt = selected?.map((ev) => parseInt(ev));
+          setSelectedEvents(events.filter((evt) => selectedInt?.includes(evt.id)));
+          const tempAtt = att.filter((attendance) => selectedInt?.includes(attendance.attendance_id));
+          setAttendances(tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name)));
+          const grouped = tempAtt.reduce((att: any, c: any) => {
+            const letter = c.full_name[0];
+            if (!att[letter]) att[letter] = { letter, children: [c] };
+            else att[letter].children.push(c);
+            return att;
+          }, {});
+          let sort = Object.values(grouped);
+    
+          setSorted(sort.sort((a: any, b: any) => a.letter - b.letter));
+          const sortedAtt = tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name));
+          const groupedById = sortedAtt.filter(
+            (att, index, allAtt) => allAtt.findIndex((v2) => v2.qr_uuid === att.qr_uuid) === index,
+          );
+          const filterVerified = groupedById.filter((att: any) => att.verified === 1);
+          const filterFailed = groupedById.filter((att: any) => att.sentStatus == "failed");
+          const filterPlanned = groupedById.filter((att: any) => att.verified == 0);
+    
+          setCountTotal(groupedById.length);
+          setCountVerified(filterVerified.length);
+          setCountFailed(filterFailed.length);
+          setCountPlanned(filterPlanned.length);
+          setSearch(groupedById);
+          setGroupedAttendances(groupedById);
+          setSyncTime(currentSync);
+      };
+    };
+
+    worker.addEventListener("message", listener);
+
+    return () => worker.removeEventListener("message", listener);
+  }, []);
 
   useEffect(() => {
     if (searchField === "") {
@@ -151,6 +199,7 @@ const AttendanceList = () => {
       {showRegistration && (
         <Modal.Attendance
           setUpdateAtt={setUpdateAtt}
+          worker={worker}
           showModal={setShowRegistration}
           attendee={selectedAttendee}
           showVerified={setShowVerified}
