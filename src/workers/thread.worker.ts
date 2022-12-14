@@ -6,7 +6,7 @@ self.onmessage = async ({ data }) => {
   if (type === "UPDATE") {
     await SendOffline()
     /* eslint-disable-next-line no-restricted-globals */
-    setTimeout(() => self.postMessage({type: "UPDATE_SUCCESS"}), 3000)
+    setTimeout(() => self.postMessage({type: "UPDATE_SUCCESS"}), 5000)
   }
 };
 

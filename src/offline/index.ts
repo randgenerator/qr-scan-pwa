@@ -3,7 +3,6 @@ import axios from "axios";
 import SyncAttendance from "attendanceSync";
 
 export const SendOffline = async () => {
-  console.log("triggered send offline data");
   const attendance = await getOffline();
   const token = await getToken();
   attendance.forEach(async (att: any) => {
@@ -59,7 +58,7 @@ export const SendOffline = async () => {
         });
     }
   });
-  await SyncAttendance()
+  setTimeout(() => SyncAttendance(), 1000)
 };
 
 export default SendOffline;
