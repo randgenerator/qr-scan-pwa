@@ -1,4 +1,4 @@
-import { changeSentStatus, changeLastSync, getOffline, getToken, removeOffline } from "store/db";
+import { changeSentStatus, getOffline, getToken, removeOffline } from "store/db";
 import axios from "axios";
 import SyncAttendance from "attendanceSync";
 
@@ -20,7 +20,6 @@ export const SendOffline = async () => {
         .then(async function (response) {
             await changeSentStatus(parseInt(att.id), "sent")
             await removeOffline(att.id);
-            await changeLastSync()
         })
         .catch(async function (error) {
           if (error.response.data.error) {
@@ -45,7 +44,6 @@ export const SendOffline = async () => {
         .then(async function (response) {
           await changeSentStatus(parseInt(att.id), "sent")
           await removeOffline(att.id);
-          await changeLastSync()
         })
         .catch(async function (error) {
           if (error.response.data.error) {

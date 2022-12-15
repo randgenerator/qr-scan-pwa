@@ -1,11 +1,9 @@
 import {
+  changeLastSync,
   getEvents,
-  getOffline,
   getSelectedEvents,
   getToken,
-  removeOffline,
   saveAttendance,
-  saveEvents,
 } from "store/db";
 import axios from "axios";
 
@@ -35,6 +33,7 @@ const SyncAttendance = async () => {
         await saveAttendance(attendance);
       });
     });
+    await changeLastSync()
   }
 };
 

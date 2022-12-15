@@ -21,7 +21,7 @@ const Cacnelled = ({
 }) => {
   useEffect(() => {
     if (continious) {
-      setTimeout(() => allowScan(), 1000);
+      setTimeout(() => allowScan(), 1300);
       setTimeout(() => closeModal(), 1800);
     }
   }, []);

@@ -40,17 +40,29 @@ const RegistrationQR = () => {
   const [updateAtt, setUpdateAtt] = useState<number>();
   const [fastMode, setFastMode] = useState<any>(true);
 
-  // useEffect(() => {
-  //   const listener = ({ data }: { data: any }) => {
-  //     console.log(data.type, data.payload);
+  useEffect(() => {
+    const listener = async ({ data }: { data: any }) => {
 
-  //     if (data.type === "UPDATE_SUCCESS") console.log(data.payload);
-  //   };
+      if (data.type === "UPDATE_SUCCESS") {
+        const selected = await getSelectedEvents();
+        const selectedInt = selected?.map((ev) => parseInt(ev));
+        let att: any[] = [];
+        let events = []; 
+        const storedAttendances = await getAttendance();
+        const storedEvents = await getEvents();
+        events = storedEvents.filter((evt: any) => selectedInt?.includes(evt.id));
+        att = storedAttendances.filter((attendance) =>
+          selectedInt?.includes(attendance.attendance_id),
+        );
+        setSelectedEvents(events);
+        setAttendances(att);
+      }
+    };
 
-  //   worker.addEventListener("message", listener);
+    worker.addEventListener("message", listener);
 
-  //   return () => worker.removeEventListener("message", listener);
-  // }, []);
+    return () => worker.removeEventListener("message", listener);
+  });
 
   const handleError = (err: any) => {
     console.log(err);
