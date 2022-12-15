@@ -64,6 +64,13 @@ const RegistrationQR = () => {
     return () => worker.removeEventListener("message", listener);
   });
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      worker.postMessage({ type: "UPDATE" });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleError = (err: any) => {
     console.log(err);
   };

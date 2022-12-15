@@ -113,6 +113,13 @@ const AttendanceList = () => {
   });
 
   useEffect(() => {
+    const interval = setInterval(async () => {
+      worker.postMessage({ type: "UPDATE" });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     if (searchField === "") {
       setSearch(groupedAttendances);
     } else {
