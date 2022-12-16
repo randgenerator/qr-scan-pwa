@@ -248,15 +248,10 @@ const RegistrationQR = () => {
   }, []);
 
   useEffect(() => {
-    console.log("attendances", attendances)
     if (!attInitiated) {
-      console.log("att isnt initiated")
       if (attendances.length > 0) {
-        console.log("attendances length > 0", attendances.length)
         setScanAllowed(true)
         setAttInitiated(true)
-      } else {
-        console.log("attendances length = 0",attendances.length)
       }
     }
   }, [attendances])
