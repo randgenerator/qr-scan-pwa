@@ -269,13 +269,13 @@ const AttendanceList = () => {
                   </h4>{" "}
                   {attendee?.sentStatus === "sent" && (
                     <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                      Nosūtīts {convertedUTC?.toLocaleString()}
+                      Nosūtīts {convertedUTC?.toLocaleString("en-GB")}
                     </p>
                   )}
                   {attendee?.sentStatus === "failed" && (
                     <p data-qr={attendee.qr_uuid} className="failedAt">
                       Gaida savienojumu (#5{" "}
-                      {attendee.attemptedTimestamp.toLocaleString({ hour12: false })}){" "}
+                      {attendee.attemptedTimestamp.toLocaleString("en-GB")}){" "}
                     </p>
                   )}
                 </div>
@@ -293,7 +293,7 @@ const AttendanceList = () => {
                         Status:
                       </h4>
                       <p data-qr={attendee.qr_uuid} className="verifiedAt">
-                        Nosūtīts {convertedUTC?.toLocaleString()}
+                        Nosūtīts {convertedUTC?.toLocaleString("en-GB")}
                       </p>
                     </>
                   )}
@@ -303,7 +303,7 @@ const AttendanceList = () => {
                         Status:
                       </h4>
                       <p data-qr={attendee.qr_uuid} className="failedAt">
-                        Gaida savienojumu (#5 {convertedUTC?.toLocaleString()})
+                        Gaida savienojumu (#5 {convertedUTC?.toLocaleString("en-GB")})
                       </p>
                     </>
                   )}

@@ -159,7 +159,6 @@ export async function getEvents() {
 
 export async function saveEvents(event: any) {
   const db = await openDB<PwaDB>("pwa-db", 5);
-  if (event.scheduled_at) event.scheduled_at = event.scheduled_at.replace(" ", "T").concat("Z")
   await db.add("events", event);
   db.close();
 }

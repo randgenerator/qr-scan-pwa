@@ -53,7 +53,7 @@ const Verified = ({
         <p><span className="names">{data[0]?.full_name}</span>{data[0]?.class_name.toUpperCase()}</p>
         {
           data[0]?.sentStatus == "sent"? (
-            <p className="statuss">Statuss: <span> Nosūtīts[{new Date(data[0]?.verified_at).toLocaleString() }]</span></p>
+            <p className="statuss">Statuss: <span> Nosūtīts[{new Date(data[0]?.verified_at).toLocaleString("en-GB") }]</span></p>
             ): ""
         }
         {button && (

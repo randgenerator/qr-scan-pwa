@@ -37,8 +37,8 @@ const Events = () => {
             console.log(error);
             return [];
           });
-        setEvents(evts);
         evts.forEach(async (event: any) => {
+          if (event.scheduled_at) event.scheduled_at = event.scheduled_at.replace(" ", "T").concat("Z")
           await saveEvents(event);
           const att = await axios
             .get(`${process.env.REACT_APP_API_URL}/pwa/events/${event.id.toString()}/attendance`, {
@@ -59,6 +59,7 @@ const Events = () => {
             await saveAttendance(attendance);
           });
         });
+        setEvents(evts);
       } else {
         const evts = await getEvents();
         setEvents(evts);
@@ -113,7 +114,7 @@ const Events = () => {
                   <label className="fullWidth" htmlFor={event.id.toString()}>
                     <div className="text">
                       <h3 className="text__title ">{event.service_series_name}</h3>
-                      <span className="text__caption">{new Date(event.scheduled_at).toLocaleString()}</span>
+                      <span className="text__caption">{new Date(event.scheduled_at).toLocaleString("en-GB")}</span>
                     </div>
                   </label>
                 </li>
