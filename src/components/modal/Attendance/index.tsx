@@ -83,7 +83,7 @@ const Attendance = ({
       showVerified(true);
       setLoading(false);
       showModal(false);
-      if (fastMode && await isReachable(process.env.REACT_APP_API_BASE_URL!)) worker.postMessage({ type: "UPDATE" });
+      // if (fastMode && await isReachable(process.env.REACT_APP_API_BASE_URL!)) worker.postMessage({ type: "UPDATE" });
     } else {
       await SendOffline();
       const token = await getToken();
@@ -147,7 +147,7 @@ const Attendance = ({
       showCancelled(true);
       setLoading(false);
       showModal(false);
-      worker.postMessage({ type: "UPDATE" });
+      // worker.postMessage({ type: "UPDATE" });
     } else {
       await SendOffline();
       const token = await getToken();

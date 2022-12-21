@@ -67,7 +67,7 @@ const RegistrationQR = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       worker.postMessage({ type: "UPDATE" });
-    }, 5000);
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -105,7 +105,7 @@ const RegistrationQR = () => {
             } else {
               setShowAlreadyVerified(true);
             }
-            worker.postMessage({ type: "UPDATE" });
+            // worker.postMessage({ type: "UPDATE" });
           } else if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
             await SendOffline();
             await axios
