@@ -59,7 +59,7 @@ const AttendanceList = () => {
       setCountVerified(filterVerified.length);
       setCountFailed(filterFailed.length);
       setCountPlanned(filterPlanned.length);
-      setSearch(groupedById);
+      if (searchField === "" ) setSearch(groupedById);
       setGroupedAttendances(groupedById);
       setSyncTime(currentSync);
     };
