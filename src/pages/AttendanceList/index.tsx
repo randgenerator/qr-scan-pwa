@@ -126,27 +126,8 @@ const AttendanceList = () => {
       setSearch(
         groupedAttendances.filter(
           (att: any) =>
-            att.full_name
-              .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .includes(
-                searchField
-                  .toLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, ""),
-              ) ||
-            att.class_name
-              .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .includes(
-                searchField
-                  .toLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, ""),
-              ),
-        ),
+            (att.full_name && att.full_name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchField.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))) || (att.class_name && att.class_name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchField.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")))
+        )
       );
     }
   }, [searchField]);
