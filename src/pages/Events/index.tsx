@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getToken, setSelectedEvents, saveEvents, saveAttendance, getEvents } from "store/db";
+import {
+  getToken,
+  setSelectedEvents,
+  saveEvents,
+  saveAttendance,
+  getEvents,
+} from "store/db";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import isReachable from "is-reachable";
@@ -38,14 +44,22 @@ const Events = () => {
             return [];
           });
         evts.forEach(async (event: any) => {
-          if (event.scheduled_at) event.scheduled_at = event.scheduled_at.replace(" ", "T").concat("Z")
+          if (event.scheduled_at)
+            event.scheduled_at = event.scheduled_at
+              .replace(" ", "T")
+              .concat("Z");
           await saveEvents(event);
           const att = await axios
-            .get(`${process.env.REACT_APP_API_URL}/pwa/events/${event.id.toString()}/attendance`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            })
+            .get(
+              `${
+                process.env.REACT_APP_API_URL
+              }/pwa/events/${event.id.toString()}/attendance`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
             .then(function (response) {
               return response.data.attendances;
             })
@@ -87,14 +101,14 @@ const Events = () => {
     }
   };
 
-  
   return (
     <form onSubmit={handleSubmit}>
       <div className="events">
         <div className="events__content">
           <h3 className="content-title">
-            Atzīmējiet pasākumus, kuros reģistrēsiet dalībniekus. Ja neredzat pasākumus,
-            pārliecinieties, ka jūsu lietotājs ir pievienots kā atbildīgais par pasākumu sēriju.
+            Atzīmējiet pasākumus, kuros reģistrēsiet dalībniekus. Ja neredzat
+            pasākumus, pārliecinieties, ka jūsu lietotājs ir pievienots kā
+            atbildīgais par pasākumu sēriju.
           </h3>
           <ul className="select-events">
             {events.map((event) => {
@@ -113,8 +127,12 @@ const Events = () => {
                   </div>
                   <label className="fullWidth" htmlFor={event.id.toString()}>
                     <div className="text">
-                      <h3 className="text__title ">{event.service_series_name}</h3>
-                      <span className="text__caption">{new Date(event.scheduled_at).toLocaleString("en-GB")}</span>
+                      <h3 className="text__title ">
+                        {event.service_series_name}
+                      </h3>
+                      <span className="text__caption">
+                        {new Date(event.scheduled_at).toLocaleString("en-GB")}
+                      </span>
                     </div>
                   </label>
                 </li>
@@ -132,6 +150,7 @@ const Events = () => {
             </div>
           </li> */}
           </ul>
+
           <div className="contentButton">
             {selected.length > 0 && (
               <button className="submitButton" type="submit">
