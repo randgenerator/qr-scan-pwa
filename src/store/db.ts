@@ -95,10 +95,6 @@ export async function initDb() {
 export async function clearDb() {
   const db = await openDB<PwaDB>("pwa-db", 5, {
     upgrade(db) {
-      db.createObjectStore("token");
-      db.createObjectStore("selected");
-      db.createObjectStore("config");
-      db.createObjectStore("mode");
       const event = db.createObjectStore("events", {
         keyPath: "id",
       });
@@ -107,15 +103,10 @@ export async function clearDb() {
         keyPath: "id",
       });
       attendance.createIndex("by-id", "id");
-      const offline = db.createObjectStore("offline", {
-        keyPath: "id",
-      });
-      offline.createIndex("by-id", "id");
     },
   });
   await db.clear("events");
   await db.clear("attendance");
-  await db.clear("selected");
   db.close();
 }
 

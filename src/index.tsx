@@ -1,21 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import Routes from "routes";
 import "assets/styles/main.scss";
 import "assets/styles/fonts.css";
 import * as serviceWorkerRegistration from 'serviceWorkerRegistration';
 import reportWebVitals from 'reportWebVitals';
-import { clearDb, getOffline, getToken, initDb, removeOffline } from 'store/db';
+import { clearDb, initDb } from 'store/db';
 import isReachable from 'is-reachable';
-import axios from 'axios';
 import SendOffline from 'offline';
 
 const init = async () => {
   await initDb()
   if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
     await SendOffline()
-    await clearDb()
+    // await clearDb()
   }
 }
 

@@ -3,9 +3,11 @@ import axios from "axios";
 import {
   getToken,
   setSelectedEvents,
+  getSelectedEvents,
   saveEvents,
   saveAttendance,
   getEvents,
+  clearDb,
 } from "store/db";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
@@ -25,10 +27,17 @@ type Event = {
 const Events = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<Array<Event>>([]);
+  const [selected, setSelected] = useState<Array<any>>([]);
+  const [firstInit, setFirstInit] = useState<boolean>(true)
   useEffect(() => {
     const initEvents = async () => {
+      const selectedDB = await getSelectedEvents();
+      if (selectedDB) {
+        setSelected(selectedDB)
+      }
       if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
         await SendOffline();
+        await clearDb()
         const token = await getToken();
         const evts = await axios
           .get(`${process.env.REACT_APP_API_URL}/pwa/events/initiated`, {
@@ -83,9 +92,12 @@ const Events = () => {
     initEvents();
   }, []);
 
-  const [selected, setSelected] = useState<Array<any>>([]);
   useEffect(() => {
-    setSelectedEvents(selected);
+    if (!firstInit) {
+      setSelectedEvents(selected);
+    } else {
+      setFirstInit(false)
+    }
   }, [selected]);
 
   const handleSubmit = (e: any) => {
@@ -119,7 +131,7 @@ const Events = () => {
                       type="checkbox"
                       value={event.id}
                       id={event.id.toString()}
-                      defaultChecked={false}
+                      defaultChecked={selected.includes(event.id.toString())}
                       onChange={handleChange}
                       name=""
                     />
