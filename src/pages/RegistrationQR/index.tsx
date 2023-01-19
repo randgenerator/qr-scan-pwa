@@ -274,6 +274,7 @@ const RegistrationQR = () => {
 
   return (
     <div className="main">
+      <Modal.RefreshSound />
       {showNotAttending && (
         <Modal.NotAttending
           setUpdateAtt={setUpdateAtt}
