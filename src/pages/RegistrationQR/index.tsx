@@ -28,6 +28,7 @@ const RegistrationQR = () => {
   const [eventData, setEventData] = useState<any>({});
   const [scannedAttendeeMultiple, setScannedAttendeeMultiple] = useState<any>([]);
   const [selectedEvents, setSelectedEvents] = useState<any>([]);
+  const [audioPaused, setAudioPaused] = useState<boolean>(false);
   const [showVerified, setShowVerified] = useState<boolean>(false);
   const [showAlreadyVerified, setShowAlreadyVerified] = useState<boolean>(false);
   const [showNotFound, setShowNotFound] = useState<boolean>(false);
@@ -268,13 +269,15 @@ const RegistrationQR = () => {
   useLayoutEffect(() => {
     if (scanAllowed) {
       let audio = new Audio("/ES_Multimedia 808 - SFX Producer.mp3");
-      audio.play();
+      audio.play().catch(error => {
+        setAudioPaused(true)
+      });
     }
   }, [scanAllowed]);
 
   return (
     <div className="main">
-      <Modal.RefreshSound />
+      {audioPaused && <Modal.RefreshSound setPaused={setAudioPaused} />}
       {showNotAttending && (
         <Modal.NotAttending
           setUpdateAtt={setUpdateAtt}

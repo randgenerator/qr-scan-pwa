@@ -59,7 +59,16 @@ const AttendanceList = () => {
       setCountVerified(filterVerified.length);
       setCountFailed(filterFailed.length);
       setCountPlanned(filterPlanned.length);
-      if (searchField === "" ) setSearch(groupedById);
+      if (searchField === "" ) {
+        setSearch(groupedById)
+      } else {
+        setSearch(
+          groupedById.filter(
+            (att: any) =>
+              (att.full_name && att.full_name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchField.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))) || (att.class_name && att.class_name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchField.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")))
+          )
+        );
+      };
       setGroupedAttendances(groupedById);
       setSyncTime(currentSync);
     };
@@ -101,7 +110,16 @@ const AttendanceList = () => {
         setCountVerified(filterVerified.length);
         setCountFailed(filterFailed.length);
         setCountPlanned(filterPlanned.length);
-        if (searchField === "" ) setSearch(groupedById);
+        if (searchField === "" ) {
+          setSearch(groupedById)
+        } else {
+          setSearch(
+            groupedById.filter(
+              (att: any) =>
+                (att.full_name && att.full_name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchField.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))) || (att.class_name && att.class_name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchField.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")))
+            )
+          );
+        };
         setGroupedAttendances(groupedById);
         setSyncTime(currentSync);
       };
@@ -146,7 +164,16 @@ const AttendanceList = () => {
         (att, index, allAtt) => allAtt.findIndex((v2) => v2.qr_uuid === att.qr_uuid) === index,
       );
       setGroupedAttendances(groupedById);
-      setSearch(groupedById);
+      if (searchField === "" ) {
+        setSearch(groupedById)
+      } else {
+        setSearch(
+          groupedById.filter(
+            (att: any) =>
+              (att.full_name && att.full_name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchField.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))) || (att.class_name && att.class_name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchField.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")))
+          )
+        );
+      };
     }
   }, [updateAtt]);
 
