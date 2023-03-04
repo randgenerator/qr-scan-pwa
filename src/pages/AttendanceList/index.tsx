@@ -133,7 +133,7 @@ const AttendanceList = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       worker.postMessage({ type: "UPDATE" });
-    }, 10000);
+    }, 25000);
     return () => clearInterval(interval);
   }, []);
 
