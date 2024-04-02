@@ -1,0 +1,8 @@
+.app-main-layout{
+  display: flex;
+  flex-direction: column;
+
+  .main-layout-content{
+    flex-grow: 1;
+  }
+}

@@ -7,12 +7,17 @@ import {
   saveEvents,
   saveAttendance,
   getEvents,
-  clearDb,
+  clearDb, deleteSelectedEvents, setAttendanceLoadedEvents,
 } from "store/db";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
+import {RootState, store} from "../../store/store";
+import {setEventsListAreLoading} from "../../store/redux/slices/eventSlice";
+import {useSelector} from "react-redux";
+import {setIsAttendancesLoading} from "../../store/redux/slices/attendaceSlice";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 type Event = {
   id: number;
@@ -20,7 +25,7 @@ type Event = {
   description: string;
   status: string;
   scheduled_at: Date;
-  service_series_name: string;
+  service_series_name: any;
   school_name: string;
 };
 
@@ -29,6 +34,23 @@ const Events = () => {
   const [events, setEvents] = useState<Array<Event>>([]);
   const [selected, setSelected] = useState<Array<any>>([]);
   const [firstInit, setFirstInit] = useState<boolean>(true)
+  const eventsListAreLoading = useSelector((state: RootState) =>state.eventSlice.eventsListAreLoading)
+  const attendanceLoadedEvents = useSelector((state: RootState) =>state.attendanceSlice.attendanceLoadedEvents)
+  const attendanceListAreLoaded = useSelector((state: RootState) =>state.attendanceSlice.attendanceListAreLoaded)
+  const asyncAttendancesLoading = useSelector((state: RootState) =>state.attendanceSlice.asyncAttendancesLoading)
+
+  useEffect(() => {
+    const handleBeforeUnload = (event:any) => {
+      deleteSelectedEvents()
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   useEffect(() => {
     const initEvents = async () => {
       const selectedDB = await getSelectedEvents();
@@ -36,7 +58,7 @@ const Events = () => {
         setSelected(selectedDB)
       }
       if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
-        await SendOffline();
+        store.dispatch(setEventsListAreLoading(true))
         await clearDb()
         const token = await getToken();
         const evts = await axios
@@ -50,71 +72,88 @@ const Events = () => {
           })
           .catch(function (error) {
             console.log(error);
+            store.dispatch(setEventsListAreLoading(false))
             return [];
           });
-        evts.forEach(async (event: any) => {
+        for (let event of evts) {
           if (event.scheduled_at)
             event.scheduled_at = event.scheduled_at
-              .replace(" ", "T")
-              .concat("Z");
-          await saveEvents(event);
-          const att = await axios
-            .get(
-              `${
-                process.env.REACT_APP_API_URL
-              }/pwa/events/${event.id.toString()}/attendance`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            )
-            .then(function (response) {
-              return response.data.attendances;
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+                .replace(" ", "T")
+                .concat("Z");
+          if(event){
+            await saveEvents(event);
+          }
 
-          att.forEach(async (attendance: any) => {
-            attendance.attendance_id = event.id;
-            if (attendance.verified === 1) attendance.sentStatus = "sent";
-            await saveAttendance(attendance);
-          });
-        });
+        }
+        await SendOffline();
         setEvents(evts);
+        store.dispatch(setEventsListAreLoading(false))
       } else {
         const evts = await getEvents();
         setEvents(evts);
       }
     };
-
     initEvents();
   }, []);
 
   useEffect(() => {
-    if (!firstInit) {
-      setSelectedEvents(selected);
-    } else {
-      setFirstInit(false)
+    const checkSelected = async ()=>{
+      if (!firstInit && attendanceListAreLoaded) {
+        const events = await getEvents();
+        const attendanceLoadedEventsIds = attendanceLoadedEvents.map((event:any)=>event.id)
+        await setSelectedEvents(selected);
+        const token = await getToken();
+        const eventIdsForLoad = []
+        for (let eventId of selected){
+          if(!attendanceLoadedEventsIds.includes( Number(eventId))){
+            eventIdsForLoad.push(Number(eventId))
+          }
+        }
+        for(let eventId of eventIdsForLoad){
+          await store.dispatch(setIsAttendancesLoading(true))
+          let eventObj = events.find((event:any)=>{
+            return event.id === eventId
+          })
+          if(eventObj){
+            await setAttendanceLoadedEvents(eventObj)
+            const att = await axios
+                .get(`${process.env.REACT_APP_API_URL}/pwa/events/${eventId.toString()}/attendance`, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                .then(function (response) {
+                  return response.data.attendances;
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            for (let attendance of att) {
+              attendance.attendance_id = eventId;
+              if (attendance.verified === 1) attendance.sentStatus = "sent";
+              await saveAttendance(attendance);
+            }
+          }
+          await store.dispatch(setIsAttendancesLoading(false))
+
+        }
+      } else {
+        setFirstInit(false)
+      }
     }
+    checkSelected()
   }, [selected]);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    navigate("/registration");
-  };
 
   const handleChange = (e: any) => {
     if (e.target.checked) {
-      setSelected([...selected, e.target.value]);
+      setSelected([...selected, Number(e.target.value)]);
     } else {
-      setSelected(selected.filter((event) => event !== e.target.value));
+      setSelected(selected.filter((event) => event !== Number(e.target.value)));
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
       <div className="events">
         <div className="events__content">
           <h3 className="content-title">
@@ -122,36 +161,37 @@ const Events = () => {
             pasākumus, pārliecinieties, ka jūsu lietotājs ir pievienots kā
             atbildīgais par pasākumu sēriju.
           </h3>
-          <ul className="select-events">
-            {events.map((event) => {
-              return (
-                <li className="items">
-                  <div className="checkbox">
-                    <input
-                      type="checkbox"
-                      value={event.id}
-                      id={event.id.toString()}
-                      defaultChecked={selected.includes(event.id.toString())}
-                      onChange={handleChange}
-                      name=""
-                    />
-                    <label htmlFor={event.id.toString()}></label>
-                  </div>
-                  <label className="fullWidth" htmlFor={event.id.toString()}>
-                    <div className="text">
-                      <h3 className="text__title ">
-                        {event.service_series_name}
-                      </h3>
-                      <span className="text__caption">
+          {
+            eventsListAreLoading ? <div>Loading</div>:<ul className="select-events">
+              {events.map((event) => {
+                return (
+                    <li key={event?.id} className="items">
+                      <div className="checkbox">
+                        <input
+                            type="checkbox"
+                            value={event.id}
+                            id={event.id.toString()}
+                            defaultChecked={selected.includes(event.id)}
+                            onChange={handleChange}
+                            name=""
+                        />
+                        <label htmlFor={event.id.toString()}></label>
+                      </div>
+                      <label className="fullWidth" htmlFor={event.id.toString()}>
+                        <div className="text">
+                          <h3 className="text__title ">
+                            {event.service_series_name?.LV}
+                          </h3>
+                          <span className="text__caption">
                         {new Date(event.scheduled_at).toLocaleString("en-GB")}
                       </span>
-                    </div>
-                  </label>
-                </li>
-              );
-            })}
+                        </div>
+                      </label>
+                    </li>
+                );
+              })}
 
-            {/* <li className="items">
+              {/* <li className="items">
             <div className="checkbox">
               <input type="checkbox" value="3" id="checkboxInputThree" name="" />
               <label htmlFor="checkboxInputThree"></label>
@@ -161,18 +201,17 @@ const Events = () => {
               <span className="text__caption">7A; 7B; 7C</span>
             </div>
           </li> */}
-          </ul>
-
+            </ul>
+          }
           <div className="contentButton">
             {selected.length > 0 && (
-              <button className="submitButton" type="submit">
-                Sākt reģistrāciju
-              </button>
+                <LoadingButton onClick={()=>navigate("/registration")} className="submitButton" startIcon={<div></div>} loadingPosition={'start'} disabled={asyncAttendancesLoading || eventsListAreLoading}>
+                  Sākt reģistrāciju
+                </LoadingButton>
             )}
           </div>
         </div>
       </div>
-    </form>
   );
 };
 

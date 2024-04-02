@@ -221,7 +221,7 @@ const Attendance = ({
                       />
                     )}
                     <div>
-                      <h4 key={event.id}>{event.service_series_name}</h4>
+                      <h4 key={event.id}>{event.service_series_name.LV}</h4>
                       {att.verified == 1 ? (
                         <span key={Math.random()} className="attendanceVerified">
                           Apmeklējums reģistrēts

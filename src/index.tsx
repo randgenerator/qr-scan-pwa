@@ -8,7 +8,9 @@ import reportWebVitals from 'reportWebVitals';
 import { clearDb, initDb } from 'store/db';
 import isReachable from 'is-reachable';
 import SendOffline from 'offline';
-
+import config from "./config/config";
+import { store } from './store/store'
+import { Provider } from 'react-redux'
 const init = async () => {
   await initDb()
   if (await isReachable(process.env.REACT_APP_API_BASE_URL!)) {
@@ -20,11 +22,18 @@ const init = async () => {
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-root.render(
-  <React.StrictMode>
+
+const App = ()=><Provider store={store}>
     <Routes />
-  </React.StrictMode>
-);
+</Provider>
+
+const renderNode = config.appEnv === 'dev' ?
+    <React.StrictMode>
+        <App/>
+    </React.StrictMode> :
+    <App/>
+
+root.render(renderNode);
 
 init()
 // If you want your app to work offline and load faster, you can change

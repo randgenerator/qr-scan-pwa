@@ -1,7 +1,6 @@
 import React, { useEffect, useLayoutEffect } from "react";
 import "./style.scss";
 import Button from "components/button";
-import SyncAttendance from "attendanceSync";
 
 import IconChecked from "assets/images/icon-checked.svg";
 
@@ -49,7 +48,6 @@ const Verified = ({
       <div className="modalOne__wrapper">
         <img src={IconChecked} alt="iconChecked" />
         <h3>Apmeklējums reģistrēts!</h3>
-
         <p><span className="names">{data[0]?.full_name}</span>{data[0]?.class_name.toUpperCase()}</p>
         {
           data[0]?.sentStatus == "sent"? (

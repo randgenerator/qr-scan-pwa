@@ -3,7 +3,7 @@ import axios from "axios";
 import "./style.scss";
 import { addToken } from "store/db";
 import { useNavigate } from "react-router-dom";
-import { useSignIn } from 'react-auth-kit'
+import useSignIn from 'react-auth-kit/hooks/useSignIn';
 import IconEye from "assets/images/icons-eye.svg";
 import IconEyeUn from "assets/images/icon-eye-un.svg";
 import IconMessage from "assets/images/icon-message.png";
@@ -82,10 +82,10 @@ const Login = () => {
       .catch(function(error) {
           setLoading(false)
           console.log("axios error", error)
-          if (error.response.data.error?.includes("invalid_code")) {
+          if (error?.response?.data?.error?.includes("invalid_code")) {
             setError2fa("Invalid code")
             setShowError(true)
-          } else if (error.response.data.message?.includes("Unauthorized")) {
+          } else if (error?.response?.data?.message?.includes("Unauthorized")) {
             setErrorLogin("Invalid credentials")
             setShowLoginError(true)
           }
@@ -96,10 +96,11 @@ const Login = () => {
         setLoginActive(false)
         setLoading(false)
       } else if (token?.token) {
-        if(signIn({token: token.token,
-          expiresIn: token.expires_in / 60,
-          tokenType: "Bearer",
-          authState: {email: email}
+        if(signIn({
+            auth:{ token: token.token,type:'Bearer'},
+            userState:{
+                email: email
+            }
         })) {
             await addToken(token.token)
             setLoading(false)

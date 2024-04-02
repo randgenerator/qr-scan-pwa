@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
 import SearchIcon from "assets/images/icon-search.svg";
-import { getAttendance, getEvents, getSelectedEvents, getLastSync } from "store/db";
+import { getAttendance, getEvents, getSelectedEvents, getLastSync, setSelectedEvents as setSelectedEventsDB , } from "store/db";
 import Modal from "components/modal";
 import SyncAttendance from "attendanceSync";
+import {useNavigate} from "react-router-dom";
+import Button from "../../components/button";
 
 const worker = new Worker(new URL("../../workers/thread.worker.ts", import.meta.url));
 
@@ -35,7 +37,9 @@ const AttendanceList = () => {
       const selected = await getSelectedEvents();
       const events = await getEvents();
       const selectedInt = selected?.map((ev) => parseInt(ev));
-      setSelectedEvents(events.filter((evt) => selectedInt?.includes(evt.id)));
+      const selectedEventsList = events.filter((evt) => selectedInt?.includes(evt.id))
+      setSelectedEvents(selectedEventsList);
+      await setSelectedEventsDB(selectedEventsList.map((event:any)=>Number(event.id)));
       const tempAtt = att.filter((attendance) => selectedInt?.includes(attendance.attendance_id));
       setAttendances(tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name)));
       const grouped = tempAtt.reduce((att: any, c: any) => {
@@ -86,7 +90,9 @@ const AttendanceList = () => {
         const selected = await getSelectedEvents();
         const events = await getEvents();
         const selectedInt = selected?.map((ev) => parseInt(ev));
-        setSelectedEvents(events.filter((evt) => selectedInt?.includes(evt.id)));
+        const selectedEventsList = events.filter((evt) => selectedInt?.includes(evt.id))
+        setSelectedEvents(selectedEventsList);
+        await setSelectedEventsDB(selectedEventsList.map((event:any)=>Number(event.id)));
         const tempAtt = att.filter((attendance) => selectedInt?.includes(attendance.attendance_id));
         setAttendances(tempAtt.sort((a, b) => a.full_name.localeCompare(b.full_name)));
         const grouped = tempAtt.reduce((att: any, c: any) => {
@@ -186,6 +192,7 @@ const AttendanceList = () => {
   const clearSearch = () => {
     setSearchField("");
   };
+  const navigate = useNavigate()
 
   return (
     <div className="list">
@@ -237,6 +244,9 @@ const AttendanceList = () => {
             Cancel
           </button>
         )}
+        <button className={'view_by_classes_button'} onClick={()=>navigate('/attendanceList/classes-view')}>
+          Skatīt pa klasēm
+        </button>
       </div>
       <div className="list__counted">
         <div className="left">

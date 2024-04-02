@@ -91,7 +91,7 @@ const NotAttending = ({
         <p>{data != undefined ? `${data[0].full_name}, ${data[0].class_name}` : ""}</p>
         <div className="events">
           <div className="lunchSeries">
-            <h4 className="lunchTitle">{event.service_series_name}</h4>
+            <h4 className="lunchTitle">{event.service_series_name.LV}</h4>
             <span>Pieteikts kavējums</span>
           </div>
           <Button

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./style.scss";
 import CloseIcon from "assets/images/icon-close.svg";
 import Button from "components/button";
-import { changeConfig, changeMode, getConfig, getMode} from "store/db";
-import { useSignOut } from 'react-auth-kit'
+import {changeConfig, changeMode, deleteSelectedEvents, getConfig, getMode} from "store/db";
+import useSignOut from 'react-auth-kit/hooks/useSignOut';
 import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
@@ -23,20 +23,19 @@ const Settings = () => {
   }, [])
   
   const handleChange = async (e:any) => {
-    console.log("continuous?", e.target.checked)
     setContinuous((check: any) => !check)
     await changeConfig(e.target.checked)
   }
 
   const handleChangeMode = async (e:any) => {
-    console.log("mode?", e.target.checked)
     setFastMode((check: any) => !check)
     await changeMode(e.target.checked)
   }
 
   const handleSignOut = () => {
-    signOut();
+    deleteSelectedEvents()
     navigate("/");
+    signOut();
   };
 
   return (
@@ -95,7 +94,7 @@ const Settings = () => {
           iconLogOut={true}
           type="redBordered"
           iconArrow={true}
-          onClick={handleSignOut}
+          onClick={()=>handleSignOut()}
           iconPersonalQR={undefined}
         />
       </div>

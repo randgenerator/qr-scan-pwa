@@ -11,14 +11,14 @@ import {
   getMode,
   changeSentStatus,
   verifyAttendance,
-  saveOffline,
+  saveOffline, setSelectedEvents as setSelectedEventsDB ,
 } from "store/db";
 
 import Modal from "components/modal";
 import axios from "axios";
 import isReachable from "is-reachable";
 import SendOffline from "offline";
-import SyncAttendance from "attendanceSync";
+import moment from "moment";
 
 const worker = new Worker(new URL("../../workers/thread.worker.ts", import.meta.url));
 
@@ -35,11 +35,12 @@ const RegistrationQR = () => {
   const [showSeveral, setShowSeveral] = useState<boolean>(false);
   const [showNotAttending, setShowNotAttending] = useState<boolean>(false);
   const [multipleCancel, setMultipleCancel] = useState<boolean>(false);
-  const [scanAllowed, setScanAllowed] = useState<boolean>(false);
+  const [scanAllowed, setScanAllowed] = useState<boolean>(true);
   const [attInitiated, setAttInitiated] = useState<boolean>(false);
   const [continious, setContinious] = useState<any>(true);
   const [updateAtt, setUpdateAtt] = useState<number>();
   const [fastMode, setFastMode] = useState<any>(true);
+  const [showIsPassedAttendanceErrorModal, setShowIsPassedAttendanceErrorModal] = useState<any>(false);
 
   useEffect(() => {
     const listener = async ({ data }: { data: any }) => {
@@ -55,8 +56,12 @@ const RegistrationQR = () => {
         att = storedAttendances.filter((attendance) =>
           selectedInt?.includes(attendance.attendance_id),
         );
+        await setSelectedEventsDB(selected);
         setSelectedEvents(events);
         setAttendances(att);
+        if(att.length>0){
+          setScanAllowed(true)
+        }
       }
     };
 
@@ -76,16 +81,43 @@ const RegistrationQR = () => {
     console.log(err);
   };
 
+  const validateAttendanceDate =async (attendance:any)=>{
+    try {
+      const selectedEvents = await getSelectedEvents();
+      const events = await getEvents();
+      const selectedInt = selectedEvents?.map((ev) => parseInt(ev));
+      if(selectedInt){
+        const eventIdOfAttendance = selectedInt.find((eventId:any)=>eventId === attendance.attendance_id)
+        const eventOfAttendance = events.find((event:any)=>event.id === eventIdOfAttendance)
+        let isAttendanceDateIsToday = moment().isSame(moment(eventOfAttendance?.scheduled_at),'day')
+        if(!isAttendanceDateIsToday){
+          return false
+        }else{
+          return  true
+        }
+      }
+    }catch (e) {
+      console.log(e)
+    }
+
+
+  }
+
   const handleScan = async (result: any) => {
     if (result) {
       const path = new URL(result).pathname;
       const pathnames = path.split("/");
       //change pathnames parameter number based on qr url
       const attendee = attendances.filter((att: any) => att.qr_uuid === pathnames[2]);
+      // console.log(attendee,'attendee')
       if (attendee.length === 1) {
         setScanAllowed(false);
         const token = await getToken();
         setScannedAttendee(attendee);
+        if(!await validateAttendanceDate(attendee[0])){
+          setShowIsPassedAttendanceErrorModal(true)
+          return
+        }
         if (attendee[0].status.toLowerCase().includes("cancelled")) {
           setEventData(selectedEvents.find((event: any) => event.id === attendee[0].attendance_id));
           setScanAllowed(false);
@@ -101,8 +133,8 @@ const RegistrationQR = () => {
               };
               await saveOffline(offlineData);
               await changeSentStatus(attendee[0].id, "failed");
-              setUpdateAtt(attendee[0].id); 
-              setShowVerified(true);             
+              setUpdateAtt(attendee[0].id);
+              setShowVerified(true);
             } else {
               setShowAlreadyVerified(true);
             }
@@ -155,9 +187,10 @@ const RegistrationQR = () => {
         }
       } else if (attendee.length > 1) {
         let countCancelled = 0;
-        attendee.forEach((att: any) => {
+        for (let att of attendee){
+          await validateAttendanceDate(att)
           if (att.status.toLowerCase().includes("cancelled")) countCancelled++;
-        });
+        }
         if (countCancelled > 0) {
           setMultipleCancel(true);
         } else {
@@ -234,19 +267,39 @@ const RegistrationQR = () => {
       //     });
       //   });
       // } else {
-        const storedAttendances = await getAttendance();
-        const storedEvents = await getEvents();
-        events = storedEvents.filter((evt: any) => selectedInt?.includes(evt.id));
-        att = storedAttendances.filter((attendance) =>
-          selectedInt?.includes(attendance.attendance_id),
-        );
+      const storedAttendances = await getAttendance();
+      const storedEvents = await getEvents();
+      events = storedEvents.filter((evt: any) => selectedInt?.includes(evt.id));
+      att = storedAttendances.filter((attendance) =>
+        selectedInt?.includes(attendance.attendance_id),
+      );
       // }
       setSelectedEvents(events);
+      await setSelectedEventsDB(selected);
       setAttendances(att);
+      if(att.length>0){
+        setScanAllowed(true)
+      }
     };
 
     getEventsDB();
   }, []);
+
+  useEffect(()=>{
+
+    const checkAttendances = async ()=>{
+      if(attendances.length > 0){
+        for (let att of attendances){
+           if(!(await validateAttendanceDate(att))){
+           setScanAllowed(false);
+           setShowIsPassedAttendanceErrorModal(true)
+           return;
+          }
+        }
+      }
+    }
+     checkAttendances()
+  },[attendances])
 
   useEffect(() => {
     if (!attInitiated) {
@@ -262,8 +315,11 @@ const RegistrationQR = () => {
     width: 320,
   };
 
-  const handlePause = () => {
-    setScanAllowed(!scanAllowed);
+  const handlePauseQRScanning = () => {
+    setScanAllowed(false);
+  };
+  const handleStartQRScanning = () => {
+    setScanAllowed(true);
   };
 
   useLayoutEffect(() => {
@@ -331,6 +387,9 @@ const RegistrationQR = () => {
           buttonTitle="Skenēt nākamo"
         />
       )}
+      {
+        showIsPassedAttendanceErrorModal && <Modal.IsPassedAttendanceErrorModal/>
+      }
       <div className="main__top">
         <p>
           Tiek reģistrēti apmeklējumi {selectedEvents.length} pasākumos.{" "}
@@ -344,9 +403,13 @@ const RegistrationQR = () => {
         {!scanAllowed && "Reģistrācija apturēta"}
       </div>
       <div className="main__bottom">
-        <button className="btn" onClick={handlePause} type="button">
-          Apturēt reģistrāciju
-        </button>
+        {
+          scanAllowed ? <button className="btn" onClick={handlePauseQRScanning} type="button">
+            Apturēt reģistrāciju
+          </button> : <button className="btn" onClick={handleStartQRScanning} type="button">
+            Sākt reģistrāciju
+          </button>
+        }
       </div>
     </div>
   );
