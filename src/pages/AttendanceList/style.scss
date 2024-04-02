@@ -33,6 +33,22 @@
       background-color: transparent;
       margin-left: 16px;
     }
+    .view_by_classes_button{
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 32px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: #7159BD;
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%;
+      color: #fff;
+    }
   }
   &__items {
     width: 100%;

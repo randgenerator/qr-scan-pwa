@@ -7,6 +7,7 @@ import NotAttending from "./NotAttending";
 import Cancelled from "./Cancelled";
 import PersonalQR from "./PersonalQR";
 import RefreshSound from "./RefreshSound";
+import IsPassedAttendanceErrorModal from "./IsPassedAttendanceErrorModal";
 
 const ModalComponent = {
   Attendance,
@@ -18,6 +19,7 @@ const ModalComponent = {
   Cancelled,
   PersonalQR,
   RefreshSound,
+  IsPassedAttendanceErrorModal,
 };
 
 export default ModalComponent;

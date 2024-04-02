@@ -1,4 +1,7 @@
 import { openDB, DBSchema } from "idb";
+import {store} from "./store";
+import {setSelectedEventsIds} from "./redux/slices/eventSlice";
+import {setAttendanceLoadedEvents as setAttendanceLoadedEventsRedux} from "./redux/slices/attendaceSlice";
 
 interface PwaDB extends DBSchema {
   token: {
@@ -13,7 +16,7 @@ interface PwaDB extends DBSchema {
       status: string;
       sentStatus: string;
       scheduled_at: Date;
-      service_series_name: string;
+      service_series_name: any;
       school_name: string;
     };
     key: string;
@@ -34,6 +37,11 @@ interface PwaDB extends DBSchema {
       qr_uuid: string;
       attendance_id: number;
     };
+    key: string;
+    indexes: { "by-id": number };
+  };
+  attendanceLoadedEvents: {
+    value: any;
     key: string;
     indexes: { "by-id": number };
   };
@@ -61,7 +69,7 @@ interface PwaDB extends DBSchema {
     };
     key: string;
     indexes: { "by-id": number };
-  };
+  }
 }
 
 export async function initDb() {
@@ -72,14 +80,22 @@ export async function initDb() {
       db.createObjectStore("config");
       db.createObjectStore("mode");
       db.createObjectStore("lastSync");
+
       const event = db.createObjectStore("events", {
         keyPath: "id",
       });
       event.createIndex("by-id", "id");
+
       const attendance = db.createObjectStore("attendance", {
         keyPath: "id",
       });
       attendance.createIndex("by-id", "id");
+
+      const attendanceLoadedEvents = db.createObjectStore("attendanceLoadedEvents", {
+        keyPath: "id",
+      });
+      attendanceLoadedEvents.createIndex("by-id", "id");
+
       const offline = db.createObjectStore("offline", {
         keyPath: "id",
       });
@@ -99,14 +115,21 @@ export async function clearDb() {
         keyPath: "id",
       });
       event.createIndex("by-id", "id");
+
       const attendance = db.createObjectStore("attendance", {
         keyPath: "id",
       });
       attendance.createIndex("by-id", "id");
+
+      const attendanceLoadedEvents = db.createObjectStore("attendanceLoadedEvents", {
+        keyPath: "id",
+      });
+      attendanceLoadedEvents.createIndex("by-id", "id",);
     },
   });
   await db.clear("events");
   await db.clear("attendance");
+  await db.clear("attendanceLoadedEvents");
   db.close();
 }
 
@@ -127,7 +150,6 @@ export async function getToken() {
 
 export async function getSelectedEvents() {
   const db = await openDB<PwaDB>("pwa-db", 5);
-
   const data = await db.get("selected", "events");
   db.close();
   return data;
@@ -135,10 +157,17 @@ export async function getSelectedEvents() {
 
 export async function setSelectedEvents(events: any) {
   const db = await openDB<PwaDB>("pwa-db", 5);
-
+  store.dispatch(setSelectedEventsIds(events))
   await db.put("selected", events, "events");
   db.close();
 }
+
+export async function deleteSelectedEvents() {
+  const db = await openDB<PwaDB>("pwa-db", 5);
+  await db.delete('selected','events')
+  db.close();
+}
+
 
 export async function getEvents() {
   const db = await openDB<PwaDB>("pwa-db", 5);
@@ -149,9 +178,13 @@ export async function getEvents() {
 }
 
 export async function saveEvents(event: any) {
-  const db = await openDB<PwaDB>("pwa-db", 5);
-  await db.add("events", event);
-  db.close();
+  try {
+    const db = await openDB<PwaDB>("pwa-db", 5);
+    await db.add("events", event);
+    db.close();
+  }catch (e){
+    console.log(e)
+  }
 }
 
 export async function getAttendance() {
@@ -166,6 +199,22 @@ export async function saveAttendance(attendance: any) {
   const db = await openDB<PwaDB>("pwa-db", 5);
   if (attendance.verified_at) attendance.verified_at = attendance.verified_at.replace(" ", "T").concat("Z")
   await db.put("attendance", attendance);
+  db.close();
+}
+
+export async function getAttendanceLoadedEvents() {
+  const db = await openDB<PwaDB>("pwa-db", 5);
+
+  const data = await db.getAllFromIndex("attendanceLoadedEvents", "by-id");
+  db.close();
+  return data;
+}
+
+export async function setAttendanceLoadedEvents(event: any) {
+  const db = await openDB<PwaDB>("pwa-db", 5);
+  await db.put("attendanceLoadedEvents", event);
+  const data = await db.getAllFromIndex("attendanceLoadedEvents", "by-id");
+  store.dispatch(setAttendanceLoadedEventsRedux(data))
   db.close();
 }
 
@@ -249,6 +298,7 @@ export async function getLastSync() {
   db.close();
   return data;
 }
+
 export async function getOffline() {
   const db = await openDB<PwaDB>("pwa-db", 5);
 

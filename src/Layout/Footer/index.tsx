@@ -1,32 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
-
+import LoadingButton from '@mui/lab/LoadingButton';
 import ScanIcon from "assets/images/icon-QR.svg";
 import ListIcon from "assets/images/icon-list.svg";
 import { Link } from "react-router-dom";
 import { getSelectedEvents } from "store/db";
+import {useSelector} from "react-redux";
+import {RootState,store} from "../../store/store";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Footer = () => {
   const [activeList, setActiveList] = useState<boolean>(false);
   const [activeScan, setActiveScan] = useState<boolean>(false);
-  const [events, setEvents] = useState<any>();
-
-  // useEffect(() => {
-  //   const getEventsDB = async () => {
-  //     setEvents(await getSelectedEvents());
-  //   };
-  //   getEventsDB();
-  // }, []);
-  useEffect(() => {
-    const getEventsDB = async () => {
-      setEvents(await getSelectedEvents());
-    };
-    
-    const interval = setInterval(() => {
-      getEventsDB();
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const selectedEventsIds = useSelector((state: RootState) =>state.eventSlice.selectedEventsIds)
+  const asyncAttendancesLoading = useSelector((state: RootState) =>state.attendanceSlice.asyncAttendancesLoading)
+  const eventsListAreLoading = useSelector((state: RootState) =>state.eventSlice.eventsListAreLoading)
 
   const selectQR = () => {
     setActiveScan(true);
@@ -37,35 +25,26 @@ const Footer = () => {
     setActiveScan(false);
     setActiveList(true);
   };
-  //  console.log("events", getSelectedEvents());
+
+  const buttonsAreDisabled = asyncAttendancesLoading || eventsListAreLoading || selectedEventsIds?.length === 0
 
   return (
     <div className="footer">
-      <div className={activeScan ? "scanQRcode active" : "scanQRcode "}>
-        {events?.length > 0 ? (
-          <Link to="/registration" onClick={selectQR}>
-            <img src={ScanIcon} alt="scanIcon" />
-            <h3>QR skenēšana</h3>
-          </Link>
-        ) : (
-          <>
-            <img src={ScanIcon} alt="scanIcon" />
-            <h3>QR skenēšana</h3>
-          </>
-        )}
+      <div className={`scanQRcode ${activeScan ? 'active':''} ${buttonsAreDisabled ? 'disabled':''}`}>
+          <LoadingButton startIcon={<div></div>} loadingPosition={'start'} disabled={buttonsAreDisabled}>
+              <Link to={'/registration'} onClick={selectQR}>
+                  {asyncAttendancesLoading || eventsListAreLoading ?  <CircularProgress className={'progress'}/> : <img src={ScanIcon} alt="scanIcon" />}
+                  <h3>QR skenēšana</h3>
+              </Link>
+          </LoadingButton>
       </div>
-      <div className={activeList ? "list active" : "list"}>
-        {events?.length > 0 ? (
-          <Link to="/attendanceList" onClick={selectList}>
-            <img src={ListIcon} alt="listIcon" />
-            <h3>Apmeklējumu saraksts</h3>
-          </Link>
-        ) : (
-          <>
-            <img src={ListIcon} alt="listIcon" />
-            <h3>Apmeklējumu saraksts</h3>
-          </>
-        )}
+      <div className={`list ${activeList ? 'active':''} ${buttonsAreDisabled ? 'disabled':''}`}>
+          <LoadingButton startIcon={<div></div>} loadingPosition={'start'} disabled={buttonsAreDisabled}>
+              <Link to={'/attendanceList'} onClick={selectList}>
+                  {asyncAttendancesLoading || eventsListAreLoading ?  <CircularProgress className={'progress'}/> : <img src={ListIcon} alt="listIcon" />}
+                  <h3>Apmeklējumu saraksts</h3>
+              </Link>
+          </LoadingButton>
       </div>
     </div>
   );
